@@ -1,0 +1,18 @@
+import { fromJS } from 'immutable';
+import { handleActions } from 'redux-actions';
+
+import * as Actions from './constants';
+
+
+/*
+ * {{ properCase name }} reducer
+ */
+const initialState = fromJS({});
+
+const {{ camelCase name }}Reducer = handleActions({
+  [Actions.DEFAULT_ACTION]: (state, action) => {
+    return state;
+  },
+}, initialState);
+
+export default {{ camelCase name }}Reducer;
