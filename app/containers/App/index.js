@@ -13,6 +13,8 @@
 
 import React from 'react';
 
+import Header from 'components/Header';
+
 import styles from './styles.css';
 
 export default class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -23,8 +25,11 @@ export default class App extends React.Component { // eslint-disable-line react/
 
   render() {
     return (
-      <div className={styles.container}>
-        {React.Children.toArray(this.props.children)}
+      <div>
+        <Header />
+        <div className={styles.container}>
+          {React.Children.toArray(this.props.children)}
+        </div>
       </div>
     );
   }

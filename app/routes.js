@@ -19,28 +19,12 @@ export default function createRoutes(store) {
   return [
     {
       path: '/',
-      name: 'home',
-      getComponent(nextState, cb) {
-        const importModules = Promise.all([
-          System.import('containers/HomePage'),
-        ]);
-
-        const renderRoute = loadModule(cb);
-
-        importModules.then(([component]) => {
-          renderRoute(component);
-        });
-
-        importModules.catch(errorLoading);
-      },
-    }, {
-      path: '/dashboard',
       name: 'todos',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          System.import('containers/Todos/reducer'),
-          System.import('containers/Todos/sagas'),
-          System.import('containers/Todos'),
+          System.import('containers/TodosPage/reducer'),
+          System.import('containers/TodosPage/sagas'),
+          System.import('containers/TodosPage'),
         ]);
 
         const renderRoute = loadModule(cb);
