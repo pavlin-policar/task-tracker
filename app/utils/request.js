@@ -37,8 +37,17 @@ function checkStatus(response) {
  *
  * @return {object}           An object containing either "data" or "err"
  */
-export default function request(url, options) {
-  return fetch(url, options)
+export default function request(url, options = {}) {
+  const headers = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  };
+  const jsonBody = (options.body !== undefined || options.body !== null) ?
+    JSON.stringify(options.body) : '';
+
+  return fetch(url, { ...headers, ...options, body: jsonBody })
     .then(checkStatus)
     .then(parseJSON)
     .then((data) => ({ data }))

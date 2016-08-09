@@ -2,7 +2,7 @@ import { createAction } from 'redux-actions';
 import { v4 } from 'node-uuid';
 import { normalize } from 'normalizr';
 
-import { todo } from './schema';
+import { todo, arrayOfTodos } from './schema';
 import * as Constants from './constants';
 
 /*
@@ -17,7 +17,10 @@ export const toggleTodo = createAction(Constants.TOGGLE_TODO);
 
 // Fetch
 export const fetchTodos = createAction(Constants.FETCH_TODOS_REQUEST);
-export const receiveTodos = createAction(Constants.FETCH_TODOS_SUCCESS);
+export const receiveTodos = createAction(
+  Constants.FETCH_TODOS_SUCCESS,
+  response => normalize(response, arrayOfTodos)
+);
 export const failedFetchingTodos = createAction(Constants.FETCH_TODOS_FAILURE);
 
 // Create
@@ -25,7 +28,10 @@ export const createTodo = createAction(
   Constants.CREATE_TODO_REQUEST,
   ({ text }) => normalize({ id: v4(), text, created: new Date() }, todo)
 );
-export const receiveCreatedTodo = createAction(Constants.CREATE_TODO_SUCCESS);
+export const receiveCreatedTodo = createAction(
+  Constants.CREATE_TODO_SUCCESS,
+  response => normalize(response, todo)
+);
 export const failedCreatingTodo = createAction(Constants.CREATE_TODO_FAILURE);
 
 // Update
