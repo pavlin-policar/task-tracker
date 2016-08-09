@@ -1,7 +1,3 @@
-/*
- * {{properCase name }}
- */
-
 import React from 'react';
 import { connect } from 'react-redux';
 {{#if wantHeaders}}
@@ -9,16 +5,21 @@ import Helmet from 'react-helmet';
 {{/if}}
 {{#if wantMessages}}
 import { FormattedMessage } from 'react-intl';
+
 import messages from './messages';
 {{/if}}
 {{#if wantActionsAndReducer}}
 import select{{properCase name}} from './selectors';
 {{/if}}
-
 {{#if wantCSS}}
+
 import styles from './styles.css';
 {{/if}}
 
+
+/*
+ * {{properCase name }}
+ */
 export class {{ properCase name }} extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
     return (

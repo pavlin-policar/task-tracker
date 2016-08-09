@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 /**
  * Direct selector to the {{ camelCase name }} state domain
  */
-const select{{ properCase name }}Domain = () => state => state.get('{{ camelCase name }}');
+export const get{{ properCase name }}Domain = () => state => state.get('{{ camelCase name }}');
 
 /**
  * Other specific selectors
@@ -14,12 +14,8 @@ const select{{ properCase name }}Domain = () => state => state.get('{{ camelCase
  * Default selector used by {{ properCase name }}
  */
 
-const select{{ properCase name }} = () => createSelector(
-  select{{ properCase name }}Domain(),
+export const get{{ properCase name }} = () => createSelector(
+  get{{ properCase name }}Domain(),
   (substate) => substate.toJS()
 );
-
-export default select{{ properCase name }};
-export {
-  select{{ properCase name }}Domain,
-};
+export default get{{ properCase name }};

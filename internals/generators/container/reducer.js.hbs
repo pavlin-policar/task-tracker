@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable';
 import { handleActions } from 'redux-actions';
 
-import * as Actions from './constants';
+import * as constants from './constants';
 
 
 /*
@@ -10,7 +10,7 @@ import * as Actions from './constants';
 const initialState = fromJS({});
 
 const {{ camelCase name }}Reducer = handleActions({
-  [Actions.DEFAULT_ACTION]: (state, action) => {
+  [constants.DEFAULT_ACTION](state, action) {
     return state;
   },
 }, initialState);
