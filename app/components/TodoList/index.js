@@ -11,15 +11,24 @@ import styles from './styles.css';
 /**
 * TodoList
 */
-const TodoList = (props) => (
+const TodoList = ({ todos, onSave, onDelete }) => (
   <div className={styles.visibleTodoList}>
     <FormattedMessage {...messages.header} />
-    {props.todos.map(todo => <TodoItem key={todo.get('id')} todo={todo} />)}
+    {todos.map(todo => (
+      <TodoItem
+        key={todo.get('id')}
+        todo={todo}
+        onSave={onSave}
+        onDelete={onDelete}
+      />
+    ))}
   </div>
 );
 
 TodoList.propTypes = {
   todos: React.PropTypes.object.isRequired,
+  onSave: React.PropTypes.func.isRequired,
+  onDelete: React.PropTypes.func.isRequired,
 };
 
 export default TodoList;

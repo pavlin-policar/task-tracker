@@ -7,6 +7,8 @@ import { getListOfAllTodos } from './selectors';
 import {
   fetchTodos,
   createTodo,
+  updateTodo,
+  deleteTodo,
 } from './actions';
 
 import CreateTodoForm from 'components/CreateTodoForm';
@@ -19,10 +21,13 @@ import styles from './styles.css';
  * Todos
  */
 export class Todos extends React.Component {
+
   static propTypes = {
+    todos: React.PropTypes.object.isRequired,
     createTodo: React.PropTypes.func.isRequired,
     fetchTodos: React.PropTypes.func.isRequired,
-    todos: React.PropTypes.object.isRequired,
+    updateTodo: React.PropTypes.func.isRequired,
+    deleteTodo: React.PropTypes.func.isRequired,
   }
 
   componentDidMount() {
@@ -37,7 +42,11 @@ export class Todos extends React.Component {
         <CreateTodoForm
           onCreateTodo={(value) => this.props.createTodo({ text: value })}
         />
-        <TodoList todos={this.props.todos} />
+        <TodoList
+          todos={this.props.todos}
+          onSave={this.props.updateTodo}
+          onDelete={this.props.deleteTodo}
+        />
       </div>
     );
   }
@@ -46,6 +55,11 @@ export class Todos extends React.Component {
 const mapStateToProps = (state) => ({
   todos: getListOfAllTodos()(state),
 });
-const mapDispatchToProps = { createTodo, fetchTodos };
+const mapDispatchToProps = {
+  createTodo,
+  fetchTodos,
+  updateTodo,
+  deleteTodo,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Todos);

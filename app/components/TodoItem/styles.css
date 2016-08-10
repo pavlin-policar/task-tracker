@@ -1,3 +1,41 @@
-.todoItem { /* stylelint-ignore */
+.todoItem,
+.textBar,
+.todoCheckbox,
+.todoTextItem,
+.optionsBar {
+  display: flex;
+}
 
+.todoItem {
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+
+.textBar {
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+}
+
+.todoCheckbox {
+}
+
+.todoTextItem,
+.todoTextInput {
+  flex-grow: 1;
+}
+
+.todoTextItem {
+  border-bottom: 1px solid #ebebeb;
+  padding: .75rem;
+}
+
+.todoTextInput {
+  margin: .5rem;
+  padding: .25rem;
+}
+
+.optionsBar {
+  width: 100%;
 }

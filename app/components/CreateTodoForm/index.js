@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import messages from './messages';
 
 import TextField from '../TextField';
+import Button from '../Button';
 
 import styles from './styles.css';
 
@@ -24,7 +25,7 @@ export default class CreateTodoForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const text = this.input.getValue().trim();
+    const text = this.input.getValue();
     if (text.length !== 0) {
       this.props.onCreateTodo(text);
       this.input.clear();
@@ -40,7 +41,7 @@ export default class CreateTodoForm extends React.Component {
             ref={(c) => { this.input = c; }}
             placeholder="Buy milk!"
           />
-          <button type="submit"><FormattedMessage {...messages.createTodoButton} /></button>
+          <Button type="submit"><FormattedMessage {...messages.createTodoButton} /></Button>
         </form>
       </div>
     );
