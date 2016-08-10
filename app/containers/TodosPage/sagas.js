@@ -14,14 +14,14 @@ import {
 } from './actions';
 
 
-const BASE_URL = 'http://localhost:3000/api';
+const BASE_URL = 'http://localhost:3000/api/v1';
+const TODOS_URL = `${BASE_URL}/todos`;
 
 /**
  * Fetch todos
  */
 export function* fetchTodos() {
-  const requestURL = `${BASE_URL}/todos`;
-  const response = yield call(request, requestURL);
+  const response = yield call(request, TODOS_URL);
 
   if (response.error === undefined || response.error === null) {
     yield put(receiveTodos(response.data));
@@ -38,8 +38,7 @@ function* getTodosWatcher() {
  * Create todo
  */
 export function* createTodo({ payload }) {
-  const requestURL = `${BASE_URL}/todos`;
-  const response = yield call(request, requestURL, {
+  const response = yield call(request, TODOS_URL, {
     method: 'POST',
     body: payload.entities.todos[payload.result],
   });
