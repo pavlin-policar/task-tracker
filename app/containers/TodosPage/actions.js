@@ -1,5 +1,5 @@
 import { createAction } from 'redux-actions';
-import { v4 } from 'node-uuid';
+import objectId from 'bson-objectid';
 import { normalize } from 'normalizr';
 
 import { todo, arrayOfTodos } from './schema';
@@ -26,7 +26,7 @@ export const failedFetchingTodos = createAction(Constants.FETCH_TODOS_FAILURE);
 // Create
 export const createTodo = createAction(
   Constants.CREATE_TODO_REQUEST,
-  ({ text }) => normalize({ id: v4(), text, created: new Date() }, todo)
+  ({ text }) => normalize({ id: objectId(), text, createdAt: new Date() }, todo)
 );
 export const receiveCreatedTodo = createAction(
   Constants.CREATE_TODO_SUCCESS,

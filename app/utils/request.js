@@ -1,15 +1,23 @@
 
 import 'whatwg-fetch';
+import _ from 'lodash';
+
+import { mappings } from 'api';
 
 /**
- * Parses the JSON returned by a network request
+ * Parses the JSON returned by a network request.
  *
  * @param  {object} response A response from a network request
  *
  * @return {object}          The parsed JSON from the request
  */
 function parseJSON(response) {
-  return response.json();
+  if (response.headers.get('Content-Length') !== null) {
+    return response.json().catch(
+      () => { throw new Error('Failed parsing response: Malformed JSON.'); }
+    );
+  }
+  return response;
 }
 
 /**
@@ -30,6 +38,43 @@ function checkStatus(response) {
 }
 
 /**
+ * Create a map handler function.
+ *
+ * @param  {bool} invertMap Determines in what direction the mapping will go.
+ *   If this value is true, the map will be inverted.
+ *
+ * @return {function}       A funciton that handles mapping.
+ *   fn :: URL -> obj -> mappedObj
+ */
+const createMapHandler = (invertMap) => (url, obj) => {
+  // The function that handles a single instance of object type
+  const handleSingle = (instance) => {
+    // Check that the url group has a defined mapping
+    if (_.has(mappings, url)) {
+      const mapping = invertMap ? _.invert(mappings[url]) : mappings[url];
+      const newObj = {};
+      _.forIn(instance, (value, key) => {
+        if (_.has(mapping, key)) {
+          newObj[mapping[key]] = value;
+        } else {
+          newObj[key] = value;
+        }
+      });
+      return newObj;
+    }
+    return instance;
+  };
+
+  if (Array.isArray(obj)) {
+    return obj.map(handleSingle);
+  }
+  return handleSingle(obj);
+};
+
+const mapFromResponse = createMapHandler(false);
+const mapFromRequest = createMapHandler(true);
+
+/**
  * Requests a URL, returning a promise
  *
  * @param  {string} url       The URL we want to request
@@ -44,12 +89,20 @@ export default function request(url, options = {}) {
       'Content-Type': 'application/json',
     },
   };
-  const jsonBody = (options.body !== undefined || options.body !== null) ?
-    JSON.stringify(options.body) : '';
 
-  return fetch(url, { ...headers, ...options, body: jsonBody })
+  const reqOptions = { ...headers, ...options };
+  // If we are sending a body with the request
+  if (_.has(options, 'body')) {
+    // Check if we need to map the request body.
+    let body = mapFromRequest(url, options.body);
+    // Convert body to JSON
+    body = JSON.stringify(body);
+    reqOptions.body = body;
+  }
+
+  return fetch(url, reqOptions)
     .then(checkStatus)
     .then(parseJSON)
-    .then((data) => ({ data }))
-    .catch((error) => ({ error }));
+    .then(obj => mapFromResponse(url, obj))
+    .then((data) => ({ data }));
 }

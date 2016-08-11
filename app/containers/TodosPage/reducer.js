@@ -1,6 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { List, OrderedMap, Record } from 'immutable';
 import { combineReducers } from 'redux-immutable';
+import _ from 'lodash';
 
 import * as constants from './constants';
 
@@ -32,7 +33,9 @@ const todos = handleActions({
 
 const todosById = handleActions({
   [constants.FETCH_TODOS_SUCCESS](state, { payload }) {
-    return state.merge(payload.entities.todos);
+    return state.merge(
+      _.mapValues(payload.entities.todos, todo => new Todo(todo))
+    );
   },
   [constants.CREATE_TODO_REQUEST](state, { payload }) {
     return state.set(
@@ -41,8 +44,7 @@ const todosById = handleActions({
     );
   },
   [constants.CREATE_TODO_SUCCESS](state, { payload }) {
-    const savedTodo = payload.entities.todos[payload.result];
-    return state.setIn([savedTodo.id, 'synced'], true);
+    return state.setIn([payload.result, 'synced'], true);
   },
 }, OrderedMap());
 
