@@ -40,18 +40,15 @@ function checkStatus(response) {
 /**
  * Create a map handler function.
  *
- * @param  {bool} invertMap Determines in what direction the mapping will go.
- *   If this value is true, the map will be inverted.
- *
- * @return {function}       A funciton that handles mapping.
- *   fn :: URL -> obj -> mappedObj
+ * @return {function}
+ *   fn :: invertMap(bool) -> URL(string) -> obj -> mappedObj
  */
-const createMapHandler = (invertMap) => (url, obj) => {
+const createMapHandler = (mappingList) => (invertMap) => (url, obj) => {
   // The function that handles a single instance of object type
   const handleSingle = (instance) => {
     // Check that the url group has a defined mapping
-    if (_.has(mappings, url)) {
-      const mapping = invertMap ? _.invert(mappings[url]) : mappings[url];
+    if (_.has(mappingList, url)) {
+      const mapping = invertMap ? _.invert(mappingList[url]) : mappingList[url];
       const newObj = {};
       _.forIn(instance, (value, key) => {
         if (_.has(mapping, key)) {
@@ -71,8 +68,8 @@ const createMapHandler = (invertMap) => (url, obj) => {
   return handleSingle(obj);
 };
 
-const mapFromResponse = createMapHandler(false);
-const mapFromRequest = createMapHandler(true);
+const mapFromResponse = createMapHandler(mappings)(false);
+const mapFromRequest = createMapHandler(mappings)(true);
 
 /**
  * Requests a URL, returning a promise

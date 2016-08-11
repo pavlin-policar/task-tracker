@@ -15,7 +15,7 @@ const Todo = Record({
   createdAt: null,
   modifiedAt: null,
   dirty: false,
-  synced: false,
+  deleted: false,
 });
 
 /*
@@ -23,28 +23,43 @@ const Todo = Record({
  */
 
 const todos = handleActions({
-  [constants.FETCH_TODOS_SUCCESS](state, { payload }) {
-    return state.merge(payload.result);
+  [constants.FETCH_TODOS_SUCCESS](state, { payload: { result } }) {
+    return state.merge(result);
   },
-  [constants.CREATE_TODO_REQUEST](state, { payload }) {
-    return state.push(payload.result);
+  [constants.CREATE_TODO_REQUEST](state, { payload: { result } }) {
+    return state.push(result);
+  },
+  [constants.DELETE_TODO_SUCCESS](state, { payload }) {
+    return state.filter(id => id.localeCompare(payload) !== 0);
   },
 }, List());
 
 const todosById = handleActions({
-  [constants.FETCH_TODOS_SUCCESS](state, { payload }) {
-    return state.merge(
-      _.mapValues(payload.entities.todos, todo => new Todo(todo))
-    );
+  // Fetch all todos
+  [constants.FETCH_TODOS_SUCCESS](state, { payload: { entities } }) {
+    return state.merge(_.mapValues(entities.todos, todo => new Todo(todo)));
   },
-  [constants.CREATE_TODO_REQUEST](state, { payload }) {
+  // Create todo
+  [constants.CREATE_TODO_REQUEST](state, { payload: { entities, result } }) {
     return state.set(
-      payload.result,
-      new Todo(payload.entities.todos[payload.result])
+      result,
+      new Todo({ ...entities.todos[result], dirty: true })
     );
   },
-  [constants.CREATE_TODO_SUCCESS](state, { payload }) {
-    return state.setIn([payload.result, 'synced'], true);
+  [constants.CREATE_TODO_SUCCESS](state, { payload: { entities, result } }) {
+    return state
+      .mergeIn([result], new Todo(entities.todos[result]))
+      .setIn([result, 'dirty'], false);
+  },
+  // Delete todo
+  [constants.DELETE_TODO_REQUEST](state, { payload }) {
+    return state.setIn([payload, 'deleted'], true);
+  },
+  [constants.DELETE_TODO_SUCCESS](state, { payload }) {
+    return state.delete(payload);
+  },
+  [constants.DELETE_TODO_FAILURE](state, { payload }) {
+    return state.setIn([payload, 'deleted'], false);
   },
 }, OrderedMap());
 

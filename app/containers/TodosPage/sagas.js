@@ -65,9 +65,9 @@ export function* deleteTodo({ payload }) {
   });
 
   if (!_.has(response, 'error')) {
-    yield put(receiveDeletedTodo());
+    yield put(receiveDeletedTodo(payload));
   } else {
-    yield put(failedDeletingTodo(response.error));
+    yield put(failedDeletingTodo(payload));
   }
 }
 
