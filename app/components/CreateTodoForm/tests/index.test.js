@@ -11,21 +11,4 @@ describe('<CreateTodoForm />', () => {
     );
     expect(renderedComponent.find('form').length).toEqual(1);
   });
-
-  it('should render a submit button', () => {
-    const renderedComponent = shallow(
-      <CreateTodoForm onCreateTodo={() => {}} />
-    );
-    expect(renderedComponent.find('button').length).toEqual(1);
-  });
-
-  it('handles adding a new todo', () => {
-    const onClickSpy = expect.createSpy();
-    const renderedComponent = shallow(
-      <CreateTodoForm onCreateTodo={onClickSpy} />
-    );
-    renderedComponent.find('input').text('Foo');
-    renderedComponent.find('button').simulate('click');
-    expect(onClickSpy).toHaveBeenCalled();
-  });
 });

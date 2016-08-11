@@ -158,7 +158,8 @@
   "stylelint": {
     "extends": "stylelint-config-standard",
     "rules": {
-      "color-hex-case": "upper",
+      "color-hex-case": "lower",
+      "number-leading-zero": "never",
       "string-quotes": "single",
       "font-family-name-quotes": "always-where-recommended",
       "selector-pseudo-class-no-unknown": [

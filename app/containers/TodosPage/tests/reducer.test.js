@@ -2,8 +2,6 @@ import expect from 'expect';
 
 import todosReducer from '../reducer';
 
-import { createTodo } from '../actions';
-
 
 describe('The todos reducer', () => {
   describe('the initial state', () => {

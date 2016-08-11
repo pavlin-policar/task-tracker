@@ -6,7 +6,7 @@ import styles from './styles.css';
 /**
 * TodoCheckBox
 */
-const TodoCheckBox = (props) => (
+const TodoCheckBox = () => (
   <input type="checkbox" className={styles.todoCheckBox} />
 );
 

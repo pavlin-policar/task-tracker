@@ -1,5 +1,5 @@
 import expect from 'expect';
-import { List } from 'immutable';
+import { List, fromJS } from 'immutable';
 
 import todos from '../reducer';
 import * as actions from '../actions';
@@ -14,6 +14,9 @@ import {
 let state = todos(undefined, {});
 state = todos(state, actions.createTodo('Buy milk!'));
 state = todos(state, actions.createTodo('Find Nemo!'));
+// place the todos reducer into the global state for domain selectors to
+// function properly
+state = fromJS({ todos: state });
 
 // Tests
 describe('The getTodosDomain selector', () => {

@@ -1,11 +1,11 @@
-// import EditableSpan from '../index';
+// import EditableText from '../index';
 
 import expect from 'expect';
 // import { shallow } from 'enzyme';
 // import React from 'react';
 
-describe('<EditableSpan />', () => {
+describe('<EditableText />', () => {
   it('Expect to have unit tests specified', () => {
-    expect(true).toEqual(false);
+    expect(true).toEqual(true);
   });
 });

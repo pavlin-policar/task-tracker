@@ -12,12 +12,11 @@ import { mappings } from 'api';
  * @return {object}          The parsed JSON from the request
  */
 function parseJSON(response) {
-  if (response.headers.get('Content-Length') !== null) {
-    return response.json().catch(
-      () => { throw new Error('Failed parsing response: Malformed JSON.'); }
-    );
+  const contentLength = response.headers.get('Content-Length');
+  if (contentLength !== null && contentLength !== undefined) {
+    return response.json();
   }
-  return response;
+  return null;
 }
 
 /**
@@ -43,7 +42,7 @@ function checkStatus(response) {
  * @return {function}
  *   fn :: invertMap(bool) -> URL(string) -> obj -> mappedObj
  */
-const createMapHandler = (mappingList) => (invertMap) => (url, obj) => {
+export const createMapHandler = (mappingList) => (invertMap) => (url, obj) => {
   // The function that handles a single instance of object type
   const handleSingle = (instance) => {
     // Check that the url group has a defined mapping
@@ -101,5 +100,6 @@ export default function request(url, options = {}) {
     .then(checkStatus)
     .then(parseJSON)
     .then(obj => mapFromResponse(url, obj))
-    .then((data) => ({ data }));
+    .then((data) => ({ data }))
+    .catch((error) => ({ error }));
 }
