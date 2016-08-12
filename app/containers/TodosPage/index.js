@@ -11,7 +11,7 @@ import {
   deleteTodo,
 } from './actions';
 
-import CreateTodoForm from 'components/CreateTodoForm';
+import AddTodoForm from 'containers/AddTodoForm';
 import TodoList from 'components/TodoList';
 
 import styles from './styles.css';
@@ -39,7 +39,7 @@ export class Todos extends React.Component {
       <div className={styles.todos}>
         <FormattedMessage {...messages.header} />
         <span onClick={() => this.props.fetchTodos()}>Refresh</span>
-        <CreateTodoForm
+        <AddTodoForm
           onCreateTodo={(value) => this.props.createTodo({ text: value })}
         />
         <TodoList

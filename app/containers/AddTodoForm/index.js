@@ -1,18 +1,20 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
 import messages from './messages';
+import { createTodo } from 'containers/TodosPage/actions';
 
-import TextField from '../TextField';
-import Button from '../Button';
+import TextField from 'components/TextField';
+import Button from 'components/Button';
 
 import styles from './styles.css';
 
 
-/**
-* CreateTodoForm
-*/
-export default class CreateTodoForm extends React.Component {
+/*
+ * AddTodoForm
+ */
+class AddTodoForm extends React.Component {
   static propTypes = {
     onCreateTodo: React.PropTypes.func.isRequired,
   }
@@ -44,6 +46,8 @@ export default class CreateTodoForm extends React.Component {
           <Button type="submit"><FormattedMessage {...messages.createTodoButton} /></Button>
         </form>
       </div>
-    );
+      );
   }
 }
+
+export default connect(null, { createTodo })(AddTodoForm);
