@@ -19,25 +19,27 @@ state = todos(state, actions.createTodo('Find Nemo!'));
 state = fromJS({ todos: state });
 
 // Tests
-describe('The getTodosDomain selector', () => {
-  it('should return the todos domain', () => {
-    const expectedResult = state.get('todos');
-    expect(getTodosDomain()(state)).toEqual(expectedResult);
+describe('Todos selectors', () => {
+  describe('getTodosDomain selector', () => {
+    it('should return the todos domain', () => {
+      const expectedResult = state.get('todos');
+      expect(getTodosDomain()(state)).toEqual(expectedResult);
+    });
   });
-});
 
 
-describe('The getTodos selector', () => {
-  it('should return a map of all the todos', () => {
-    const expectedResult = state.getIn(['todos', 'todosById']);
-    expect(getTodos()(state)).toEqual(expectedResult);
+  describe('getTodos selector', () => {
+    it('should return a map of all the todos', () => {
+      const expectedResult = state.getIn(['todos', 'todosById']);
+      expect(getTodos()(state)).toEqual(expectedResult);
+    });
   });
-});
 
-describe('The getListOfAllTodos selector', () => {
-  it('should return an array of all the todos', () => {
-    const result = getListOfAllTodos()(state);
-    expect(result).toBeA(List);
-    expect(result.size).toBe(2);
+  describe('getListOfAllTodos selector', () => {
+    it('should return an array of all the todos', () => {
+      const result = getListOfAllTodos()(state);
+      expect(result).toBeA(List);
+      expect(result.size).toBe(2);
+    });
   });
 });
