@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import messages from './messages';
 import selectLoginContainer from './selectors';
+import { login } from './actions';
 
 import TextField from 'components/TextField';
 
@@ -15,7 +16,7 @@ import styles from './styles.css';
  */
 export class Authentication extends React.Component {
   static propTypes = {
-    onLogin: React.PropTypes.func.isRequired,
+    login: React.PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -29,7 +30,7 @@ export class Authentication extends React.Component {
     const username = this.usernameField.getValue();
     const password = this.passwordField.getValue();
 
-    this.props.onLogin({ username, password });
+    this.props.login({ username, password });
     this.passwordField.clear();
   }
 
@@ -52,10 +53,4 @@ export class Authentication extends React.Component {
 
 const mapStateToProps = selectLoginContainer();
 
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Authentication);
+export default connect(mapStateToProps, { login })(Authentication);

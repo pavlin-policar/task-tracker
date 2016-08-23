@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 /**
  * Direct selector to the Authentication state domain
  */
-export const getLoginContainerDomain = () => state => state.get('Authentication');
+export const getLoginContainerDomain = () => state => state.get('authentication');
 
 /**
  * Other specific selectors
