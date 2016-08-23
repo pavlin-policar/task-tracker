@@ -42,15 +42,15 @@ export default function createRoutes(store) {
       name: 'loginForm',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          System.import('containers/LoginForm/reducer'),
-          System.import('containers/LoginForm/sagas'),
-          System.import('containers/LoginForm'),
+          System.import('containers/Authentication/reducer'),
+          System.import('containers/Authentication/sagas'),
+          System.import('containers/Authentication'),
         ]);
 
         const renderRoute = loadModule(cb);
 
         importModules.then(([reducer, sagas, component]) => {
-          injectReducer('loginForm', reducer.default);
+          injectReducer('authentication', reducer.default);
           injectSagas(sagas.default);
           renderRoute(component);
         });

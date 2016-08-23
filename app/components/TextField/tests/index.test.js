@@ -11,6 +11,11 @@ describe('<TextField />', () => {
     expect(renderedComponent.find('input').hasClass('test')).toBe(true);
   });
 
+  it('should adopt the placeholder attribute', () => {
+    const renderedComponent = shallow(<TextField placeholder="test" />);
+    expect(renderedComponent.find('input').prop('placeholder')).toEqual('test');
+  });
+
   it('should adopt the value attribute', () => {
     const renderedComponent = shallow(<TextField value="test" />);
     expect(renderedComponent.find('input').prop('value')).toEqual('test');

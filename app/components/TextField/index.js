@@ -51,6 +51,7 @@ class TextField extends React.Component {
         onKeyUp={this.props.onKeyUp || (() => {})}
         autoFocus={this.props.autoFocus || false}
         disabled={this.props.disabled || false}
+        placeholder={this.props.placeholder || ''}
       />
     );
   }

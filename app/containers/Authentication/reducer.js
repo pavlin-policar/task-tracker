@@ -5,7 +5,7 @@ import * as constants from './constants';
 
 
 /*
- * LoginContainer reducer
+ * Authentication reducer
  */
 const initialState = fromJS({});
 

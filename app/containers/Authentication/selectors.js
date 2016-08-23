@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect';
 
 /**
- * Direct selector to the loginForm state domain
+ * Direct selector to the Authentication state domain
  */
-export const getLoginContainerDomain = () => state => state.get('loginForm');
+export const getLoginContainerDomain = () => state => state.get('Authentication');
 
 /**
  * Other specific selectors
@@ -11,7 +11,7 @@ export const getLoginContainerDomain = () => state => state.get('loginForm');
 
 
 /**
- * Default selector used by LoginContainer
+ * Default selector used by Authentication
  */
 
 export const getLoginContainer = () => createSelector(
