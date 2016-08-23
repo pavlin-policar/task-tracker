@@ -18,7 +18,15 @@ export default function createRoutes(store) {
 
   return [
     {
-      path: '/',
+      path: '/register',
+      name: 'register',
+      getComponent(nextState, cb) {
+        System.import('containers/RegistrationForm')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
+      path: '/todos',
       name: 'todos',
       getComponent(nextState, cb) {
         const importModules = Promise.all([

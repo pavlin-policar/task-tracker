@@ -3,6 +3,6 @@ import generateInputField from 'components/InputField';
 import styles from './styles.css';
 
 
-export default generateInputField('text', {
-  className: styles.textField,
+export default generateInputField('password', {
+  className: styles.passwordField,
 });
