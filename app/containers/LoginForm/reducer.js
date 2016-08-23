@@ -9,10 +9,10 @@ import * as constants from './constants';
  */
 const initialState = fromJS({});
 
-const loginContainerReducer = handleActions({
+const loginFormreducer = handleActions({
   [constants.DEFAULT_ACTION](state, action) {
     return state;
   },
 }, initialState);
 
-export default loginContainerReducer;
+export default loginFormreducer;

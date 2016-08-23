@@ -10,18 +10,12 @@ import styles from './styles.css';
 
 
 /*
- * LoginContainer
+ * LoginForm
  */
-export class LoginContainer extends React.Component { // eslint-disable-line react/prefer-stateless-function
+export class LoginForm extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
     return (
       <div className={styles.loginContainer}>
-      <Helmet
-        title="LoginContainer"
-        meta={[
-          { name: 'description', content: 'Description of LoginContainer' },
-        ]}
-      />
         <FormattedMessage {...messages.header} />
       </div>
     );
@@ -36,4 +30,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
