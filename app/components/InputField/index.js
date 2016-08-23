@@ -8,17 +8,17 @@ import styles from './styles.css';
 /**
  * Generate an `input` type field with common methods.
 
- * @param  {string} type             This should be a valid input[type] string.
- * @param  {String} [validations=''] Validations that should be run on the input
+ * @param  {string} type          This should be a valid input[type] string.
+ * @param  {String} [validate=''] Validations that should be run on the input
  *   field by default e.g. email type fields should run an email validation without
  *   the developer having to explicitly specify that every time they want to use
  *   the component.
- * @param  {String} className        A classname that should be added to the type
+ * @param  {String} className     A classname that should be added to the type
  *   of component.
- * @return {Component}               A `InputField` component that renders the input
+ * @return {Component}            A `InputField` component that renders the input
  *   according to the specified options.
  */
-export default function (type, { validations = '', className }) {
+export default function (type, { validate = '', className } = {}) {
   return class InputField extends React.Component {
     static displayName = `${capitalize(camelCase(type))}Field`;
 
@@ -33,17 +33,17 @@ export default function (type, { validations = '', className }) {
     }
 
     static defaultProps = {
-      validations: '',
+      validate: '',
     }
 
     state = {
       value: this.props.value || '',
     }
 
-    parseValidations() {
+    parseValdiators() {
       // Parse validators, remove duplicates, include default validators
       const validators = Object.keys(
-        concat(validations.split('|'), this.props.validate.split('|'))
+        concat(validate.split('|'), this.props.validate.split('|'))
           .reduce((acc, el) => (el ? { ...acc, [el]: null } : acc), {})
       );
       return validators;

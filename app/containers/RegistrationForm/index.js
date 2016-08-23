@@ -44,14 +44,17 @@ export class RegistrationForm extends React.Component { // eslint-disable-line r
         />
         <EmailField
           name="email"
+          placeholder="example@example.com"
           required
         />
         <PasswordField
           name="password"
+          placeholder="Password"
           required
         />
         <PasswordField
           name="passwordConfirmation"
+          placeholder="Confirm password"
           required
         />
 
