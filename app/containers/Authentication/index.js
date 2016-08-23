@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Helmet from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
 
 import messages from './messages';
@@ -15,6 +14,9 @@ import styles from './styles.css';
  * Authentication
  */
 export class Authentication extends React.Component {
+  static propTypes = {
+    onLogin: React.PropTypes.func.isRequired,
+  }
 
   constructor(props) {
     super(props);

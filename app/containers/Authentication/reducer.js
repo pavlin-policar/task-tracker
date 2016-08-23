@@ -10,7 +10,7 @@ import * as constants from './constants';
 const initialState = fromJS({});
 
 const loginFormreducer = handleActions({
-  [constants.DEFAULT_ACTION](state, action) {
+  [constants.LOGIN_REQUEST](state) {
     return state;
   },
 }, initialState);
