@@ -29,7 +29,7 @@ export default function (type, { validations = '', className }) {
       onKeyUp: React.PropTypes.func,
       autoFocus: React.PropTypes.bool,
       disabled: React.PropTypes.bool,
-      validations: React.PropTypes.string,
+      validate: React.PropTypes.string,
     }
 
     static defaultProps = {
@@ -43,7 +43,7 @@ export default function (type, { validations = '', className }) {
     parseValidations() {
       // Parse validators, remove duplicates, include default validators
       const validators = Object.keys(
-        concat(validations.split('|'), this.props.validations.split('|'))
+        concat(validations.split('|'), this.props.validate.split('|'))
           .reduce((acc, el) => (el ? { ...acc, [el]: null } : acc), {})
       );
       return validators;
