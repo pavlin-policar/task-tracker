@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const restful = require('node-restful');
+import mongoose from 'mongoose';
+import restful from 'node-restful';
 
 
 const TodoSchema = mongoose.Schema({
@@ -15,4 +15,4 @@ const TodoSchema = mongoose.Schema({
   timestamps: true,
 });
 
-module.exports = restful.model('Todo', TodoSchema);
+export default restful.model('Todo', TodoSchema);
