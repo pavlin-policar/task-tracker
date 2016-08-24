@@ -36,25 +36,44 @@ class Form extends React.Component {
     this.props.onSubmit(this.getData());
   }
 
+  /**
+   * Get all data from child input components.
+   *
+   * @param formElements Elements that have the `getValue` method to retrieve
+   *   value.
+   */
   getDataFrom(formElements) {
     return {
       data: mapValues(formElements, (el) => el.getValue()),
     };
   }
 
+  /**
+   * Get the form data from any elements that contain the `name` attribute.
+   */
   getData() {
     this.setState(merge(this.state, this.getDataFrom(this.state.formElements)));
     return this.state.data;
   }
 
+  /**
+   * Get any validation errors from tracked elements.
+   */
   getErrors() {
 
   }
 
+  /**
+   * If validations are specified, check if the data is valid.
+   */
   isValid() {
 
   }
 
+  /**
+   * Associate the original children with the form element to keep all the data
+   * in one place.
+   */
   associate(children) {
     return React.Children.map(children, (child) => React.cloneElement(child, {
       ref: (c) => {
