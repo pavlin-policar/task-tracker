@@ -30,6 +30,7 @@ export default function (type, { validate = '', className } = {}) {
       onKeyUp: React.PropTypes.func,
       autoFocus: React.PropTypes.bool,
       disabled: React.PropTypes.bool,
+      required: React.PropTypes.bool,
       validate: React.PropTypes.string,
     }
 
@@ -82,6 +83,7 @@ export default function (type, { validate = '', className } = {}) {
           autoFocus={this.props.autoFocus || false}
           disabled={this.props.disabled || false}
           placeholder={this.props.placeholder || ''}
+          required={this.props.required || false}
         />
       );
     }

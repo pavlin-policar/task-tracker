@@ -60,14 +60,16 @@ class Form extends React.Component {
    * Get any validation errors from tracked elements.
    */
   getErrors() {
-
+    // TODO Implement this
+    return {};
   }
 
   /**
    * If validations are specified, check if the data is valid.
    */
   isValid() {
-
+    // TODO Implement this
+    return true;
   }
 
   /**

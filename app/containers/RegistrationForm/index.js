@@ -17,9 +17,15 @@ import styles from './styles.css';
 /*
  * RegistrationForm
  */
-export class RegistrationForm extends React.Component { // eslint-disable-line react/prefer-stateless-function
+export class RegistrationForm extends React.Component {
   static propTypes = {
     register: React.PropTypes.func.isRequired,
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.submit = this.submit.bind(this);
   }
 
   submit() {
@@ -33,7 +39,7 @@ export class RegistrationForm extends React.Component { // eslint-disable-line r
       <Form
         ref={(c) => { this.form = c; }}
         className={styles.registrationForm}
-        onSubmit={this.onSubmit}
+        onSubmit={this.submit}
       >
         <FormattedMessage {...messages.header} />
         <h1>Foo</h1>
@@ -77,4 +83,4 @@ export class RegistrationForm extends React.Component { // eslint-disable-line r
   }
 }
 
-export default connect({ register })(RegistrationForm);
+export default connect(null, { register })(RegistrationForm);
