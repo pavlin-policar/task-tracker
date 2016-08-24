@@ -26,6 +26,7 @@ export default function (type, { validate = '', className } = {}) {
       placeholder: React.PropTypes.string,
       value: React.PropTypes.string,
       className: React.PropTypes.string,
+      name: React.PropTypes.string,
       onKeyUp: React.PropTypes.func,
       autoFocus: React.PropTypes.bool,
       disabled: React.PropTypes.bool,
@@ -49,6 +50,10 @@ export default function (type, { validate = '', className } = {}) {
       return validators;
     }
 
+    addFormChangeListener(callback) {
+      this.onChangeListener = callback;
+    }
+
     /**
      * Get the value of the textfield.
      *
@@ -69,6 +74,7 @@ export default function (type, { validate = '', className } = {}) {
       return (
         <input
           type={type}
+          name={this.props.name}
           className={classNames(styles.inputField, className, this.props.className)}
           value={this.state.value}
           onChange={(e) => { this.setState({ value: e.target.value }); }}

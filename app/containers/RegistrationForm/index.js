@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
 import messages from './messages';
+import { register } from 'containers/Authentication/actions';
 
 import Form from 'components/Form';
 import TextField from 'components/TextField';
@@ -17,13 +18,25 @@ import styles from './styles.css';
  * RegistrationForm
  */
 export class RegistrationForm extends React.Component { // eslint-disable-line react/prefer-stateless-function
+  static propTypes = {
+    register: React.PropTypes.func.isRequired,
+  }
+
+  submit() {
+    if (this.form.isValid()) {
+      this.props.register(this.form.getData());
+    }
+  }
+
   render() {
     return (
       <Form
+        ref={(c) => { this.form = c; }}
         className={styles.registrationForm}
         onSubmit={this.onSubmit}
       >
         <FormattedMessage {...messages.header} />
+        <h1>Foo</h1>
 
         <TextField
           name="name"
@@ -64,11 +77,4 @@ export class RegistrationForm extends React.Component { // eslint-disable-line r
   }
 }
 
-
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
-}
-
-export default connect(mapDispatchToProps)(RegistrationForm);
+export default connect({ register })(RegistrationForm);
