@@ -12,9 +12,16 @@ export const API_URL = 'http://localhost:3000/api/v1';
  * better alternative.
  */
 
+
 const idMapping = {
   _id: 'id',
 };
+
+/**
+* Authentication
+*/
+const REGISTRATION_URL = `${API_URL}/auth/register`;
+const LOGIN_URL = `${API_URL}/auth/login`;
 
 /**
  * Todos
@@ -27,6 +34,8 @@ const todoMapping = idMapping;
  * Exports
  */
 export const URLS = {
+  REGISTRATION_URL,
+  LOGIN_URL,
   TODOS_URL,
 };
 export const mappings = {

@@ -23,7 +23,7 @@ function validateUser({
   if (!validator.isEmail(email)) {
     errors.email = 'EMAIL_INVALID_FORMAT';
   }
-  if (!validator.isDate(birthday)) {
+  if (!(birthday instanceof Date) || !validator.isDate(birthday)) {
     errors.birthday = 'DATE_INVALID_FORMAT';
   }
   if (!validator.isLength(password, 6)) {

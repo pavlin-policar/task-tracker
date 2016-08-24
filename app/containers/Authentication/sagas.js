@@ -1,11 +1,33 @@
-// import { take, call, put, select } from 'redux-saga/effects';
+import { takeEvery } from 'redux-saga';
+import { call, put } from 'redux-saga/effects';
+import { has } from 'lodash';
+
+import { REGISTRATION_REQUEST } from './constants';
+import { registrationSuccess, registrationFailure } from './actions';
+
+import { URLS } from 'api';
+import request from 'utils/request';
+
 
 // Individual exports for testing
-export function* defaultSaga() {
-  return;
+export function* registration({ payload }) {
+  const response = yield call(request, URLS.REGISTRATION_URL, {
+    method: 'post',
+    body: payload,
+  });
+
+  if (!has(response, 'error')) {
+    yield put(registrationSuccess());
+  } else {
+    yield put(registrationFailure({ error: response.error }));
+  }
+}
+
+function* registrationWatcher() {
+  yield* takeEvery(REGISTRATION_REQUEST, registration);
 }
 
 // All sagas to be loaded
 export default [
-  defaultSaga,
+  registrationWatcher,
 ];

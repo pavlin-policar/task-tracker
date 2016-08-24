@@ -42,7 +42,6 @@ export class RegistrationForm extends React.Component {
         onSubmit={this.submit}
       >
         <FormattedMessage {...messages.header} />
-        <h1>Foo</h1>
 
         <TextField
           name="name"
@@ -54,11 +53,6 @@ export class RegistrationForm extends React.Component {
           name="surname"
           placeholder="Surname"
           validate="alpha-dash"
-          required
-        />
-        <TextField
-          name="username"
-          placeholder="Username"
           required
         />
         <EmailField
