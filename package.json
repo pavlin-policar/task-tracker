@@ -5,7 +5,7 @@
   "engines": {
     "npm": ">=3"
   },
-  "author": "Max Stoiber",
+  "author": "Pavlin Poličar",
   "license": "MIT",
   "scripts": {
     "analyze:clean": "rimraf stats.json",
