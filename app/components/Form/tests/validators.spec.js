@@ -32,4 +32,12 @@ describe('validators', () => {
       invalid: ['', ' '],
     });
   });
+
+  it('should validate "alphaDash"', () => {
+    test({
+      validator: 'alphaDash',
+      valid: ['foo', 'bar', 'foo-bar'],
+      invalid: ['123', '1abc', 'abc_123'],
+    });
+  });
 });
