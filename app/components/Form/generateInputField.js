@@ -51,10 +51,6 @@ export default function (type, { validate = '', className } = {}) {
       return validators;
     }
 
-    addFormChangeListener(callback) {
-      this.onChangeListener = callback;
-    }
-
     /**
      * Get the value of the textfield.
      *
