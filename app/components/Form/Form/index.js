@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { has, mapValues, merge } from 'lodash';
+import { has, mapValues, merge, isEmpty, pickBy } from 'lodash';
 
 import styles from './styles.css';
 
@@ -65,8 +65,10 @@ class Form extends React.Component {
    * @public
    */
   getErrors() {
-    // TODO Implement this
-    return {};
+    return pickBy(
+      mapValues(this.state.formElements, (el) => el.getErrors()),
+      (err) => !isEmpty(err)
+    );
   }
 
   /**
@@ -75,8 +77,7 @@ class Form extends React.Component {
    * @public
    */
   isValid() {
-    // TODO Implement this
-    return true;
+    return isEmpty(this.getErrors());
   }
 
   /**

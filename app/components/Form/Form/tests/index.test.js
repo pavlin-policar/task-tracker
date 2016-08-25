@@ -59,14 +59,40 @@ describe('<Form />', () => {
     });
 
     it('should handle data change', () => {
-      renderedComponent.find({ name: 'name' })
-        .simulate('change', { target: { value: 'Jane' } });
-      renderedComponent.find({ name: 'surname' })
-        .simulate('change', { target: { value: 'Smith' } });
+      renderedComponent.find({ name: 'name' }).simulate('change', { target: { value: 'Jane' } });
+      renderedComponent.find({ name: 'surname' }).simulate('change', { target: { value: 'Smith' } });
       expect(renderedComponent.instance().getData()).toEqual({
         name: 'Jane',
         surname: 'Smith',
       });
+    });
+  });
+
+  describe('validation with input type components', () => {
+    let renderedComponent;
+    let componentInstance;
+    beforeEach(() => {
+      renderedComponent = mount(
+        <Form>
+          <TextField name="name" validate="required|alpha" />
+          <TextField name="surname" validate="required|alpha" />
+        </Form>
+      );
+      componentInstance = renderedComponent.instance();
+    });
+
+    it('should be invalid if the data is invalid', () => {
+      expect(componentInstance.getData()).toEqual({ name: '', surname: '' });
+      expect(componentInstance.getErrors()).toIncludeKeys(['name', 'surname']);
+      expect(componentInstance.isValid()).toBe(false);
+    });
+
+    it('should be valid if the data is valid', () => {
+      renderedComponent.find({ name: 'name' }).simulate('change', { target: { value: 'John' } });
+      renderedComponent.find({ name: 'surname' }).simulate('change', { target: { value: 'Doe' } });
+      expect(componentInstance.isValid()).toBe(true);
+      expect(componentInstance.getData()).toEqual({ name: 'John', surname: 'Doe' });
+      expect(componentInstance.getErrors()).toEqual({});
     });
   });
 });

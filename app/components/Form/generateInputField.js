@@ -72,6 +72,7 @@ export default function (type, { validate = '', className } = {}) {
             params = params[0].split(',');
           }
         }
+        validator = camelCase(validator);
         // Replace any empty string parameters with undefined
         params = params.map((el) => (isEmpty(el) ? undefined : el));
 
