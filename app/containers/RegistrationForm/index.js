@@ -44,7 +44,7 @@ export class RegistrationForm extends React.Component {
         <FormattedMessage {...messages.header} />
 
         <TextField
-          name="name"
+          name="firstName"
           placeholder="First name"
           validate="required|alpha-dash"
         />

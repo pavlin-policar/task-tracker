@@ -15,7 +15,7 @@ const router = Router();
 
 router.post('/register', (req, res) => {
   const {
-    name,
+    firstName,
     surname,
     email,
     birthday,
@@ -36,8 +36,10 @@ router.post('/register', (req, res) => {
         // The user is indeed a new user, proceed with registration
         const passwordDigest = bcrypt.hashSync(password, SALT_ROUNDS);
         new User({
-          name,
-          surname,
+          name: {
+            first: firstName,
+            last: surname,
+          },
           email,
           birthday,
           password: passwordDigest,
