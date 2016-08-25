@@ -52,7 +52,7 @@ router.post('/register', (req, res) => {
     });
   } else {
     // Something went wrong with validations
-    res.json({ errors, isValid });
+    res.status(400).json({ errors, isValid });
   }
 });
 
