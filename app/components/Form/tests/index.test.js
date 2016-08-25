@@ -1,72 +1,90 @@
-import Form from '../index';
+import generateInputField from '../generateInputField';
 
 import expect from 'expect';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import React from 'react';
 
-import TextField from 'components/TextField';
-
-
-describe('<Form />', () => {
-  it('should render a form element', () => {
-    const renderedComponent = shallow(<Form />);
-    expect(renderedComponent.find('form').length).toBe(1);
+describe('generateInputField', () => {
+  it('should generate an input type component', () => {
+    const Component = generateInputField('text');
+    const renderedComponent = shallow(<Component />);
+    expect(renderedComponent.find('input').length).toBe(1);
   });
 
-  it('should adopt the className attribute', () => {
-    const renderedComponent = shallow(<Form className="testClass" />);
-    expect(renderedComponent.find('form').hasClass('testClass')).toBe(true);
-  });
+  describe('a simple text component', () => {
+    let Component;
+    before(() => {
+      Component = generateInputField('text');
+    });
 
-  it('should trigger the onSubmit property', () => {
-    const onSubmitSpy = expect.createSpy();
-    const renderedComponent = shallow(<Form onSubmit={onSubmitSpy} />);
-    renderedComponent.find('form').simulate('submit', { preventDefault: () => {} });
-    expect(onSubmitSpy).toHaveBeenCalled();
-  });
+    it('should have type text', () => {
+      const renderedComponent = shallow(<Component />);
+      expect(renderedComponent.find('input').prop('type')).toEqual('text');
+    });
 
-  describe('rendering a trivial form', () => {
-    it('should be able to handle both regular DOM nodes and react components', () => {
-      const renderedComponent = shallow(
-        <Form>
-          <h1>Test</h1>
-          <TextField name="test" />
-          <TextField />
-        </Form>
-      );
-      expect(renderedComponent.find('h1').length).toBe(1);
-      expect(renderedComponent.find('TextField').length).toBe(2);
+    it('should adopt the className attribute', () => {
+      const renderedComponent = shallow(<Component className="test" />);
+      expect(renderedComponent.find('input').hasClass('test')).toBe(true);
+    });
+
+    it('should adopt the placeholder attribute', () => {
+      const renderedComponent = shallow(<Component placeholder="test" />);
+      expect(renderedComponent.find('input').prop('placeholder')).toEqual('test');
+    });
+
+    it('should adopt the value attribute', () => {
+      const renderedComponent = shallow(<Component value="test" />);
+      expect(renderedComponent.find('input').prop('value')).toEqual('test');
+    });
+
+    it('should adopt the autoFocus attribute', () => {
+      const renderedComponent = shallow(<Component autoFocus />);
+      expect(renderedComponent.find('input').prop('autoFocus')).toBe(true);
+    });
+
+    it('should adopt the disabled attribute', () => {
+      const renderedComponent = shallow(<Component disabled />);
+      expect(renderedComponent.find('input').prop('disabled')).toBe(true);
+    });
+
+    it('should trigger the onKeyUp property', () => {
+      const onKeyUpSpy = expect.createSpy();
+      const renderedComponent = shallow(<Component onKeyUp={onKeyUpSpy} />);
+      renderedComponent.find('input').simulate('keyUp');
+      expect(onKeyUpSpy).toHaveBeenCalled();
+    });
+
+    it('should have its initial value set when passed down from props', () => {
+      const renderedComponent = shallow(<Component value="test" />);
+      expect(renderedComponent.instance().getValue()).toEqual('test');
+    });
+
+    it('should change its value when user types things in', () => {
+      const renderedComponent = shallow(<Component value="test" />);
+      renderedComponent.simulate('change', { target: { value: 'changed' } });
+      expect(renderedComponent.instance().getValue()).toEqual('changed');
+    });
+
+    it('should clear the value when the clear method is called', () => {
+      const renderedComponent = shallow(<Component value="test" />);
+      renderedComponent.instance().clear();
+      expect(renderedComponent.instance().getValue()).toEqual('');
     });
   });
 
-  describe('interaction with input type components', () => {
-    let renderedComponent;
-    beforeEach(() => {
-      renderedComponent = mount(
-        <Form>
-          <TextField name="name" value="John" />
-          <TextField name="surname" value="Doe" />
-          <TextField value="Not tracked" />
-        </Form>
-      );
-    });
-
-    it('should get data from child components with default values', () => {
-      expect(renderedComponent.instance().getData()).toEqual({
-        name: 'John',
-        surname: 'Doe',
+  describe('a component with additional options', () => {
+    let Component;
+    before(() => {
+      Component = generateInputField('text', {
+        validate: 'minLength:3',
+        className: 'testClass',
       });
     });
 
-    it('should handle data change', () => {
-      renderedComponent.find({ name: 'name' })
-        .simulate('change', { target: { value: 'Jane' } });
-      renderedComponent.find({ name: 'surname' })
-        .simulate('change', { target: { value: 'Smith' } });
-      expect(renderedComponent.instance().getData()).toEqual({
-        name: 'Jane',
-        surname: 'Smith',
-      });
+    it('should contain both the passed down class as well as prop class', () => {
+      const renderedComponent = shallow(<Component className="propClass" />);
+      expect(renderedComponent.find('input').hasClass('testClass')).toBe(true);
+      expect(renderedComponent.find('input').hasClass('propClass')).toBe(true);
     });
   });
 });

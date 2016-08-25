@@ -2,7 +2,7 @@ import React from 'react';
 
 import keys from 'utils/keyCode';
 
-import TextField from '../TextField';
+import TextField from 'components/Form/TextField';
 
 import styles from './styles.css';
 

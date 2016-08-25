@@ -1,4 +1,4 @@
-import generateInputField from 'components/InputField';
+import generateInputField from '../generateInputField';
 
 import styles from './styles.css';
 

@@ -5,10 +5,10 @@ import { FormattedMessage } from 'react-intl';
 import messages from './messages';
 import { register } from 'containers/Authentication/actions';
 
-import Form from 'components/Form';
-import TextField from 'components/TextField';
-import EmailField from 'components/EmailField';
-import PasswordField from 'components/PasswordField';
+import Form from 'components/Form/Form';
+import TextField from 'components/Form/TextField';
+import EmailField from 'components/Form/EmailField';
+import PasswordField from 'components/Form/PasswordField';
 import Button from 'components/Button';
 
 import styles from './styles.css';

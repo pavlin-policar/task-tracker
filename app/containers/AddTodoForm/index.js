@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import messages from './messages';
 import { createTodo } from 'containers/TodosPage/actions';
 
-import TextField from 'components/TextField';
+import TextField from 'components/Form/TextField';
 import Button from 'components/Button';
 
 import styles from './styles.css';

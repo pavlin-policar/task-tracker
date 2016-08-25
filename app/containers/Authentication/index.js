@@ -6,7 +6,7 @@ import messages from './messages';
 import selectLoginContainer from './selectors';
 import { login } from './actions';
 
-import TextField from 'components/TextField';
+import TextField from 'components/Form/TextField';
 
 import styles from './styles.css';
 
