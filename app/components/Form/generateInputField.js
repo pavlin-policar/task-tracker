@@ -46,6 +46,13 @@ export default function (type, { validate = '', className } = {}) {
       errors: [],
     }
 
+    /**
+     * Parse the validation string passed down from props and return an object
+     * containing data to execute the validator.
+     *
+     * @return {array}
+     * @private
+     */
     parseValidators() {
       // Parse validators, remove duplicates, include default validators
       const strValidators = Object.keys(
@@ -56,25 +63,33 @@ export default function (type, { validate = '', className } = {}) {
         let validator = strValidator;
         let params = [];
 
+        // Parameters are separated from the validation with a colon
         if (strValidator.indexOf(':') > 0) {
           [validator, ...params] = strValidator.split(':');
 
+          // Multiple parameters may be delimited by a comma
           if (params[0].indexOf(',') > -1) {
             params = params[0].split(',');
           }
         }
+        // Replace any empty string parameters with undefined
         params = params.map((el) => (isEmpty(el) ? undefined : el));
 
         return { validator, params };
       });
     }
 
+    /**
+     * @return {void}
+     * @private
+     */
     validate() {
       if (!this.state.validated) {
         const errors = [];
 
         const validatorsParams = this.parseValidators();
         validatorsParams.forEach(({ validator, params }) => {
+          // Confirm that the validator is recognized
           invariant(
             validator in validators,
             `${validator} validator is not recognized in validators.js`
@@ -90,19 +105,30 @@ export default function (type, { validate = '', className } = {}) {
     }
 
     /**
-     * Get the value of the textfield.
+     * Get the value of the field.
      *
-     * @return {string} The value of the textfield.
+     * @return {string} The value of the field.
+     * @public
      */
     getValue() {
       return this.state.value;
     }
 
+    /**
+     * Get array of errors for the field.
+     *
+     * @return {array}
+     * @public
+     */
     getErrors() {
       this.validate();
       return this.state.errors;
     }
 
+    /**
+     * @return {bool}
+     * @public
+     */
     isValid() {
       this.validate();
       return isEmpty(this.state.errors);
@@ -110,6 +136,9 @@ export default function (type, { validate = '', className } = {}) {
 
     /**
      * Clear the textfield of any text.
+     *
+     * @return {void}
+     * @public
      */
     clear() {
       this.setState({ value: '', validated: false });
