@@ -1,6 +1,5 @@
 import { takeEvery } from 'redux-saga';
 import { call, put } from 'redux-saga/effects';
-import { has } from 'lodash';
 
 import { REGISTRATION_REQUEST } from './constants';
 import { registrationSuccess, registrationFailure } from './actions';
@@ -16,10 +15,10 @@ export function* registration({ payload }) {
     body: payload,
   });
 
-  if (!has(response, 'error')) {
+  if (response.errors) {
     yield put(registrationSuccess());
   } else {
-    yield put(registrationFailure({ error: response.error }));
+    yield put(registrationFailure(response));
   }
 }
 
