@@ -15,7 +15,7 @@ export function* registration({ payload }) {
     body: payload,
   });
 
-  if (response.errors) {
+  if (!response.error) {
     yield put(registrationSuccess());
   } else {
     yield put(registrationFailure(response));
