@@ -1,7 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 
-import authentication from './authentication';
+import authentication from './Authentication';
 
 import Todo from './models/Todo';
 

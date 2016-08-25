@@ -1,38 +1,17 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import validator from 'validator';
 import { isEmpty } from 'lodash';
 
 import config from './config';
 
-import User from './models/User';
+import User from '../models/User';
+import { validateUser } from './validation';
 
-
-const router = Router();
 
 const SALT_ROUNDS = 10;
 
-function validateUser({
-  email,
-  birthday,
-  password,
-  passwordConfirmation,
-}) {
-  const errors = {};
-  if (!validator.isEmail(email)) {
-    errors.email = 'EMAIL_INVALID_FORMAT';
-  }
-  if (!(birthday instanceof Date) || !validator.isDate(birthday)) {
-    errors.birthday = 'DATE_INVALID_FORMAT';
-  }
-  if (!validator.isLength(password, 6)) {
-    errors.password = 'PASSWORD_TOO_SHORT';
-  }
-  if (!validator.matches(password, passwordConfirmation)) {
-    errors.passwordConfirmation = 'PASSWORD_NO_MATCH';
-  }
-}
+const router = Router();
 
 router.post('/register', (req, res) => {
   const {
@@ -43,7 +22,7 @@ router.post('/register', (req, res) => {
     password,
   } = req.body;
 
-  const errors = validateUser(req.body);
+  const { errors, isValid } = validateUser(req.body);
   if (isEmpty(errors)) {
     User.findOne({ email }, (findUserError, user) => {
       if (findUserError) {
@@ -51,7 +30,8 @@ router.post('/register', (req, res) => {
         res.status(500).json({ error: 'INTERNAL_ERROR' });
       } else if (user) {
         // User with email already exists
-        res.status(400).json({ error: 'USER_EXISTS' });
+        errors.email.push('The email address provided is already in use.');
+        res.status(400).json({ errors, isValid });
       } else {
         // The user is indeed a new user, proceed with registration
         const passwordDigest = bcrypt.hashSync(password, SALT_ROUNDS);
@@ -65,14 +45,14 @@ router.post('/register', (req, res) => {
           if (saveUserError) {
             res.status(500).json({ error: 'INTERNAL_ERROR' });
           } else {
-            res.json({ success: 'SUCCESS' });
+            res.status(200).json({ success: 'SUCCESS' });
           }
         });
       }
     });
   } else {
     // Something went wrong with validations
-    res.json({ errors });
+    res.json({ errors, isValid });
   }
 });
 
