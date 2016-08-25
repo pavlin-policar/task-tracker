@@ -87,4 +87,42 @@ describe('generateInputField', () => {
       expect(renderedComponent.find('input').hasClass('propClass')).toBe(true);
     });
   });
+
+  describe('component validations', () => {
+    let Component;
+    before(() => {
+      Component = generateInputField('text');
+    });
+
+    it('should validate single validations', () => {
+      const renderedComponent = shallow(<Component validate="required" />);
+      expect(renderedComponent.instance().isValid()).toBe(false);
+      renderedComponent.simulate('change', { target: { value: 'valid' } });
+      expect(renderedComponent.instance().isValid()).toBe(true);
+    });
+
+    it('should validate initial values', () => {
+      const renderedComponent = shallow(<Component validate="required" value="valid" />);
+      expect(renderedComponent.instance().isValid()).toBe(true);
+    });
+
+    it('should throw for unrecognized validations', () => {
+      const renderedComponent = shallow(<Component validate="unrecognized" />);
+      expect(() => { renderedComponent.instance().isValid(); }).toThrow();
+    });
+
+    it('should handle multiple validations', () => {
+      const renderedComponent = shallow(<Component validate="required|alpha" />);
+      expect(renderedComponent.instance().isValid()).toBe(false);
+      renderedComponent.simulate('change', { target: { value: '12345' } });
+      expect(renderedComponent.instance().isValid()).toBe(false);
+      renderedComponent.simulate('change', { target: { value: 'finally' } });
+      expect(renderedComponent.instance().isValid()).toBe(true);
+    });
+
+    it('should return an array with the validation errors', () => {
+      const renderedComponent = shallow(<Component validate="required|alpha" />);
+      expect(renderedComponent.instance().getErrors().length).toBe(2);
+    });
+  });
 });

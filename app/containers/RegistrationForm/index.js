@@ -46,29 +46,27 @@ export class RegistrationForm extends React.Component {
         <TextField
           name="name"
           placeholder="First name"
-          validate="alpha-dash"
-          required
+          validate="required|alpha-dash"
         />
         <TextField
           name="surname"
           placeholder="Surname"
-          validate="alpha-dash"
-          required
+          validate="required|alpha-dash"
         />
         <EmailField
           name="email"
           placeholder="example@example.com"
-          required
+          validate="required"
         />
         <PasswordField
           name="password"
           placeholder="Password"
-          required
+          validate="required|length:6"
         />
         <PasswordField
           name="passwordConfirmation"
           placeholder="Confirm password"
-          required
+          validate="required|same-as:password"
         />
 
         <Button type="submit">Register</Button>

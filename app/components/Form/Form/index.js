@@ -41,6 +41,7 @@ class Form extends React.Component {
    *
    * @param formElements Elements that have the `getValue` method to retrieve
    *   value.
+   * @private
    */
   getDataFrom(formElements) {
     return {
@@ -50,6 +51,8 @@ class Form extends React.Component {
 
   /**
    * Get the form data from any elements that contain the `name` attribute.
+   *
+   * @public
    */
   getData() {
     this.setState(merge(this.state, this.getDataFrom(this.state.formElements)));
@@ -58,6 +61,8 @@ class Form extends React.Component {
 
   /**
    * Get any validation errors from tracked elements.
+   *
+   * @public
    */
   getErrors() {
     // TODO Implement this
@@ -66,6 +71,8 @@ class Form extends React.Component {
 
   /**
    * If validations are specified, check if the data is valid.
+   *
+   * @public
    */
   isValid() {
     // TODO Implement this
@@ -75,6 +82,8 @@ class Form extends React.Component {
   /**
    * Associate the original children with the form element to keep all the data
    * in one place.
+   *
+   * @private
    */
   associate(children) {
     return React.Children.map(children, (child) => React.cloneElement(child, {

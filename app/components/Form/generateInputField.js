@@ -1,7 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
-import { capitalize, camelCase, concat } from 'lodash';
+import { capitalize, camelCase, concat, isEmpty } from 'lodash';
+import invariant from 'invariant';
 
+import * as validators from './validators';
 import styles from './styles.css';
 
 
@@ -40,15 +42,37 @@ export default function (type, { validate = '', className } = {}) {
 
     state = {
       value: this.props.value || '',
+      validated: false,
+      errors: [],
     }
 
-    parseValdiators() {
+    parseValidators() {
       // Parse validators, remove duplicates, include default validators
-      const validators = Object.keys(
+      const strValidators = Object.keys(
         concat(validate.split('|'), this.props.validate.split('|'))
           .reduce((acc, el) => (el ? { ...acc, [el]: null } : acc), {})
       );
-      return validators;
+      return strValidators;
+    }
+
+    validate() {
+      if (!this.state.validated) {
+        const errors = [];
+
+        const strValidators = this.parseValidators();
+        strValidators.forEach((val) => {
+          invariant(
+            val in validators,
+            `${val} validator is not recognized in validators.js`
+          );
+
+          if (!validators[val](this.state.value)) {
+            errors.push(val);
+          }
+        });
+
+        this.setState({ errors, validated: true });
+      }
     }
 
     /**
@@ -60,11 +84,21 @@ export default function (type, { validate = '', className } = {}) {
       return this.state.value;
     }
 
+    getErrors() {
+      this.validate();
+      return this.state.errors;
+    }
+
+    isValid() {
+      this.validate();
+      return isEmpty(this.state.errors);
+    }
+
     /**
      * Clear the textfield of any text.
      */
     clear() {
-      this.setState({ value: '' });
+      this.setState({ value: '', validated: false });
     }
 
     render() {
@@ -74,7 +108,7 @@ export default function (type, { validate = '', className } = {}) {
           name={this.props.name}
           className={classNames(styles.inputField, className, this.props.className)}
           value={this.state.value}
-          onChange={(e) => { this.setState({ value: e.target.value }); }}
+          onChange={(e) => { this.setState({ value: e.target.value, validated: false }); }}
           onKeyUp={this.props.onKeyUp || (() => {})}
           autoFocus={this.props.autoFocus || false}
           disabled={this.props.disabled || false}
