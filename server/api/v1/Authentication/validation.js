@@ -17,7 +17,7 @@ export const validateUser = (data) => {
     errors.email.push('The email you have input is not a valid email.');
   }
   if (
-    !(birthday instanceof Date) ||
+    !(birthday instanceof Date) &&
     (birthday instanceof String && !validator.isDate(birthday))
   ) {
     errors.birthday.push('The date is not a valid date.');
