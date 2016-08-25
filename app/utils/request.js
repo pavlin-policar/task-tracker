@@ -1,6 +1,6 @@
 
 import 'whatwg-fetch';
-import _ from 'lodash';
+import { invert, forIn } from 'lodash';
 
 import { mappings } from 'api';
 
@@ -12,28 +12,19 @@ import { mappings } from 'api';
  * @return {object}          The parsed JSON from the request
  */
 function parseJSON(response) {
+  const formatData = (data) => ({
+    response: {
+      status: response.status,
+      statusText: response.statusText,
+    },
+    [response.status >= 400 ? 'error' : 'data']: data,
+  });
+
   const contentLength = response.headers.get('Content-Length');
   if (contentLength !== null && contentLength !== undefined) {
-    return response.json();
+    return response.json().then((data) => formatData(data));
   }
-  return null;
-}
-
-/**
- * Checks if a network request came back fine, and throws an error if not
- *
- * @param  {object} response   A response from a network request
- *
- * @return {object|undefined} Returns either the response, or throws an error
- */
-function checkStatus(response) {
-  if (response.status >= 200 && response.status < 300) {
-    return response;
-  }
-
-  const error = new Error(response.statusText);
-  error.response = response;
-  throw error;
+  return Promise.resolve(formatData({}));
 }
 
 /**
@@ -42,15 +33,15 @@ function checkStatus(response) {
  * @return {function}
  *   fn :: invertMap(bool) -> URL(string) -> obj -> mappedObj
  */
-export const createMapHandler = (mappingList) => (invertMap) => (url, obj) => {
+export const createMapHandler = (mappingList) => (invertMap) => (url, response) => {
   // The function that handles a single instance of object type
   const handleSingle = (instance) => {
     // Check that the url group has a defined mapping
-    if (_.has(mappingList, url)) {
-      const mapping = invertMap ? _.invert(mappingList[url]) : mappingList[url];
+    if (mappingList[url]) {
+      const mapping = invertMap ? invert(mappingList[url]) : mappingList[url];
       const newObj = {};
-      _.forIn(instance, (value, key) => {
-        if (_.has(mapping, key)) {
+      forIn(instance, (value, key) => {
+        if (mapping[key]) {
           newObj[mapping[key]] = value;
         } else {
           newObj[key] = value;
@@ -61,10 +52,20 @@ export const createMapHandler = (mappingList) => (invertMap) => (url, obj) => {
     return instance;
   };
 
-  if (Array.isArray(obj)) {
-    return obj.map(handleSingle);
+  // If the data field was not specified, simply return the data
+  if (!response.data) {
+    return response;
   }
-  return handleSingle(obj);
+
+  const { data: obj } = response;
+  let data;
+  if (Array.isArray(obj)) {
+    data = obj.map(handleSingle);
+  } else {
+    data = handleSingle(obj);
+  }
+
+  return { ...response, data };
 };
 
 const mapFromResponse = createMapHandler(mappings)(false);
@@ -88,7 +89,7 @@ export default function request(url, options = {}) {
 
   const reqOptions = { ...headers, ...options };
   // If we are sending a body with the request
-  if (_.has(options, 'body')) {
+  if (options.body) {
     // Check if we need to map the request body.
     let body = mapFromRequest(url, options.body);
     // Convert body to JSON
@@ -97,9 +98,7 @@ export default function request(url, options = {}) {
   }
 
   return fetch(url, reqOptions)
-    .then(checkStatus)
     .then(parseJSON)
     .then(obj => mapFromResponse(url, obj))
-    .then((data) => ({ data }))
     .catch((error) => ({ error }));
 }
