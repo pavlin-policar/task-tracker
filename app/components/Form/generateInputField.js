@@ -52,22 +52,36 @@ export default function (type, { validate = '', className } = {}) {
         concat(validate.split('|'), this.props.validate.split('|'))
           .reduce((acc, el) => (el ? { ...acc, [el]: null } : acc), {})
       );
-      return strValidators;
+      return strValidators.map((strValidator) => {
+        let validator = strValidator;
+        let params = [];
+
+        if (strValidator.indexOf(':') > 0) {
+          [validator, ...params] = strValidator.split(':');
+
+          if (params[0].indexOf(',') > -1) {
+            params = params[0].split(',');
+          }
+        }
+        params = params.map((el) => (isEmpty(el) ? undefined : el));
+
+        return { validator, params };
+      });
     }
 
     validate() {
       if (!this.state.validated) {
         const errors = [];
 
-        const strValidators = this.parseValidators();
-        strValidators.forEach((val) => {
+        const validatorsParams = this.parseValidators();
+        validatorsParams.forEach(({ validator, params }) => {
           invariant(
-            val in validators,
-            `${val} validator is not recognized in validators.js`
+            validator in validators,
+            `${validator} validator is not recognized in validators.js`
           );
 
-          if (!validators[val](this.state.value)) {
-            errors.push(val);
+          if (!validators[validator](this.state.value, ...params)) {
+            errors.push(validator);
           }
         });
 

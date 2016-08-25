@@ -124,5 +124,28 @@ describe('generateInputField', () => {
       const renderedComponent = shallow(<Component validate="required|alpha" />);
       expect(renderedComponent.instance().getErrors().length).toBe(2);
     });
+
+    it('should handle validations with one parameter', () => {
+      const renderedComponent = shallow(<Component validate="length:5" />);
+      expect(renderedComponent.instance().isValid()).toBe(false);
+      renderedComponent.simulate('change', { target: { value: '12345' } });
+      expect(renderedComponent.instance().isValid()).toBe(true);
+    });
+
+    it('should handle validations with multiple parameters', () => {
+      const renderedComponent = shallow(<Component validate="length:3,6" />);
+      expect(renderedComponent.instance().isValid()).toBe(false);
+      renderedComponent.simulate('change', { target: { value: '1234567' } });
+      expect(renderedComponent.instance().isValid()).toBe(false);
+      renderedComponent.simulate('change', { target: { value: '12345' } });
+      expect(renderedComponent.instance().isValid()).toBe(true);
+    });
+
+    it('should handle validations with only second parameter', () => {
+      const renderedComponent = shallow(<Component validate="length:,3" value="1234" />);
+      expect(renderedComponent.instance().isValid()).toBe(false);
+      renderedComponent.simulate('change', { target: { value: '123' } });
+      expect(renderedComponent.instance().isValid()).toBe(true);
+    });
   });
 });
