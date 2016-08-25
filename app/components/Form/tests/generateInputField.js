@@ -122,7 +122,7 @@ describe('generateInputField', () => {
 
     it('should return an array with the validation errors', () => {
       const renderedComponent = shallow(<Component validate="required|alpha" />);
-      expect(renderedComponent.instance().getErrors().length).toBe(2);
+      expect(renderedComponent.instance().getErrors().length).toBe(1);
     });
 
     it('should handle validations with one parameter', () => {
