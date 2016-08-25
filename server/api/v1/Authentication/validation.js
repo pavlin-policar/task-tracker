@@ -16,7 +16,10 @@ export const validateUser = (data) => {
   if (!validator.isEmail(email)) {
     errors.email.push('The email you have input is not a valid email.');
   }
-  if (!(birthday instanceof Date) && !validator.isDate(birthday)) {
+  if (
+    !(birthday instanceof Date) ||
+    (birthday instanceof String && !validator.isDate(birthday))
+  ) {
     errors.birthday.push('The date is not a valid date.');
   }
   if (!validator.isLength(password, 6)) {
