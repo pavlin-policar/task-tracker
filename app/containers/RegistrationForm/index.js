@@ -10,6 +10,7 @@ import TextField from 'components/Form/TextField';
 import EmailField from 'components/Form/EmailField';
 import PasswordField from 'components/Form/PasswordField';
 import Button from 'components/Button';
+import FormElement from 'components/FormElement';
 
 import styles from './styles.css';
 
@@ -43,30 +44,65 @@ export class RegistrationForm extends React.Component {
       >
         <FormattedMessage {...messages.header} />
 
-        <TextField
-          name="firstName"
-          placeholder="First name"
-          validate="required|alpha-dash"
+        <div className="helpText">foo</div>
+        <FormElement
+          label="First name"
+          helpText="Tell us you name"
+          inputComponent={
+            <TextField
+              name="firstName"
+              placeholder="First name"
+              validate="required|alpha-dash"
+            />
+          }
         />
-        <TextField
-          name="surname"
-          placeholder="Surname"
-          validate="required|alpha-dash"
+
+        <FormElement
+          label="Surname"
+          helpText="Tell us your last name"
+          inputComponent={
+            <TextField
+              name="surname"
+              placeholder="Surname"
+              validate="required|alpha-dash"
+            />
+          }
         />
-        <EmailField
-          name="email"
-          placeholder="example@example.com"
-          validate="required"
+
+        <FormElement
+          label="Email"
+          helpText="Tell us your email"
+          inputComponent={
+            <EmailField
+              name="email"
+              placeholder="example@example.com"
+              validate="required"
+            />
+          }
         />
-        <PasswordField
-          name="password"
-          placeholder="Password"
-          validate="required|length:6"
+
+        <FormElement
+          label="Password"
+          helpText="Enter a password"
+          inputComponent={
+            <PasswordField
+              name="password"
+              placeholder="Password"
+              validate="required|length:6"
+            />
+          }
         />
-        <PasswordField
-          name="passwordConfirmation"
-          placeholder="Confirm password"
-          validate="required|same-as:password"
+
+        <FormElement
+          label="Confirm password"
+          helpText="Please repeat your password"
+          inputComponent={
+            <PasswordField
+              name="passwordConfirmation"
+              placeholder="Confirm password"
+              validate="required|same-as:password"
+            />
+          }
         />
 
         <Button type="submit">Register</Button>
