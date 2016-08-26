@@ -113,7 +113,9 @@ export default function (type, { defaultValidations = '', className } = {}) {
         });
 
         this.setState({ errors, validated: true });
+        return errors;
       }
+      return this.state.errors;
     }
 
     /**
@@ -133,8 +135,7 @@ export default function (type, { defaultValidations = '', className } = {}) {
      * @public
      */
     getErrors() {
-      this.validate();
-      return this.state.errors;
+      return this.validate();
     }
 
     /**
@@ -142,8 +143,7 @@ export default function (type, { defaultValidations = '', className } = {}) {
      * @public
      */
     isValid() {
-      this.validate();
-      return isEmpty(this.state.errors);
+      return isEmpty(this.validate());
     }
 
     /**
