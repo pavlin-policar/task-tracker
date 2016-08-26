@@ -1,0 +1,17 @@
+.formElement { /* stylelint-ignore */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.label {
+  font-size: 2rem;
+}
+
+.input { /* stylelint-ignore */
+}
+
+.helpText {
+  font-size: .75rem;
+  color: #ccc;
+}
