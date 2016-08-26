@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { has, mapValues, merge, isEmpty, pickBy } from 'lodash';
+import { mapValues, merge, isEmpty, pickBy } from 'lodash';
 
 import styles from './styles.css';
 
@@ -15,6 +15,10 @@ class Form extends React.Component {
     onSubmit: React.PropTypes.func,
   }
 
+  static childContextTypes = {
+    registerWithForm: React.PropTypes.func,
+  }
+
   constructor(props) {
     super(props);
 
@@ -27,8 +31,12 @@ class Form extends React.Component {
     errors: {},
   }
 
-  componentWillMount() {
-    this.associatedChildren = this.associate(this.props.children);
+  getChildContext() {
+    return {
+      registerWithForm: (c) => {
+        this.setState(merge(this.state, { formElements: { [c.props.name]: c } }));
+      },
+    };
   }
 
   onSubmit(e) {
@@ -80,30 +88,13 @@ class Form extends React.Component {
     return isEmpty(this.getErrors());
   }
 
-  /**
-   * Associate the original children with the form element to keep all the data
-   * in one place.
-   *
-   * @private
-   */
-  associate(children) {
-    return React.Children.map(children, (child) => React.cloneElement(child, {
-      ref: (c) => {
-        if (has(c, 'props.name')) {
-          const { name } = c.props;
-          this.setState(merge(this.state, { formElements: { [name]: c } }));
-        }
-      },
-    }));
-  }
-
   render() {
     return (
       <form
         className={classNames(styles.form, this.props.className)}
         onSubmit={this.onSubmit}
       >
-        {this.associatedChildren}
+        {this.props.children}
       </form>
     );
   }

@@ -10,17 +10,17 @@ import styles from './styles.css';
 /**
  * Generate an `input` type field with common methods.
 
- * @param  {string} type          This should be a valid input[type] string.
- * @param  {String} [validate=''] Validations that should be run on the input
+ * @param  {string} type      This should be a valid input[type] string.
+ * @param  {object} options   Validations that should be run on the input
  *   field by default e.g. email type fields should run an email validation without
  *   the developer having to explicitly specify that every time they want to use
  *   the component.
- * @param  {String} className     A classname that should be added to the type
+ * @param  {String} className A classname that should be added to the type
  *   of component.
- * @return {Component}            A `InputField` component that renders the input
+ * @return {Component}        A `InputField` component that renders the input
  *   according to the specified options.
  */
-export default function (type, { validate = '', className } = {}) {
+export default function (type, { defaultValidations = '', className } = {}) {
   return class InputField extends React.Component {
     static displayName = `${capitalize(camelCase(type))}Field`;
 
@@ -36,6 +36,10 @@ export default function (type, { validate = '', className } = {}) {
       validate: React.PropTypes.string,
     }
 
+    static contextTypes = {
+      registerWithForm: React.PropTypes.func,
+    }
+
     static defaultProps = {
       validate: '',
     }
@@ -44,6 +48,12 @@ export default function (type, { validate = '', className } = {}) {
       value: this.props.value || '',
       validated: false,
       errors: [],
+    }
+
+    componentWillMount() {
+      if (this.props.name && this.context.registerWithForm) {
+        this.context.registerWithForm(this);
+      }
     }
 
     /**
@@ -56,7 +66,7 @@ export default function (type, { validate = '', className } = {}) {
     parseValidators() {
       // Parse validators, remove duplicates, include default validators
       const strValidators = Object.keys(
-        concat(validate.split('|'), this.props.validate.split('|'))
+        concat(defaultValidations.split('|'), this.props.validate.split('|'))
           .reduce((acc, el) => (el ? { ...acc, [el]: null } : acc), {})
       );
       return strValidators.map((strValidator) => {

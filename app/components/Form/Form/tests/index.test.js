@@ -68,6 +68,27 @@ describe('<Form />', () => {
     });
   });
 
+  describe('intereaction with deeply nested input components', () => {
+    let renderedComponent;
+    let componentInstance;
+    beforeEach(() => {
+      renderedComponent = mount(
+        <Form>
+          <div><TextField name="name" value="John" /></div>
+          <div><TextField name="surname" value="Doe" /></div>
+        </Form>
+      );
+      componentInstance = renderedComponent.instance();
+    });
+
+    it('should get data from child components with default values', () => {
+      expect(componentInstance.getData()).toEqual({
+        name: 'John',
+        surname: 'Doe',
+      });
+    });
+  });
+
   describe('validation with input type components', () => {
     let renderedComponent;
     let componentInstance;
