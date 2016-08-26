@@ -30,6 +30,7 @@ export default function (type, { defaultValidations = '', className } = {}) {
       className: React.PropTypes.string,
       name: React.PropTypes.string,
       onKeyUp: React.PropTypes.func,
+      onBlur: React.PropTypes.func,
       autoFocus: React.PropTypes.bool,
       disabled: React.PropTypes.bool,
       required: React.PropTypes.bool,
@@ -160,10 +161,12 @@ export default function (type, { defaultValidations = '', className } = {}) {
         <input
           type={type}
           name={this.props.name}
+          id={this.props.name}
           className={classNames(styles.inputField, className, this.props.className)}
           value={this.state.value}
           onChange={(e) => { this.setState({ value: e.target.value, validated: false }); }}
           onKeyUp={this.props.onKeyUp || (() => {})}
+          onBlur={this.props.onBlur || (() => {})}
           autoFocus={this.props.autoFocus || false}
           disabled={this.props.disabled || false}
           placeholder={this.props.placeholder || ''}

@@ -54,6 +54,13 @@ describe('generateInputField', () => {
       expect(onKeyUpSpy).toHaveBeenCalled();
     });
 
+    it('should trigger the onBlur property', () => {
+      const onBlurSpy = expect.createSpy();
+      const renderedComponent = shallow(<Component onBlur={onBlurSpy} />);
+      renderedComponent.find('input').simulate('blur');
+      expect(onBlurSpy).toHaveBeenCalled();
+    });
+
     it('should have its initial value set when passed down from props', () => {
       const renderedComponent = shallow(<Component value="test" />);
       expect(renderedComponent.instance().getValue()).toEqual('test');
