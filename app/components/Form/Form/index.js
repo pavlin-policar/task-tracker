@@ -151,6 +151,7 @@ class Form extends React.Component {
   /**
    * If validations are specified, check if the data is valid.
    *
+   * @return {bool}
    * @public
    */
   get valid() {
