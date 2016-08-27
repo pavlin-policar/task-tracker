@@ -10,7 +10,7 @@ class FormElement extends React.Component {
   static propTypes = {
     label: React.PropTypes.string.isRequired,
     inputComponent: React.PropTypes.element.isRequired,
-    helpText: React.PropTypes.string.isRequired,
+    helpText: React.PropTypes.string,
   }
 
   constructor(props) {
@@ -32,10 +32,12 @@ class FormElement extends React.Component {
   }
 
   onBlur() {
-    this.setState({ errors: this.input.getErrors() });
+    // this.setState({ errors: this.input.getErrors() });
   }
 
   render() {
+    const { label, helpText } = this.props;
+
     const errors = this.state.errors.map((err) => (<span key={err}>{err}</span>));
     return (
       <div className={styles.formElement}>
@@ -43,10 +45,10 @@ class FormElement extends React.Component {
           className={styles.label}
           htmlFor={(this.input && this.input.props.name) || ''}
         >
-          {this.props.label}
+          {label}
         </label>
         {this.inputComponent}
-        <span className={styles.helpText}>{this.props.helpText}</span>
+        {helpText ? (<span className={styles.helpText}>{helpText}</span>) : null}
         {errors}
       </div>
     );

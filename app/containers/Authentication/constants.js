@@ -7,6 +7,10 @@ export const REGISTRATION_REQUEST = 'app.Authentication.REGISTRATION_REQUEST';
 export const REGISTRATION_SUCCESS = 'app.Authentication.REGISTRATION_SUCCESS';
 export const REGISTRATION_FAILURE = 'app.Authentication.REGISTRATION_FAILURE';
 
+export const CHECK_EMAIL_EXISTS_REQUEST = 'app.Authentication.CHECK_EMAIL_EXISTS_REQUEST';
+export const CHECK_EMAIL_EXISTS_SUCCESS = 'app.Authentication.CHECK_EMAIL_EXISTS_SUCCESS';
+export const CHECK_EMAIL_EXISTS_FAILURE = 'app.Authentication.CHECK_EMAIL_EXISTS_FAILURE';
+
 export const LOGIN_REQUEST = 'app.Authentication.LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'app.Authentication.LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'app.Authentication.LOGIN_FAILURE';

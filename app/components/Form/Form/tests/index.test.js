@@ -52,7 +52,7 @@ describe('<Form />', () => {
     });
 
     it('should get data from child components with default values', () => {
-      expect(renderedComponent.instance().getData()).toEqual({
+      expect(renderedComponent.instance().data).toEqual({
         name: 'John',
         surname: 'Doe',
       });
@@ -61,7 +61,7 @@ describe('<Form />', () => {
     it('should handle data change', () => {
       renderedComponent.find({ name: 'name' }).simulate('change', { target: { value: 'Jane' } });
       renderedComponent.find({ name: 'surname' }).simulate('change', { target: { value: 'Smith' } });
-      expect(renderedComponent.instance().getData()).toEqual({
+      expect(renderedComponent.instance().data).toEqual({
         name: 'Jane',
         surname: 'Smith',
       });
@@ -82,7 +82,7 @@ describe('<Form />', () => {
     });
 
     it('should get data from child components with default values', () => {
-      expect(componentInstance.getData()).toEqual({
+      expect(componentInstance.data).toEqual({
         name: 'John',
         surname: 'Doe',
       });
@@ -103,17 +103,17 @@ describe('<Form />', () => {
     });
 
     it('should be invalid if the data is invalid', () => {
-      expect(componentInstance.getData()).toEqual({ name: '', surname: '' });
-      expect(componentInstance.getErrors()).toIncludeKeys(['name', 'surname']);
-      expect(componentInstance.isValid()).toBe(false);
+      expect(componentInstance.data).toEqual({ name: '', surname: '' });
+      expect(componentInstance.errors).toIncludeKeys(['name', 'surname']);
+      expect(componentInstance.valid).toBe(false);
     });
 
     it('should be valid if the data is valid', () => {
       renderedComponent.find({ name: 'name' }).simulate('change', { target: { value: 'John' } });
       renderedComponent.find({ name: 'surname' }).simulate('change', { target: { value: 'Doe' } });
-      expect(componentInstance.isValid()).toBe(true);
-      expect(componentInstance.getData()).toEqual({ name: 'John', surname: 'Doe' });
-      expect(componentInstance.getErrors()).toEqual({});
+      expect(componentInstance.valid).toBe(true);
+      expect(componentInstance.data).toEqual({ name: 'John', surname: 'Doe' });
+      expect(componentInstance.errors).toEqual({});
     });
   });
 });

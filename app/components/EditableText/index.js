@@ -65,7 +65,7 @@ class EditableText extends React.Component {
    * Trigger a save event on the editable text element.
    */
   save() {
-    const text = this.input.getValue();
+    const text = this.input.value;
     this.setState({ value: text });
     this.disableEditMode();
     (this.props.onSave || Function)(text);

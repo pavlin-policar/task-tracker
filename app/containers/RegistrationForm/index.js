@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
 import messages from './messages';
-import { register } from 'containers/Authentication/actions';
+import { register, checkEmailExists } from 'containers/Authentication/actions';
 
 import Form from 'components/Form/Form';
 import TextField from 'components/Form/TextField';
@@ -27,11 +27,16 @@ export class RegistrationForm extends React.Component {
     super(props);
 
     this.submit = this.submit.bind(this);
+    this.checkEmailExists = this.checkEmailExists.bind(this);
   }
 
+  // checkEmailExists(email) {
+  //   this.props.checkEmailExists(email);
+  // }
+
   submit() {
-    if (this.form.isValid()) {
-      this.props.register(this.form.getData());
+    if (this.form.valid) {
+      this.props.register(this.form.data);
     }
   }
 
@@ -47,7 +52,6 @@ export class RegistrationForm extends React.Component {
         <div className="helpText">foo</div>
         <FormElement
           label="First name"
-          helpText="Tell us you name"
           inputComponent={
             <TextField
               name="firstName"
@@ -59,7 +63,6 @@ export class RegistrationForm extends React.Component {
 
         <FormElement
           label="Surname"
-          helpText="Tell us your last name"
           inputComponent={
             <TextField
               name="surname"
@@ -71,19 +74,18 @@ export class RegistrationForm extends React.Component {
 
         <FormElement
           label="Email"
-          helpText="Tell us your email"
           inputComponent={
             <EmailField
               name="email"
               placeholder="example@example.com"
               validate="required"
+              serverValidate={this.checkEmailExists}
             />
           }
         />
 
         <FormElement
           label="Password"
-          helpText="Enter a password"
           inputComponent={
             <PasswordField
               name="password"
@@ -95,7 +97,6 @@ export class RegistrationForm extends React.Component {
 
         <FormElement
           label="Confirm password"
-          helpText="Please repeat your password"
           inputComponent={
             <PasswordField
               name="passwordConfirmation"
@@ -111,4 +112,4 @@ export class RegistrationForm extends React.Component {
   }
 }
 
-export default connect(null, { register })(RegistrationForm);
+export default connect(null, { register, checkEmailExists })(RegistrationForm);

@@ -2,10 +2,11 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin: 1rem 0;
 }
 
-.label {
-  font-size: 2rem;
+.label { /* stylelint-ignore */
+  font-weight: bold;
 }
 
 .input { /* stylelint-ignore */
@@ -13,5 +14,5 @@
 
 .helpText {
   font-size: .75rem;
-  color: #ccc;
+  color: #666;
 }

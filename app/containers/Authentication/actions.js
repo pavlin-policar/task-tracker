@@ -4,6 +4,9 @@ import {
   REGISTRATION_REQUEST,
   REGISTRATION_SUCCESS,
   REGISTRATION_FAILURE,
+  CHECK_EMAIL_EXISTS_REQUEST,
+  CHECK_EMAIL_EXISTS_SUCCESS,
+  CHECK_EMAIL_EXISTS_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
@@ -20,6 +23,10 @@ import {
 export const register = createAction(REGISTRATION_REQUEST);
 export const registrationSuccess = createAction(REGISTRATION_SUCCESS);
 export const registrationFailure = createAction(REGISTRATION_FAILURE);
+
+export const checkEmailExists = createAction(CHECK_EMAIL_EXISTS_REQUEST);
+export const receiveCheckEmailExists = createAction(CHECK_EMAIL_EXISTS_SUCCESS);
+export const failedCheckingEmailExists = createAction(CHECK_EMAIL_EXISTS_FAILURE);
 
 export const login = createAction(LOGIN_REQUEST);
 export const loginSuccess = createAction(LOGIN_SUCCESS);

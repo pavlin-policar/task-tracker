@@ -63,19 +63,19 @@ describe('generateInputField', () => {
 
     it('should have its initial value set when passed down from props', () => {
       const renderedComponent = shallow(<Component value="test" />);
-      expect(renderedComponent.instance().getValue()).toEqual('test');
+      expect(renderedComponent.instance().value).toEqual('test');
     });
 
     it('should change its value when user types things in', () => {
       const renderedComponent = shallow(<Component value="test" />);
       renderedComponent.simulate('change', { target: { value: 'changed' } });
-      expect(renderedComponent.instance().getValue()).toEqual('changed');
+      expect(renderedComponent.instance().value).toEqual('changed');
     });
 
     it('should clear the value when the clear method is called', () => {
       const renderedComponent = shallow(<Component value="test" />);
       renderedComponent.instance().clear();
-      expect(renderedComponent.instance().getValue()).toEqual('');
+      expect(renderedComponent.instance().value).toEqual('');
     });
   });
 
@@ -92,67 +92,6 @@ describe('generateInputField', () => {
       const renderedComponent = shallow(<Component className="propClass" />);
       expect(renderedComponent.find('input').hasClass('testClass')).toBe(true);
       expect(renderedComponent.find('input').hasClass('propClass')).toBe(true);
-    });
-  });
-
-  describe('component validations', () => {
-    let Component;
-    before(() => {
-      Component = generateInputField('text');
-    });
-
-    it('should validate single validations', () => {
-      const renderedComponent = shallow(<Component validate="required" />);
-      expect(renderedComponent.instance().isValid()).toBe(false);
-      renderedComponent.simulate('change', { target: { value: 'valid' } });
-      expect(renderedComponent.instance().isValid()).toBe(true);
-    });
-
-    it('should validate initial values', () => {
-      const renderedComponent = shallow(<Component validate="required" value="valid" />);
-      expect(renderedComponent.instance().isValid()).toBe(true);
-    });
-
-    it('should throw for unrecognized validations', () => {
-      const renderedComponent = shallow(<Component validate="unrecognized" />);
-      expect(() => { renderedComponent.instance().isValid(); }).toThrow();
-    });
-
-    it('should handle multiple validations', () => {
-      const renderedComponent = shallow(<Component validate="required|alpha" />);
-      expect(renderedComponent.instance().isValid()).toBe(false);
-      renderedComponent.simulate('change', { target: { value: '12345' } });
-      expect(renderedComponent.instance().isValid()).toBe(false);
-      renderedComponent.simulate('change', { target: { value: 'finally' } });
-      expect(renderedComponent.instance().isValid()).toBe(true);
-    });
-
-    it('should return an array with the validation errors', () => {
-      const renderedComponent = shallow(<Component validate="required|alpha" />);
-      expect(renderedComponent.instance().getErrors().length).toBe(1);
-    });
-
-    it('should handle validations with one parameter', () => {
-      const renderedComponent = shallow(<Component validate="length:5" />);
-      expect(renderedComponent.instance().isValid()).toBe(false);
-      renderedComponent.simulate('change', { target: { value: '12345' } });
-      expect(renderedComponent.instance().isValid()).toBe(true);
-    });
-
-    it('should handle validations with multiple parameters', () => {
-      const renderedComponent = shallow(<Component validate="length:3,6" />);
-      expect(renderedComponent.instance().isValid()).toBe(false);
-      renderedComponent.simulate('change', { target: { value: '1234567' } });
-      expect(renderedComponent.instance().isValid()).toBe(false);
-      renderedComponent.simulate('change', { target: { value: '12345' } });
-      expect(renderedComponent.instance().isValid()).toBe(true);
-    });
-
-    it('should handle validations with only second parameter', () => {
-      const renderedComponent = shallow(<Component validate="length:,3" value="1234" />);
-      expect(renderedComponent.instance().isValid()).toBe(false);
-      renderedComponent.simulate('change', { target: { value: '123' } });
-      expect(renderedComponent.instance().isValid()).toBe(true);
     });
   });
 });

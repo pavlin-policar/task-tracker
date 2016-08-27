@@ -1,9 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import { capitalize, camelCase, concat, isEmpty } from 'lodash';
-import invariant from 'invariant';
+import { capitalize, camelCase } from 'lodash';
 
-import * as validators from './validators';
 import styles from './styles.css';
 
 
@@ -35,125 +33,54 @@ export default function (type, { defaultValidations = '', className } = {}) {
       disabled: React.PropTypes.bool,
       required: React.PropTypes.bool,
       validate: React.PropTypes.string,
+      serverValidate: React.PropTypes.oneOfType([
+        React.PropTypes.func,
+        React.PropTypes.arrayOf(React.PropTypes.func),
+      ]),
     }
 
     static contextTypes = {
-      registerWithForm: React.PropTypes.func,
+      attachToForm: React.PropTypes.func,
+      detachFromForm: React.PropTypes.func,
+      triggerValidation: React.PropTypes.func,
     }
 
     static defaultProps = {
       validate: '',
+      defaultValidations,
     }
 
     state = {
       value: this.props.value || '',
-      validated: false,
-      errors: [],
     }
 
     componentWillMount() {
-      if (this.props.name && this.context.registerWithForm) {
-        this.context.registerWithForm(this);
+      if (this.props.name && this.context.attachToForm) {
+        this.context.attachToForm(this);
       }
     }
 
-    /**
-     * Parse the validation string passed down from props and return an object
-     * containing data to execute the validator.
-     *
-     * @return {array}
-     * @private
-     */
-    parseValidators() {
-      // Parse validators, remove duplicates, include default validators
-      const strValidators = Object.keys(
-        concat(defaultValidations.split('|'), this.props.validate.split('|'))
-          .reduce((acc, el) => (el ? { ...acc, [el]: null } : acc), {})
-      );
-      return strValidators.map((strValidator) => {
-        let validator = strValidator;
-        let params = [];
-
-        // Parameters are separated from the validation with a colon
-        if (strValidator.indexOf(':') > 0) {
-          [validator, ...params] = strValidator.split(':');
-
-          // Multiple parameters may be delimited by a comma
-          if (params[0].indexOf(',') > -1) {
-            params = params[0].split(',');
-          }
-        }
-        validator = camelCase(validator);
-        // Replace any empty string parameters with undefined
-        params = params.map((el) => (isEmpty(el) ? undefined : el));
-
-        return { validator, params };
-      });
-    }
-
-    /**
-     * @return {void}
-     * @private
-     */
-    validate() {
-      if (!this.state.validated) {
-        const errors = [];
-
-        const validatorsParams = this.parseValidators();
-        validatorsParams.forEach(({ validator, params }) => {
-          // Confirm that the validator is recognized
-          invariant(
-            validator in validators,
-            `${validator} validator is not recognized in validators.js`
-          );
-
-          if (!validators[validator](this.state.value, ...params)) {
-            errors.push(validator);
-          }
-        });
-
-        this.setState({ errors, validated: true });
-        return errors;
+    componentWillUnmount() {
+      if (this.props.name && this.context.detachFromForm) {
+        this.context.detachFromForm(this);
       }
-      return this.state.errors;
     }
 
-    /**
-     * Get the value of the field.
-     *
-     * @return {string} The value of the field.
-     * @public
-     */
-    getValue() {
+    get value() {
       return this.state.value;
     }
 
-    /**
-     * Get array of errors for the field.
-     *
-     * @return {array}
-     * @public
-     */
-    getErrors() {
-      return this.validate();
-    }
-
-    /**
-     * @return {bool}
-     * @public
-     */
-    isValid() {
-      return isEmpty(this.validate());
-    }
-
-    /**
-     * Clear the textfield of any text.
-     *
-     * @return {void}
-     * @public
-     */
     clear() {
-      this.setState({ value: '', validated: false });
+      this.setState({ value: '' });
+    }
+
+    onBlur = (e) => {
+      if (this.context.triggerValidation) {
+        this.context.triggerValidation(this);
+      }
+      if (this.props.onBlur) {
+        this.props.onBlur(e);
+      }
     }
 
     render() {
@@ -164,13 +91,13 @@ export default function (type, { defaultValidations = '', className } = {}) {
           id={this.props.name}
           className={classNames(styles.inputField, className, this.props.className)}
           value={this.state.value}
-          onChange={(e) => { this.setState({ value: e.target.value, validated: false }); }}
-          onKeyUp={this.props.onKeyUp || (() => {})}
-          onBlur={this.props.onBlur || (() => {})}
           autoFocus={this.props.autoFocus || false}
           disabled={this.props.disabled || false}
           placeholder={this.props.placeholder || ''}
           required={this.props.required || false}
+          onChange={(e) => { this.setState({ value: e.target.value }); }}
+          onKeyUp={this.props.onKeyUp || (() => {})}
+          onBlur={this.onBlur}
         />
       );
     }
