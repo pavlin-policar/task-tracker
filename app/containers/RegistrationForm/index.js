@@ -27,7 +27,6 @@ export class RegistrationForm extends React.Component {
     super(props);
 
     this.submit = this.submit.bind(this);
-    this.checkEmailExists = this.checkEmailExists.bind(this);
   }
 
   // checkEmailExists(email) {
