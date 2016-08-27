@@ -116,7 +116,7 @@ class Form extends React.Component {
         `${validator} validator is not recognized in validators.js`
       );
 
-      if (!validators[validator](component.value, ...params)) {
+      if (!validators[validator](component.value, params, this.data)) {
         errors.push(validator);
       }
     });
