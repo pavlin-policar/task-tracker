@@ -4,7 +4,7 @@ import expect from 'expect';
 import { mount } from 'enzyme';
 import React from 'react';
 
-import TextField from 'components/Form/TextField';
+import TextField from 'containers/Form/components/TextField';
 
 
 describe('<FormElement />', () => {

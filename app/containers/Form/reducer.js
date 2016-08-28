@@ -1,12 +1,12 @@
-import { handleActions } from 'redux-actions';
 import { combineReducers } from 'redux-immutable';
-import { Map } from 'immutable'
+import { Map } from 'immutable';
 
 import {
   REGISTER_FORM,
   UNREGISTER_FORM,
   ATTACH_TO_FORM,
   DETACH_FROM_FORM,
+  CHANGE,
 } from './constants';
 
 
@@ -33,10 +33,12 @@ const values = (state = Map(), action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case CHANGE:
+      return state.set(payload.name, payload.value);
     default:
       return state;
   }
-}
+};
 
 const form = combineReducers({
   fields,

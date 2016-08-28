@@ -1,13 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { mapValues, merge, isEmpty, omit, omitBy, camelCase, trimEnd } from 'lodash';
+import { mapValues, isEmpty, omitBy, camelCase, trimEnd } from 'lodash';
 import invariant from 'invariant';
 
 import {
   registerForm,
   unregisterForm,
   attachToForm,
-  detachFromForm
+  detachFromForm,
 } from './actions';
 import { getFormFields } from './selectors';
 
@@ -22,13 +22,14 @@ const generateForm = ({ id }) => (FormComponent) => {
       children: React.PropTypes.node,
       className: React.PropTypes.string,
       onSubmit: React.PropTypes.func,
+      registerForm: React.PropTypes.func.isRequired,
+      unregisterForm: React.PropTypes.func.isRequired,
+      attachToForm: React.PropTypes.func.isRequired,
+      detachFromForm: React.PropTypes.func.isRequired,
     }
 
     static childContextTypes = {
       form: React.PropTypes.object,
-      attachToForm: React.PropTypes.func,
-      detachFromForm: React.PropTypes.func,
-      triggerValidation: React.PropTypes.func,
     }
 
     constructor(props) {
@@ -37,6 +38,12 @@ const generateForm = ({ id }) => (FormComponent) => {
       this.validate = this.validate.bind(this);
     }
 
+    state = {
+      formElements: {},
+    }
+
+    getChildContext = () => ({ form: this })
+
     componentWillMount() {
       this.props.registerForm(id);
     }
@@ -44,12 +51,6 @@ const generateForm = ({ id }) => (FormComponent) => {
     componentWillUnmount() {
       this.props.unregisterForm(id);
     }
-
-    state = {
-      formElements: {},
-    }
-
-    getChildContext = () => ({ form: this })
 
     attach = (component) => this.props.attachToForm({ component, id })
     detach = (component) => this.props.detachFromForm({ component, id })
@@ -159,7 +160,8 @@ const generateForm = ({ id }) => (FormComponent) => {
           data={this.data}
           errors={this.errors}
           isValid={this.valid}
-          handleSubmit={this.handleSubmit} />
+          handleSubmit={this.handleSubmit}
+        />
       );
     }
   }
@@ -173,6 +175,6 @@ const generateForm = ({ id }) => (FormComponent) => {
     detachFromForm,
   };
   return connect(mapStateToProps, mapDispatchToProps)(FormWrapper);
-}
+};
 
 export default generateForm;
