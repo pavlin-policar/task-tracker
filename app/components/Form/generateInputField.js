@@ -52,6 +52,7 @@ export default function (type, { defaultValidations = '', className } = {}) {
 
     state = {
       value: this.props.value || '',
+      needsValidation: true,
     }
 
     componentWillMount() {
@@ -75,8 +76,9 @@ export default function (type, { defaultValidations = '', className } = {}) {
     }
 
     onBlur = (e) => {
-      if (this.context.triggerValidation) {
+      if (this.state.needsValidation && this.context.triggerValidation) {
         this.context.triggerValidation(this);
+        this.setState({ needsValidation: false });
       }
       if (this.props.onBlur) {
         this.props.onBlur(e);
@@ -95,7 +97,7 @@ export default function (type, { defaultValidations = '', className } = {}) {
           disabled={this.props.disabled || false}
           placeholder={this.props.placeholder || ''}
           required={this.props.required || false}
-          onChange={(e) => { this.setState({ value: e.target.value }); }}
+          onChange={(e) => { this.setState({ value: e.target.value, needsValidation: true }); }}
           onKeyUp={this.props.onKeyUp || (() => {})}
           onBlur={this.onBlur}
         />
