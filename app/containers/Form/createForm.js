@@ -1,6 +1,7 @@
 import React from 'react';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
-import { mapValues, isEmpty, omitBy, camelCase, trimEnd } from 'lodash';
+import { isEmpty, camelCase, trimEnd } from 'lodash';
 import invariant from 'invariant';
 
 import {
@@ -8,8 +9,9 @@ import {
   unregisterForm,
   attachToForm,
   detachFromForm,
+  change,
 } from './actions';
-import { getFormFields } from './selectors';
+import { getFormValues, getFormErrors } from './selectors';
 
 import * as validators from './validators';
 
@@ -26,6 +28,10 @@ const generateForm = ({ id }) => (FormComponent) => {
       unregisterForm: React.PropTypes.func.isRequired,
       attachToForm: React.PropTypes.func.isRequired,
       detachFromForm: React.PropTypes.func.isRequired,
+
+      values: ImmutablePropTypes.map,
+      errors: ImmutablePropTypes.map,
+      change: React.PropTypes.func.isRequired,
     }
 
     static childContextTypes = {
@@ -36,29 +42,29 @@ const generateForm = ({ id }) => (FormComponent) => {
       super(props);
 
       this.validate = this.validate.bind(this);
+      this.attach = this.attach.bind(this);
+      this.detach = this.detach.bind(this);
+      this.change = this.change.bind(this);
     }
 
-    state = {
-      formElements: {},
+    getChildContext() { return { form: this }; }
+
+    componentWillMount() { this.props.registerForm(id); }
+
+    shouldComponentUpdate(nextProps) {
+      return (
+        this.props.values !== nextProps.values ||
+        this.props.errors !== nextProps.errors
+      );
     }
 
-    getChildContext = () => ({ form: this })
+    componentWillUnmount() { this.props.unregisterForm(id); }
 
-    componentWillMount() {
-      this.props.registerForm(id);
-    }
+    attach(component) { this.props.attachToForm({ component, id }); }
+    detach(component) { this.props.detachFromForm({ component, id }); }
+    change(name, value) { this.props.change({ id, name, value }); }
 
-    componentWillUnmount() {
-      this.props.unregisterForm(id);
-    }
-
-    attach = (component) => this.props.attachToForm({ component, id })
-    detach = (component) => this.props.detachFromForm({ component, id })
-
-    handleSubmit = (callback) => (e) => {
-      e.preventDefault();
-      callback(this.data);
-    }
+    get id() { return id; }
 
     /**
      * Parse the validation string passed down from props and return an object
@@ -121,58 +127,25 @@ const generateForm = ({ id }) => (FormComponent) => {
       return errors;
     }
 
-    /**
-     * Get the form data from any elements that contain the `name` attribute.
-     *
-     * @return {object}
-     * @public
-     */
-    get data() {
-      const data = mapValues(this.state.formElements, (el) => el.getValue());
-      return data;
-    }
-
-    /**
-     * Get any validation errors from tracked elements.
-     *
-     * @return {object}
-     * @public
-     */
-    get errors() {
-      const errors = mapValues(this.state.formElements, this.validate);
-      return omitBy(errors, isEmpty);
-    }
-
-    /**
-     * If validations are specified, check if the data is valid.
-     *
-     * @return {bool}
-     * @public
-     */
-    get valid() {
-      return isEmpty(this.errors);
-    }
-
     render() {
       return React.Children.only(
         <FormComponent
-          {...this.props}
-          data={this.data}
-          errors={this.errors}
-          isValid={this.valid}
-          handleSubmit={this.handleSubmit}
+          values={this.props.values}
+          errors={this.props.errors}
         />
       );
     }
   }
   const mapStateToProps = (state) => ({
-    fields: getFormFields(id)(state),
+    values: getFormValues(id)(state),
+    errors: getFormErrors(id)(state),
   });
   const mapDispatchToProps = {
     registerForm,
     unregisterForm,
     attachToForm,
     detachFromForm,
+    change,
   };
   return connect(mapStateToProps, mapDispatchToProps)(FormWrapper);
 };

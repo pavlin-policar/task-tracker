@@ -18,7 +18,21 @@ export const getForm = (id) => createSelector(
 
 export const getFormFields = (id) => createSelector(
   getForm(id),
-  form => form.get('fields')
+  form => form.get('fields') || Map()
 );
+export const getFormValues = (id) => createSelector(
+  getForm(id),
+  form => form.get('values') || Map()
+);
+export const getFormErrors = (id) => createSelector(
+  getForm(id),
+  form => form.get('errors') || Map()
+);
+
+export const getFieldValue = (id, name) => createSelector(
+  getFormValues(id),
+  values => values.get(name)
+);
+
 
 export default getForm;

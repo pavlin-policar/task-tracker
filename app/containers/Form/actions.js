@@ -6,6 +6,8 @@ import {
   ATTACH_TO_FORM,
   DETACH_FROM_FORM,
   CHANGE,
+  FOCUS,
+  BLUR,
 } from './constants';
 
 
@@ -15,4 +17,7 @@ export const unregisterForm = createAction(UNREGISTER_FORM);
 export const attachToForm = createAction(ATTACH_TO_FORM);
 export const detachFromForm = createAction(DETACH_FROM_FORM);
 
-export const valueChanged = createAction(CHANGE);
+export const change = createAction(CHANGE, (id, name, value) => ({ id, name, value }));
+
+export const focus = createAction(FOCUS, (id, name) => ({ id, name }));
+export const blur = createAction(BLUR, (id, name) => ({ id, name }));

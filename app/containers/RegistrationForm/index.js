@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import messages from './messages';
 import { register, checkEmailExists } from 'containers/Authentication/actions';
@@ -18,8 +19,8 @@ import FormElement from 'components/FormElement';
  */
 class RegistrationForm extends React.Component {
   static propTypes = {
-    errors: React.PropTypes.object.isRequired,
-    register: React.PropTypes.func.isRequired,
+    errors: ImmutablePropTypes.mapOf(ImmutablePropTypes.list),
+    // register: React.PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -43,7 +44,7 @@ class RegistrationForm extends React.Component {
 
         <FormElement
           label="First name"
-          errors={errors.firstName}
+          errors={errors.get('firstName')}
           inputComponent={
             <TextField
               name="firstName"
@@ -55,7 +56,7 @@ class RegistrationForm extends React.Component {
 
         <FormElement
           label="Surname"
-          errors={errors.surname}
+          errors={errors.get('surname')}
           inputComponent={
             <TextField
               name="surname"
@@ -67,7 +68,7 @@ class RegistrationForm extends React.Component {
 
         <FormElement
           label="Email"
-          errors={errors.email}
+          errors={errors.get('email')}
           inputComponent={
             <EmailField
               name="email"
@@ -80,7 +81,7 @@ class RegistrationForm extends React.Component {
 
         <FormElement
           label="Password"
-          errors={errors.password}
+          errors={errors.get('password')}
           inputComponent={
             <PasswordField
               name="password"
@@ -92,7 +93,7 @@ class RegistrationForm extends React.Component {
 
         <FormElement
           label="Confirm password"
-          errors={errors.passwordConfirmation}
+          errors={errors.get('passwordConfirmation')}
           inputComponent={
             <PasswordField
               name="passwordConfirmation"
