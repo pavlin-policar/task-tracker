@@ -1,5 +1,5 @@
 import expect from 'expect';
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 
 import { Form, Field, forms, form, field } from '../reducer';
 import {
@@ -12,6 +12,82 @@ import {
 
 
 describe('Form reducers', () => {
+  describe('Field data type', () => {
+    it('should be valid when there are no errors', () => {
+      const fieldObj = new Field();
+      expect(fieldObj.isValid()).toBe(true);
+    });
+
+    it('should be invalid when there are errors', () => {
+      const fieldObj = new Field({ errors: List(['error']) });
+      expect(fieldObj.isValid()).toBe(false);
+    });
+  });
+
+  describe('Form data type', () => {
+    describe('getData', () => {
+      it('should get the data in the fields', () => {
+        const formObj = new Form({
+          fields: Map({
+            foo: new Field({ value: 'foo' }),
+            bar: new Field({ value: 'bar' }),
+            baz: new Field({ value: 'baz' }),
+          }),
+        });
+        expect(formObj.getData()).toEqual(Map({ foo: 'foo', bar: 'bar', baz: 'baz' }));
+      });
+    });
+    describe('parsingValidators', () => {
+      it('should handle multiple validators', () => {
+        const result = Form.parseValidators('foo|bar');
+        expect(result).toEqual([
+          { validator: 'foo', params: [] },
+          { validator: 'bar', params: [] },
+        ]);
+      });
+
+      it('should handle parameters', () => {
+        const result = Form.parseValidators('foo:bar,baz|bim:bam');
+        expect(result).toEqual([
+          { validator: 'foo', params: ['bar', 'baz'] },
+          { validator: 'bim', params: ['bam'] },
+        ]);
+      });
+
+      it('should convert dashes to camel case', () => {
+        const result = Form.parseValidators('i-am-a-dash');
+        expect(result).toEqual([{ validator: 'iAmADash', params: [] }]);
+      });
+    });
+    describe('validateValue', () => {
+      it('should return an array of errors if anything is wrong', () => {
+        const formObj = new Form();
+        expect(
+          formObj.validateValue('21', 'alpha|length:3')
+        ).toEqual(['alpha', 'length']);
+      });
+    });
+    describe('isValid', () => {
+      it('should be valid if the fields contain no errors', () => {
+        const formObj = new Form({ fields: Map({
+          one: new Field({ errors: List() }),
+          two: new Field({ errors: List() }),
+          three: new Field({ errors: List() }),
+        }) });
+        expect(formObj.isValid()).toBe(true);
+      });
+
+      it('should be invalid if the fields contain errors', () => {
+        const formObj = new Form({ fields: Map({
+          one: new Field({ errors: List(['error']) }),
+          two: new Field({ errors: List() }),
+          three: new Field({ errors: List() }),
+        }) });
+        expect(formObj.isValid()).toBe(false);
+      });
+    });
+  });
+
   describe('Forms reducer', () => {
     it('should register a new form', () => {
       const initialState = Map({ existing: new Form() });
@@ -51,6 +127,19 @@ describe('Form reducers', () => {
       const initialState = new Field({ value: 'original' });
       const state = field(initialState, change({ value: 'changed' }));
       expect(state.get('value')).toEqual('changed');
+    });
+
+    it('should set its validation string if one is provided', () => {
+      const initialState = new Field();
+      const state = field(initialState, attachToForm({ validationString: 'required' }));
+      expect(state.get('validationString')).toEqual('required');
+    });
+
+    it('should not change the default validation string if none is provided', () => {
+      const initialState = new Field();
+      const expected = initialState.get('validationString');
+      const state = field(initialState, attachToForm({ validationString: undefined }));
+      expect(state.get('validationString')).toEqual(expected);
     });
   });
 });
