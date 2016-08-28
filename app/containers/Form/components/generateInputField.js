@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { capitalize, camelCase } from 'lodash';
 
-import styles from './styles.css';
+import styles from '../styles.css';
 
 
 /**
@@ -40,9 +40,7 @@ export default function (type, { defaultValidations = '', className } = {}) {
     }
 
     static contextTypes = {
-      attachToForm: React.PropTypes.func,
-      detachFromForm: React.PropTypes.func,
-      triggerValidation: React.PropTypes.func,
+      form: React.PropTypes.object.isRequired,
     }
 
     static defaultProps = {
@@ -56,18 +54,18 @@ export default function (type, { defaultValidations = '', className } = {}) {
     }
 
     componentWillMount() {
-      if (this.props.name && this.context.attachToForm) {
-        this.context.attachToForm(this);
+      if (this.props.name) {
+        this.context.form.attach(this);
       }
     }
 
     componentWillUnmount() {
-      if (this.props.name && this.context.detachFromForm) {
-        this.context.detachFromForm(this);
+      if (this.props.name) {
+        this.context.form.detach(this);
       }
     }
 
-    get value() {
+    getValue() {
       return this.state.value;
     }
 
@@ -76,8 +74,7 @@ export default function (type, { defaultValidations = '', className } = {}) {
     }
 
     onBlur = (e) => {
-      if (this.state.needsValidation && this.context.triggerValidation) {
-        this.context.triggerValidation(this);
+      if (this.state.needsValidation) {
         this.setState({ needsValidation: false });
       }
       if (this.props.onBlur) {

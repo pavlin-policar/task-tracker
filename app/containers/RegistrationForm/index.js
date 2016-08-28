@@ -4,22 +4,21 @@ import { FormattedMessage } from 'react-intl';
 
 import messages from './messages';
 import { register, checkEmailExists } from 'containers/Authentication/actions';
+import createForm from 'containers/Form/createForm';
 
-import Form from 'components/Form/Form';
-import TextField from 'components/Form/TextField';
-import EmailField from 'components/Form/EmailField';
-import PasswordField from 'components/Form/PasswordField';
+import TextField from 'containers/Form/components/TextField';
+import EmailField from 'containers/Form/components/EmailField';
+import PasswordField from 'containers/Form/components/PasswordField';
 import Button from 'components/Button';
 import FormElement from 'components/FormElement';
-
-import styles from './styles.css';
 
 
 /*
  * RegistrationForm
  */
-export class RegistrationForm extends React.Component {
+class RegistrationForm extends React.Component {
   static propTypes = {
+    errors: React.PropTypes.object.isRequired,
     register: React.PropTypes.func.isRequired,
   }
 
@@ -34,23 +33,17 @@ export class RegistrationForm extends React.Component {
   // }
 
   submit() {
-    if (this.form.valid) {
-      this.props.register(this.form.data);
-    }
   }
 
   render() {
+    const { errors } = this.props;
     return (
-      <Form
-        ref={(c) => { this.form = c; }}
-        className={styles.registrationForm}
-        onSubmit={this.submit}
-      >
+      <form onSubmit={this.submit}>
         <FormattedMessage {...messages.header} />
 
-        <div className="helpText">foo</div>
         <FormElement
           label="First name"
+          errors={errors.firstName}
           inputComponent={
             <TextField
               name="firstName"
@@ -62,6 +55,7 @@ export class RegistrationForm extends React.Component {
 
         <FormElement
           label="Surname"
+          errors={errors.surname}
           inputComponent={
             <TextField
               name="surname"
@@ -73,6 +67,7 @@ export class RegistrationForm extends React.Component {
 
         <FormElement
           label="Email"
+          errors={errors.email}
           inputComponent={
             <EmailField
               name="email"
@@ -85,6 +80,7 @@ export class RegistrationForm extends React.Component {
 
         <FormElement
           label="Password"
+          errors={errors.password}
           inputComponent={
             <PasswordField
               name="password"
@@ -96,6 +92,7 @@ export class RegistrationForm extends React.Component {
 
         <FormElement
           label="Confirm password"
+          errors={errors.passwordConfirmation}
           inputComponent={
             <PasswordField
               name="passwordConfirmation"
@@ -106,9 +103,13 @@ export class RegistrationForm extends React.Component {
         />
 
         <Button type="submit">Register</Button>
-      </Form>
+      </form>
     );
   }
 }
+
+RegistrationForm = createForm({ // eslint-disable-line no-class-assign
+  id: 'registration',
+})(RegistrationForm);
 
 export default connect(null, { register, checkEmailExists })(RegistrationForm);
