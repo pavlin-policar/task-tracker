@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import messages from './messages';
 import { register, checkEmailExists } from 'containers/Authentication/actions';
@@ -19,7 +18,7 @@ import FormElement from 'components/FormElement';
  */
 class RegistrationForm extends React.Component {
   static propTypes = {
-    errors: ImmutablePropTypes.mapOf(ImmutablePropTypes.list),
+    errors: React.PropTypes.object,
     // register: React.PropTypes.func.isRequired,
   }
 

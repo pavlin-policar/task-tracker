@@ -1,5 +1,4 @@
 import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 import { isEmpty, camelCase, trimEnd } from 'lodash';
 import invariant from 'invariant';
@@ -29,8 +28,8 @@ const generateForm = ({ id }) => (FormComponent) => {
       attachToForm: React.PropTypes.func.isRequired,
       detachFromForm: React.PropTypes.func.isRequired,
 
-      values: ImmutablePropTypes.map,
-      errors: ImmutablePropTypes.map,
+      values: React.PropTypes.object,
+      errors: React.PropTypes.object,
       change: React.PropTypes.func.isRequired,
     }
 

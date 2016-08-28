@@ -1,5 +1,4 @@
 import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import { FormattedMessage } from 'react-intl';
 
 import messages from './messages';
@@ -15,7 +14,7 @@ class FormElement extends React.Component {
     label: React.PropTypes.string.isRequired,
     inputComponent: React.PropTypes.element.isRequired,
     helpText: React.PropTypes.string,
-    errors: ImmutablePropTypes.list,
+    errors: React.PropTypes.object,
   }
 
   constructor(props) {
