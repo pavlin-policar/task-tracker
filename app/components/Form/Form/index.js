@@ -50,7 +50,7 @@ class Form extends React.Component {
       triggerValidation: (el) => {
         this.setState({
           ...this.state,
-          errors: { ...this.state.errors, [name]: this.validate(el) },
+          errors: { ...this.state.errors, [el.props.name]: this.validate(el) },
         });
       },
     };
