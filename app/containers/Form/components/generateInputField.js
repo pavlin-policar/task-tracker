@@ -70,7 +70,10 @@ export default function (type, { defaultValidations = '' } = {}) {
     }
 
     componentWillMount() {
-      this.context.form.attach(this.props.name);
+      this.context.form.attach({
+        name: this.props.name,
+        validationString: this.props.validate,
+      });
     }
 
     shouldComponentUpdate() {
@@ -78,7 +81,7 @@ export default function (type, { defaultValidations = '' } = {}) {
     }
 
     componentWillUnmount() {
-      this.context.form.detach(this.props.name);
+      this.context.form.detach({ name: this.props.name });
     }
 
     /**
