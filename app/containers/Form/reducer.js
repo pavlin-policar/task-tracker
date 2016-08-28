@@ -1,5 +1,4 @@
-import { combineReducers } from 'redux-immutable';
-import { Map, List } from 'immutable';
+import { Map, List, Record } from 'immutable';
 
 import {
   REGISTER_FORM,
@@ -10,41 +9,52 @@ import {
 } from './constants';
 
 
-const values = (state = Map(), action) => {
-  const { type, payload } = action;
+/**
+ * Record definitions
+ */
 
-  switch (type) {
-    case ATTACH_TO_FORM:
-      return state.set(payload.component.props.name, '');
-    case DETACH_FROM_FORM:
-      return state.remove(payload.component.props.name);
-    case CHANGE:
-      return state.set(payload.name, payload.value);
-    default:
-      return state;
-  }
-};
-
-const errors = (state = Map(), action) => {
-  const { type, payload } = action;
-
-  switch (type) {
-    case ATTACH_TO_FORM:
-      return state.set(payload.component.props.name, List());
-    case DETACH_FROM_FORM:
-      return state.remove(payload.component.props.name);
-    case CHANGE:
-    default:
-      return state;
-  }
-};
-
-const form = combineReducers({
-  values,
-  errors,
+export const Field = Record({
+  value: '',
+  errors: List(),
+});
+export const Form = Record({
+  fields: Map(),
 });
 
-const forms = (state = Map(), action) => {
+/**
+ * Reducers
+ */
+
+export const field = (state = new Field(), action) => {
+  const { type, payload } = action;
+
+  switch (type) {
+    case CHANGE:
+      return state.set('value', payload.value);
+    default:
+      return state;
+  }
+};
+
+export const form = (state = new Form(), action) => {
+  const { type, payload } = action;
+
+  switch (type) {
+    case ATTACH_TO_FORM:
+      return state.setIn(['fields', payload.name], field(undefined, action));
+    case DETACH_FROM_FORM:
+      return state.removeIn(['fields', payload.name]);
+    case CHANGE:
+      return state.setIn(
+        ['fields', payload.name],
+        field(state.getIn(['fields', payload.name]), action)
+      );
+    default:
+      return state;
+  }
+};
+
+export const forms = (state = new Map(), action) => {
   const { type, payload } = action;
   switch (type) {
     // Register form in reducer

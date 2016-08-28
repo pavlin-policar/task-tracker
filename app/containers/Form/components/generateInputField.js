@@ -70,7 +70,7 @@ export default function (type, { defaultValidations = '' } = {}) {
     }
 
     componentWillMount() {
-      this.context.form.attach(this);
+      this.context.form.attach(this.props.name);
     }
 
     shouldComponentUpdate() {
@@ -78,12 +78,24 @@ export default function (type, { defaultValidations = '' } = {}) {
     }
 
     componentWillUnmount() {
-      this.context.form.detach(this);
+      this.context.form.detach(this.props.name);
     }
 
-    onChange(e) { this.props.change(this.formId, this.props.name, e.target.value); }
-    onFocus() { this.props.focus(this.formId, this.props.name); }
-    onBlur() { this.props.blur(this.formId, this.props.name); }
+    /**
+     * Methods that dispatch actions.
+     */
+
+    onChange(e) {
+      this.props.change({ id: this.formId, name: this.props.name, value: e.target.value });
+    }
+
+    onFocus() {
+      this.props.focus({ id: this.formId, name: this.props.name });
+    }
+
+    onBlur() {
+      this.props.blur({ id: this.formId, name: this.props.name });
+    }
 
     render() {
       return (

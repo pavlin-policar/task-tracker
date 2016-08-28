@@ -59,8 +59,8 @@ const generateForm = ({ id }) => (FormComponent) => {
 
     componentWillUnmount() { this.props.unregisterForm(id); }
 
-    attach(component) { this.props.attachToForm({ component, id }); }
-    detach(component) { this.props.detachFromForm({ component, id }); }
+    attach(name) { this.props.attachToForm({ name, id }); }
+    detach(name) { this.props.detachFromForm({ name, id }); }
     change(name, value) { this.props.change({ id, name, value }); }
 
     get id() { return id; }
