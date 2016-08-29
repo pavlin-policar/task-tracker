@@ -11,7 +11,7 @@ export const alpha = (str) => v.matches(str, /^[A-Za-z ČŠŽčšž]*$/u);
 export const alphaDash = (str) => v.matches(str, /^[A-Za-z- ČŠŽčšž]*$/u);
 
 /**
- * Complex validations
+ * Validations with other fields
  */
 
-export const sameAs = (str, { same }, formData) => eq(str, formData[same]);
+export const sameAs = (str, [same], formData) => eq(str, formData[same]);
