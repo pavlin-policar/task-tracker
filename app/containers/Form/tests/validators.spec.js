@@ -48,4 +48,12 @@ describe('validators', () => {
       invalid: ['foo', '123', ''],
     });
   });
+
+  it('should validate "email"', () => {
+    test({
+      validator: 'email',
+      valid: ['', 'example@foo.com'],
+      invalid: ['abc'],
+    });
+  });
 });
