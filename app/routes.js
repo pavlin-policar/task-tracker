@@ -26,6 +26,14 @@ export default function createRoutes(store) {
           .catch(errorLoading);
       },
     }, {
+      path: '/login',
+      name: 'login',
+      getComponent(nextState, cb) {
+        System.import('containers/Pages/LoginPage')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
       path: '/todos',
       name: 'todos',
       getComponent(nextState, cb) {
@@ -39,26 +47,6 @@ export default function createRoutes(store) {
 
         importModules.then(([reducer, sagas, component]) => {
           injectReducer('todos', reducer.default);
-          injectSagas(sagas.default);
-          renderRoute(component);
-        });
-
-        importModules.catch(errorLoading);
-      },
-    }, {
-      path: '/login',
-      name: 'loginForm',
-      getComponent(nextState, cb) {
-        const importModules = Promise.all([
-          System.import('containers/Authentication/reducer'),
-          System.import('containers/Authentication/sagas'),
-          System.import('containers/Authentication'),
-        ]);
-
-        const renderRoute = loadModule(cb);
-
-        importModules.then(([reducer, sagas, component]) => {
-          injectReducer('authentication', reducer.default);
           injectSagas(sagas.default);
           renderRoute(component);
         });

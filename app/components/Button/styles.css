@@ -4,7 +4,7 @@
 }
 
 .button {
-  padding: .4rem .5rem;
+  padding: .4rem .8rem;
   border: 1px solid var(--field-border);
   background-color: var(--button-color);
   cursor: pointer;
