@@ -2,12 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
-import messages from './messages';
-import { createTodo } from 'containers/TodosPage/actions';
+import createForm from 'containers/Form/createForm';
+import { createTodo } from 'containers/Todos/actions';
 
 import TextField from 'containers/Form/components/TextField';
 import Button from 'components/Button';
 
+import messages from './messages';
 import styles from './styles.css';
 
 
@@ -17,6 +18,7 @@ import styles from './styles.css';
 class AddTodoForm extends React.Component {
   static propTypes = {
     onCreateTodo: React.PropTypes.func.isRequired,
+    values: React.PropTypes.object,
   }
 
   constructor(props) {
@@ -27,27 +29,27 @@ class AddTodoForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const text = this.input.getValue();
-    if (text.length !== 0) {
-      this.props.onCreateTodo(text);
-      this.input.clear();
+    const value = this.props.values.get('text');
+    if (value !== '') {
+      // console.log(value);
+      // this.props.onCreateTodo(value);
     }
   }
 
   render() {
     return (
       <div className={styles.createTodoForm}>
-        <FormattedMessage {...messages.header} />
         <form onSubmit={this.handleSubmit}>
-          <TextField
-            ref={(c) => { this.input = c; }}
-            placeholder="Buy milk!"
-          />
+          <TextField name="text" placeholder="Buy milk!" />
           <Button type="submit"><FormattedMessage {...messages.createTodoButton} /></Button>
         </form>
       </div>
       );
   }
 }
+
+AddTodoForm = createForm({ // eslint-disable-line no-class-assign
+  id: 'addTodo',
+})(AddTodoForm);
 
 export default connect(null, { createTodo })(AddTodoForm);

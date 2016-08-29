@@ -43,5 +43,9 @@ h1 {
   text-align: center;
 }
 
+:global(.right) {
+  text-align: right;
+}
+
 .app {  /* stylelint-ignore */
 }

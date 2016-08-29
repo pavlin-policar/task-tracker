@@ -11,7 +11,7 @@ import {
   deleteTodo,
 } from './actions';
 
-import AddTodoForm from 'containers/AddTodoForm';
+import AddTodoForm from 'containers/Forms/AddTodoForm';
 import TodoList from 'components/TodoList';
 
 import styles from './styles.css';
