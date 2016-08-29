@@ -26,7 +26,8 @@ span {
 }
 
 h1 {
-  margin: 1.5rem 0 3rem;
+  margin: 1.5rem 0 2.5rem;
+  font-size: 1.8rem;
 }
 
 :global(.wrap) {
