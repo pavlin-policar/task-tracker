@@ -105,12 +105,12 @@ describe('Form reducers', () => {
         one: new Field({ value: '', validationString: 'required|length:3' }),
         two: new Field({ value: '123', validationString: 'alpha' }),
       }) });
-      expect(formObj.validate()).toEqual(
-        new Form({ fields: Map({
-          one: new Field({ value: '', validationString: 'required|length:3', errors: List(['required', 'length']) }),
-          two: new Field({ value: '123', validationString: 'alpha', errors: List(['alpha']) }),
-        }) })
-      );
+      expect(
+        formObj.validate().getIn(['fields', 'one', 'errors'])
+      ).toEqual(List(['required', 'length']));
+      expect(
+        formObj.validate().getIn(['fields', 'two', 'errors'])
+      ).toEqual(List(['alpha']));
     });
   });
 
