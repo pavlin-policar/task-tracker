@@ -8,7 +8,11 @@ import {
   detachFromForm,
   change,
 } from './actions';
-import { getFormValues, getFormErrors } from './selectors';
+import {
+  getFormValues,
+  getFormErrors,
+  getFormIsValid,
+} from './selectors';
 
 
 const generateForm = ({ id }) => (FormComponent) => {
@@ -16,17 +20,14 @@ const generateForm = ({ id }) => (FormComponent) => {
     static displayName = `Form(${FormComponent.displayName})`
 
     static propTypes = {
-      children: React.PropTypes.node,
-      className: React.PropTypes.string,
-      onSubmit: React.PropTypes.func,
+      values: React.PropTypes.object.isRequired,
+      errors: React.PropTypes.object.isRequired,
+      isValid: React.PropTypes.bool.isRequired,
+      change: React.PropTypes.func.isRequired,
       registerForm: React.PropTypes.func.isRequired,
       unregisterForm: React.PropTypes.func.isRequired,
       attachToForm: React.PropTypes.func.isRequired,
       detachFromForm: React.PropTypes.func.isRequired,
-
-      values: React.PropTypes.object,
-      errors: React.PropTypes.object,
-      change: React.PropTypes.func.isRequired,
     }
 
     static childContextTypes = {
@@ -65,6 +66,7 @@ const generateForm = ({ id }) => (FormComponent) => {
         <FormComponent
           values={this.props.values}
           errors={this.props.errors}
+          isValid={this.props.isValid}
         />
       );
     }
@@ -72,6 +74,7 @@ const generateForm = ({ id }) => (FormComponent) => {
   const mapStateToProps = (state) => ({
     values: getFormValues(id)(state),
     errors: getFormErrors(id)(state),
+    isValid: getFormIsValid(id)(state),
   });
   const mapDispatchToProps = {
     registerForm,
