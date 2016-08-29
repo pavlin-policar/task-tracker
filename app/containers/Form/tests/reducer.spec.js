@@ -146,6 +146,12 @@ describe('Form reducers', () => {
       expect(state.hasIn(['fields', 'one'])).toBe(true);
       expect(state.hasIn(['fields', 'two'])).toBe(false);
     });
+
+    it('should set the initial value if one is passed when attaching to a form', () => {
+      const initialState = new Form();
+      const state = form(initialState, attachToForm({ name: 'field', initialValue: 'cookies' }));
+      expect(state.getIn(['fields', 'field', 'value'])).toEqual('cookies');
+    });
   });
 
   describe('Field reducer', () => {

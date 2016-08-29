@@ -115,9 +115,13 @@ export const field = (state = new Field(), action) => {
 
   switch (type) {
     case ATTACH_TO_FORM:
-      return payload.validationString ?
-        state.set('validationString', payload.validationString) :
-        state;
+      return state.set(
+        'validationString',
+        payload.validationString || state.get('validationString')
+      ).set(
+        'value',
+        payload.initialValue || state.get('initialValue')
+      );
     case CHANGE:
       return state.set('value', payload.value).set('needsValidation', true);
     default:
@@ -135,8 +139,10 @@ export const form = (state = new Form(), action) => {
     case DETACH_FROM_FORM:
       return state.removeIn(['fields', payload.name]);
     case CHANGE:
-      return state.setIn(['fields', payload.name], field(state.getIn(['fields', payload.name]), action))
-        .validate();
+      return state.setIn(
+        ['fields', payload.name],
+        field(state.getIn(['fields', payload.name]), action)
+      ).validate();
     default:
       return state;
   }
