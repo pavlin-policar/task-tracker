@@ -33,6 +33,10 @@ export class Form extends FormRecord {
     return this.fields.map(f => f.get('value'));
   }
 
+  getErrors() {
+    return this.fields.map(f => f.get('errors'));
+  }
+
   /**
    * Parse the validation string passed down from props and return an object
    * containing data to execute the validator.
@@ -78,7 +82,7 @@ export class Form extends FormRecord {
         `${validator} validator is not recognized in validators.js`
       );
 
-      if (!validators[validator](value, params, this.getData())) {
+      if (!validators[validator](value, params, this.getData().toJS())) {
         errors.push(validator);
       }
     });
@@ -87,7 +91,9 @@ export class Form extends FormRecord {
   }
 
   validate() {
-
+    return this.set('fields', this.fields.map(f => f.set('errors', List(
+      this.validateValue(f.get('value'), f.get('validationString'))
+    ))));
   }
 
   isValid() {
@@ -124,9 +130,9 @@ export const form = (state = new Form(), action) => {
       return state.removeIn(['fields', payload.name]);
     case CHANGE:
       return state.setIn(
-        ['fields', payload.name],
-        field(state.getIn(['fields', payload.name]), action)
-      );
+          ['fields', payload.name],
+          field(state.getIn(['fields', payload.name]), action)
+        ).validate();
     default:
       return state;
   }

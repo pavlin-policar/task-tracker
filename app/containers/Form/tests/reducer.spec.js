@@ -37,6 +37,20 @@ describe('Form reducers', () => {
         expect(formObj.getData()).toEqual(Map({ foo: 'foo', bar: 'bar', baz: 'baz' }));
       });
     });
+    describe('getErrors', () => {
+      it('should get the errors in the fields', () => {
+        const formObj = new Form({
+          fields: Map({
+            foo: new Field({ errors: List() }),
+            bar: new Field({ errors: List([1]) }),
+            baz: new Field({ errors: List([1, 2]) }),
+          }),
+        });
+        expect(formObj.getErrors()).toEqual(
+          Map({ foo: List(), bar: List([1]), baz: List([1, 2]) })
+        );
+      });
+    });
     describe('parsingValidators', () => {
       it('should handle multiple validators', () => {
         const result = Form.parseValidators('foo|bar');
@@ -85,6 +99,18 @@ describe('Form reducers', () => {
         }) });
         expect(formObj.isValid()).toBe(false);
       });
+    });
+    describe('validate', () => {
+      const formObj = new Form({ fields: Map({
+        one: new Field({ value: '', validationString: 'required|length:3' }),
+        two: new Field({ value: '123', validationString: 'alpha' }),
+      }) });
+      expect(formObj.validate()).toEqual(
+        new Form({ fields: Map({
+          one: new Field({ value: '', validationString: 'required|length:3', errors: List(['required', 'length']) }),
+          two: new Field({ value: '123', validationString: 'alpha', errors: List(['alpha']) }),
+        }) })
+      );
     });
   });
 
