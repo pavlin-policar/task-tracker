@@ -1,5 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import classNames from 'classnames';
+import { List } from 'immutable';
 
 import messages from './messages';
 
@@ -15,6 +17,10 @@ class FormElement extends React.Component {
     inputComponent: React.PropTypes.element.isRequired,
     helpText: React.PropTypes.string,
     errors: React.PropTypes.object,
+  }
+
+  static defaultProps = {
+    errors: List(),
   }
 
   constructor(props) {
@@ -37,8 +43,22 @@ class FormElement extends React.Component {
   render() {
     const { label, helpText, errors } = this.props;
 
+    let errorsMessages = [];
+    errors.forEach((error) => {
+      errorsMessages.push(
+        <span key={error} className={styles.errorText}>
+          <FormattedMessage {...messages[error]} />
+        </span>
+      );
+    });
+
     return (
-      <div className={styles.formElement}>
+      <div
+        className={classNames({
+          [styles.formElement]: true,
+          [styles.error]: errors.size > 0,
+        })}
+      >
         <label
           className={styles.label}
           htmlFor={(this.input && this.input.props.name) || ''}
@@ -47,7 +67,7 @@ class FormElement extends React.Component {
         </label>
         {this.inputComponent}
         {helpText ? (<span className={styles.helpText}>{helpText}</span>) : null}
-        {(errors || []).map((error) => (<FormattedMessage key={error} {...messages[error]} />))}
+        {errorsMessages}
       </div>
     );
   }

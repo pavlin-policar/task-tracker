@@ -6,7 +6,6 @@
 }
 
 .label { /* stylelint-ignore */
-  font-weight: bold;
 }
 
 .input { /* stylelint-ignore */
@@ -15,4 +14,16 @@
 .helpText {
   font-size: .75rem;
   color: #666;
+}
+
+.error .input {
+  border-color: #f03c3c;
+}
+
+.error .label {
+  color: #f03c3c;
+}
+
+.errorText {
+  color: #f03c3c;
 }

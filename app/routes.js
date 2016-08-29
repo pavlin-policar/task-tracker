@@ -21,7 +21,7 @@ export default function createRoutes(store) {
       path: '/register',
       name: 'register',
       getComponent(nextState, cb) {
-        System.import('containers/RegistrationForm')
+        System.import('containers/Pages/RegistrationPage')
           .then(loadModule(cb))
           .catch(errorLoading);
       },

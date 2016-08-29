@@ -1,0 +1,8 @@
+.footerContainer { /* stylelint-ignore */
+  background: #2d2d2d;
+  color: #999;
+}
+
+.footer {
+  padding: 1.5rem;
+}

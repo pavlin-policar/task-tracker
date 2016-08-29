@@ -1,10 +1,43 @@
 /**
  * styles.css
  *
- * App container styles
+ * App styles
  */
 
-.container {
-  display: block;
+html {
+  cursor: auto;
+}
+
+body {
+  font-family: Helvetica, Verdana;
+  min-height: 100%;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span {
+  font-weight: lighter;
+}
+
+h1 {
+  margin: 1.5rem 0 3rem;
+}
+
+:global(.wrap) {
+  max-width: 1200px;
   margin: 0 auto;
+}
+
+:global(.space-after) {
+  margin-bottom: 1.5rem;
+}
+
+:global(.center) {
+  text-align: center;
 }

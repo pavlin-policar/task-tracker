@@ -6,8 +6,16 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  header: {
-    id: 'app.components.Header.header',
-    defaultMessage: 'This is the Header component !',
+  register: {
+    id: 'app.components.Header.register',
+    defaultMessage: 'Register',
+  },
+  login: {
+    id: 'app.components.Header.login',
+    defaultMessage: 'Login',
+  },
+  logout: {
+    id: 'app.components.Header.logout',
+    defaultMessage: 'Logout',
   },
 });
