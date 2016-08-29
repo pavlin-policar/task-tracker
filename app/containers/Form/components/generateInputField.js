@@ -10,7 +10,7 @@ import {
   focus,
   blur,
 } from '../actions';
-import { getFieldValue } from '../selectors';
+import { getFieldValue, getFieldTouched } from '../selectors';
 
 import styles from '../styles.css';
 
@@ -39,6 +39,7 @@ export function generateInputComponent(type, { validate = '' } = {}) {
       disabled: React.PropTypes.bool,
       required: React.PropTypes.bool,
       validate: React.PropTypes.string,
+      formId: React.PropTypes.string.isRequired,
       // Event callbacks
       onKeyUp: React.PropTypes.func,
       onChange: React.PropTypes.func,
@@ -46,6 +47,7 @@ export function generateInputComponent(type, { validate = '' } = {}) {
       onBlur: React.PropTypes.func,
       // Connected values
       value: React.PropTypes.string,
+      touched: React.PropTypes.bool,
       // Dispatch methods
       blur: React.PropTypes.func,
       focus: React.PropTypes.func,
@@ -67,8 +69,6 @@ export function generateInputComponent(type, { validate = '' } = {}) {
         this.context.form,
         'Input type elements must be contained within a valid `Form` component!'
       );
-
-      this.formId = context.form.id;
 
       this.onChange = this.onChange.bind(this);
       this.onFocus = this.onFocus.bind(this);
@@ -98,7 +98,7 @@ export function generateInputComponent(type, { validate = '' } = {}) {
     onChange(e) {
       if ((this.props.onChange && this.props.onChange(e)) || !this.props.onChange) {
         this.props.change({
-          id: this.formId,
+          id: this.props.formId,
           name: this.props.name,
           value: e.target.value,
         });
@@ -106,14 +106,14 @@ export function generateInputComponent(type, { validate = '' } = {}) {
     }
 
     onFocus() {
-      this.props.focus({ id: this.formId, name: this.props.name });
+      this.props.focus({ id: this.props.formId, name: this.props.name });
       if (this.props.onFocus) {
         this.props.onFocus();
       }
     }
 
     onBlur() {
-      this.props.blur({ id: this.formId, name: this.props.name });
+      this.props.blur({ id: this.props.formId, name: this.props.name });
       if (this.props.onBlur) {
         this.props.onBlur();
       }
@@ -150,6 +150,7 @@ export default function generateInputField(...params) {
 
   const mapStateToProps = (state, { formId, name }) => ({
     value: getFieldValue(formId, name)(state),
+    touched: getFieldTouched(formId, name)(state),
   });
   const mapDispatchToProps = {
     change,

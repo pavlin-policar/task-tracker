@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import Header from 'components/Header';
 
-// import styles from './styles.css';
+import styles from './styles.css';
 
 /**
  * App.react.js
@@ -24,7 +24,7 @@ export default class App extends React.Component { // eslint-disable-line react/
 
   render() {
     return (
-      <div>
+      <div className={styles.app}>
         <Header />
         <div className={classNames('container-fluid', 'wrap')}>
           {React.Children.toArray(this.props.children)}

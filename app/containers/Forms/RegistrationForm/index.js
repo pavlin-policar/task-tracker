@@ -18,9 +18,11 @@ import FormElement from 'components/FormElement';
  */
 class RegistrationForm extends React.Component {
   static propTypes = {
+    // Connected props
     errors: React.PropTypes.object,
     values: React.PropTypes.object,
     isValid: React.PropTypes.bool,
+    fieldsTouched: React.PropTypes.object,
     // register: React.PropTypes.func.isRequired,
   }
 
@@ -44,73 +46,74 @@ class RegistrationForm extends React.Component {
   }
 
   render() {
-    const { errors } = this.props;
+    const { errors, fieldsTouched } = this.props;
     return (
       <form onSubmit={this.submit}>
-        <FormattedMessage {...messages.header} />
-
-        <FormElement
-          label="First name"
-          errors={errors.get('firstName')}
-          inputComponent={
-            <TextField
+        <p><FormattedMessage {...messages.fillInDataText} /></p>
+        <div className="row">
+          <div className="col-md-6">
+            <FormElement
+              errors={errors.get('firstName')}
+              touched={fieldsTouched.get('firstName')}
+              type={TextField}
               name="firstName"
               placeholder="First name"
               validate="required|alpha-dash"
             />
-          }
-        />
-
-        <FormElement
-          label="Surname"
-          errors={errors.get('surname')}
-          inputComponent={
-            <TextField
+          </div>
+          <div className="col-md-6">
+            <FormElement
+              errors={errors.get('surname')}
+              touched={fieldsTouched.get('surname')}
+              type={TextField}
               name="surname"
               placeholder="Surname"
               validate="required|alpha-dash"
             />
-          }
-        />
-
-        <FormElement
-          label="Email"
-          errors={errors.get('email')}
-          inputComponent={
-            <EmailField
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md">
+            <FormElement
+              errors={errors.get('email')}
+              touched={fieldsTouched.get('email')}
+              type={EmailField}
               name="email"
-              placeholder="example@example.com"
+              placeholder="Email"
               validate="required"
               serverValidate={this.checkEmailExists}
             />
-          }
-        />
-
-        <FormElement
-          label="Password"
-          errors={errors.get('password')}
-          inputComponent={
-            <PasswordField
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md">
+            <FormElement
+              errors={errors.get('password')}
+              touched={fieldsTouched.get('password')}
+              type={PasswordField}
               name="password"
               placeholder="Password"
               validate="length:6"
             />
-          }
-        />
-
-        <FormElement
-          label="Confirm password"
-          errors={errors.get('passwordConfirmation')}
-          inputComponent={
-            <PasswordField
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md">
+            <FormElement
+              errors={errors.get('passwordConfirmation')}
+              touched={fieldsTouched.get('passwordConfirmation')}
+              type={PasswordField}
               name="passwordConfirmation"
               placeholder="Confirm password"
               validate="same-as:password"
             />
-          }
-        />
-
-        <Button type="submit">Register</Button>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md">
+            <Button type="submit">Register</Button>
+          </div>
+        </div>
       </form>
     );
   }

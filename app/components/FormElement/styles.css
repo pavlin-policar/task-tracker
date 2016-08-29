@@ -2,13 +2,14 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin: 1rem 0;
+  margin: .5rem 0;
 }
 
 .label { /* stylelint-ignore */
 }
 
 .input { /* stylelint-ignore */
+  font-weight: lighter;
 }
 
 .helpText {
@@ -25,5 +26,6 @@
 }
 
 .errorText {
+  font-size: .9rem;
   color: #f03c3c;
 }

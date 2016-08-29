@@ -8,6 +8,7 @@ import {
   attachToForm,
   detachFromForm,
   change,
+  blur,
 } from '../actions';
 
 
@@ -187,6 +188,12 @@ describe('Form reducers', () => {
       const expected = initialState.get('validationString');
       const state = field(initialState, attachToForm({ validationString: undefined }));
       expect(state.get('validationString')).toEqual(expected);
+    });
+
+    it('should set itself to touched on a blur event', () => {
+      const initialState = new Field();
+      const state = field(initialState, blur());
+      expect(state.get('touched')).toBe(true);
     });
   });
 });

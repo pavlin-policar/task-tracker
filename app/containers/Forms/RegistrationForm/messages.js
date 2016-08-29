@@ -6,8 +6,8 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  header: {
-    id: 'app.containers.RegistrationForm.header',
-    defaultMessage: 'This is RegistrationForm container !',
+  fillInDataText: {
+    id: 'app.containers.RegistrationForm.fillInDataText',
+    defaultMessage: 'Fill in the blanks with your data to register an account.',
   },
 });

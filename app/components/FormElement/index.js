@@ -13,61 +13,52 @@ import styles from './styles.css';
 */
 class FormElement extends React.Component {
   static propTypes = {
-    label: React.PropTypes.string.isRequired,
-    inputComponent: React.PropTypes.element.isRequired,
+    label: React.PropTypes.string,
+    type: React.PropTypes.func.isRequired,
+    name: React.PropTypes.string.isRequired,
+    placeholder: React.PropTypes.string.isRequired,
+    validate: React.PropTypes.string,
     helpText: React.PropTypes.string,
     errors: React.PropTypes.object,
+    touched: React.PropTypes.bool,
   }
 
   static defaultProps = {
     errors: List(),
   }
 
-  constructor(props) {
-    super(props);
-
-    this.onBlur = this.onBlur.bind(this);
-  }
-
-  componentWillMount() {
-    this.inputComponent = React.cloneElement(this.props.inputComponent, {
-      ref: (c) => { this.input = c; },
-      className: styles.input,
-      onBlur: this.onBlur,
-    });
-  }
-
-  onBlur() {
-  }
-
   render() {
-    const { label, helpText, errors } = this.props;
+    const { label, helpText, errors, touched } = this.props;
 
-    let errorsMessages = [];
-    errors.forEach((error) => {
-      errorsMessages.push(
-        <span key={error} className={styles.errorText}>
-          <FormattedMessage {...messages[error]} />
-        </span>
-      );
-    });
+    const errorsMessages = errors.map((error) => (
+      <span key={error} className={styles.errorText}>
+        <FormattedMessage {...messages[error]} />
+      </span>
+    ));
 
     return (
       <div
         className={classNames({
           [styles.formElement]: true,
-          [styles.error]: errors.size > 0,
+          [styles.error]: (errors.size > 0) && touched,
         })}
       >
-        <label
-          className={styles.label}
-          htmlFor={(this.input && this.input.props.name) || ''}
-        >
-          {label}
-        </label>
-        {this.inputComponent}
+        {label ? (
+          <label
+            className={styles.label}
+            htmlFor={(this.input && this.input.props.name) || ''}
+          >
+            {label}
+          </label>
+        ) : null}
+        <this.props.type
+          className={styles.input}
+          name={this.props.name}
+          placeholder={this.props.placeholder}
+          validate={this.props.validate}
+        />
         {helpText ? (<span className={styles.helpText}>{helpText}</span>) : null}
-        {errorsMessages}
+        {touched ? errorsMessages : null}
       </div>
     );
   }

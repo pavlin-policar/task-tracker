@@ -8,6 +8,7 @@ import {
   ATTACH_TO_FORM,
   DETACH_FROM_FORM,
   CHANGE,
+  BLUR,
 } from './constants';
 import * as validators from './validators';
 
@@ -22,6 +23,7 @@ const FieldRecord = Record({
   validators: [],
   errors: List(),
   needsValidation: true,
+  touched: false,
 });
 export class Field extends FieldRecord {
   isValid() { return this.get('errors').isEmpty(); }
@@ -132,6 +134,8 @@ export const field = (state = new Field(), action) => {
       ).set(
         'name', payload.name || state.get('name')
       );
+    case BLUR:
+      return state.set('touched', true);
     case CHANGE:
       return state.set('value', payload.value).setNeedsValidation(payload);
     default:
@@ -148,6 +152,11 @@ export const form = (state = new Form(), action) => {
         .validate();
     case DETACH_FROM_FORM:
       return state.removeIn(['fields', payload.name]);
+    case BLUR:
+      return state.setIn(
+        ['fields', payload.name],
+        field(state.getIn(['fields', payload.name]), action)
+      );
     case CHANGE:
       return state.set(
         'fields',
@@ -173,6 +182,7 @@ export const forms = (state = new Map(), action) => {
     case ATTACH_TO_FORM:
     case DETACH_FROM_FORM:
     case CHANGE:
+    case BLUR:
       return state.set(payload.id, form(state.get(payload.id), action));
     default:
       return state;

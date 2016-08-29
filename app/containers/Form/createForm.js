@@ -12,6 +12,7 @@ import {
   getFormValues,
   getFormErrors,
   getFormIsValid,
+  getFormTouchedFields,
 } from './selectors';
 
 
@@ -20,9 +21,12 @@ const generateForm = ({ id }) => (FormComponent) => {
     static displayName = `Form(${FormComponent.displayName})`
 
     static propTypes = {
+      // Connected values
       values: React.PropTypes.object.isRequired,
       errors: React.PropTypes.object.isRequired,
       isValid: React.PropTypes.bool.isRequired,
+      fieldsTouched: React.PropTypes.object,
+      // Dispatch methods
       change: React.PropTypes.func.isRequired,
       registerForm: React.PropTypes.func.isRequired,
       unregisterForm: React.PropTypes.func.isRequired,
@@ -50,7 +54,8 @@ const generateForm = ({ id }) => (FormComponent) => {
       return (
         this.props.values !== nextProps.values ||
         this.props.errors !== nextProps.errors ||
-        this.props.isValid !== nextProps.isValid
+        this.props.isValid !== nextProps.isValid ||
+        this.props.fieldsTouched !== nextProps.fieldsTouched
       );
     }
 
@@ -68,6 +73,7 @@ const generateForm = ({ id }) => (FormComponent) => {
           values={this.props.values}
           errors={this.props.errors}
           isValid={this.props.isValid}
+          fieldsTouched={this.props.fieldsTouched}
         />
       );
     }
@@ -76,6 +82,7 @@ const generateForm = ({ id }) => (FormComponent) => {
     values: getFormValues(id)(state),
     errors: getFormErrors(id)(state),
     isValid: getFormIsValid(id)(state),
+    fieldsTouched: getFormTouchedFields(id)(state),
   });
   const mapDispatchToProps = {
     registerForm,
