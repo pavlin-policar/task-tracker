@@ -1,4 +1,7 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
+
+import messages from './messages';
 
 import styles from './styles.css';
 
@@ -11,16 +14,13 @@ class FormElement extends React.Component {
     label: React.PropTypes.string.isRequired,
     inputComponent: React.PropTypes.element.isRequired,
     helpText: React.PropTypes.string,
+    errors: React.PropTypes.object,
   }
 
   constructor(props) {
     super(props);
 
     this.onBlur = this.onBlur.bind(this);
-  }
-
-  state = {
-    errors: [],
   }
 
   componentWillMount() {
@@ -32,13 +32,11 @@ class FormElement extends React.Component {
   }
 
   onBlur() {
-    // this.setState({ errors: this.input.getErrors() });
   }
 
   render() {
-    const { label, helpText } = this.props;
+    const { label, helpText, errors } = this.props;
 
-    const errors = this.state.errors.map((err) => (<span key={err}>{err}</span>));
     return (
       <div className={styles.formElement}>
         <label
@@ -49,7 +47,7 @@ class FormElement extends React.Component {
         </label>
         {this.inputComponent}
         {helpText ? (<span className={styles.helpText}>{helpText}</span>) : null}
-        {errors}
+        {(errors || []).map((error) => (<FormattedMessage key={error} {...messages[error]} />))}
       </div>
     );
   }

@@ -6,20 +6,18 @@ import * as validator from '../validators';
 
 function test(options) {
   const args = options.args || [];
-  args.unshift(null);
+  const values = options.values || [];
 
   let result = [];
   if (options.valid) {
-    result = concat(result, options.valid.map((valid) => {
-      args[0] = valid;
-      return validator[options.validator](...args) === true;
-    }));
+    result = concat(result, options.valid.map((valid) =>
+      validator[options.validator](valid, args, values) === true
+    ));
   }
   if (options.invalid) {
-    result = concat(result, options.invalid.map((invalid) => {
-      args[0] = invalid;
-      return validator[options.validator](...args) === false;
-    }));
+    result = concat(result, options.invalid.map((invalid) =>
+      validator[options.validator](invalid, args, values) === false
+    ));
   }
   expect(result.every(el => el === true)).toBe(true);
 }
@@ -38,6 +36,16 @@ describe('validators', () => {
       validator: 'alphaDash',
       valid: ['foo', 'bar', 'foo-bar'],
       invalid: ['123', '1abc', 'abc_123'],
+    });
+  });
+
+  it('should validate "sameAs"', () => {
+    test({
+      validator: 'sameAs',
+      args: ['foo'],
+      values: { foo: 'bar' },
+      valid: ['bar'],
+      invalid: ['foo', '123', ''],
     });
   });
 });
