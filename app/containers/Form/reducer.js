@@ -20,6 +20,7 @@ const FieldRecord = Record({
   value: '',
   validationString: '',
   errors: List(),
+  needsValidation: true,
 });
 export class Field extends FieldRecord {
   isValid() { return this.get('errors').isEmpty(); }
@@ -91,9 +92,13 @@ export class Form extends FormRecord {
   }
 
   validate() {
-    return this.set('fields', this.fields.map(f => f.set('errors', List(
-      this.validateValue(f.get('value'), f.get('validationString'))
-    ))));
+    return this.set('fields', this.fields.map((f) => {
+      if (f.get('needsValidation')) {
+        return f.set('errors', List(this.validateValue(f.get('value'), f.get('validationString'))))
+          .set('needsValidation', false);
+      }
+      return f;
+    }));
   }
 
   isValid() {
@@ -114,7 +119,7 @@ export const field = (state = new Field(), action) => {
         state.set('validationString', payload.validationString) :
         state;
     case CHANGE:
-      return state.set('value', payload.value);
+      return state.set('value', payload.value).set('needsValidation', true);
     default:
       return state;
   }
@@ -125,14 +130,13 @@ export const form = (state = new Form(), action) => {
 
   switch (type) {
     case ATTACH_TO_FORM:
-      return state.setIn(['fields', payload.name], field(undefined, action));
+      return state.setIn(['fields', payload.name], field(undefined, action))
+        .validate();
     case DETACH_FROM_FORM:
       return state.removeIn(['fields', payload.name]);
     case CHANGE:
-      return state.setIn(
-          ['fields', payload.name],
-          field(state.getIn(['fields', payload.name]), action)
-        ).validate();
+      return state.setIn(['fields', payload.name], field(state.getIn(['fields', payload.name]), action))
+        .validate();
     default:
       return state;
   }
