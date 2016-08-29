@@ -21,12 +21,12 @@ export const getFormFields = (id) => createSelector(
   form => form.get('fields') || Map()
 );
 export const getFormValues = (id) => createSelector(
-  getForm(id),
-  form => form.get('values') || Map()
+  getFormFields(id),
+  fields => fields.map(f => f.get('value')) || Map()
 );
 export const getFormErrors = (id) => createSelector(
-  getForm(id),
-  form => form.get('errors') || Map()
+  getFormFields(id),
+  fields => fields.map(f => f.get('errors')) || Map()
 );
 export const getFormIsValid = (id) => createSelector(
   getForm(id),
@@ -36,7 +36,7 @@ export const getFormIsValid = (id) => createSelector(
 // Field selectors
 export const getFieldValue = (id, name) => createSelector(
   getFormValues(id),
-  values => values.get(name)
+  values => values.get(name) || ''
 );
 
 

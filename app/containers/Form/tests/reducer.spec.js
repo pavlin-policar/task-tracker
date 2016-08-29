@@ -77,7 +77,10 @@ describe('Form reducers', () => {
       it('should return an array of errors if anything is wrong', () => {
         const formObj = new Form();
         expect(
-          formObj.validateValue('21', 'alpha|length:3')
+          formObj.validateValue('21', [
+            { validator: 'alpha' },
+            { validator: 'length', params: ['3'] },
+          ])
         ).toEqual(['alpha', 'length']);
       });
     });
@@ -102,8 +105,20 @@ describe('Form reducers', () => {
     });
     describe('validate', () => {
       const formObj = new Form({ fields: Map({
-        one: new Field({ value: '', validationString: 'required|length:3' }),
-        two: new Field({ value: '123', validationString: 'alpha' }),
+        one: new Field({
+          value: '',
+          validators: [
+            { validator: 'required' },
+            { validator: 'length', params: ['3'] },
+          ],
+        }),
+        two: new Field({
+          value: '123',
+          validators: [
+            { validator: 'alpha' },
+            { validator: 'length', params: ['3'] },
+          ],
+        }),
       }) });
       expect(
         formObj.validate().getIn(['fields', 'one', 'errors'])
@@ -161,10 +176,10 @@ describe('Form reducers', () => {
       expect(state.get('value')).toEqual('changed');
     });
 
-    it('should set its validation string if one is provided', () => {
+    it('should parse its validation string if one is provided', () => {
       const initialState = new Field();
       const state = field(initialState, attachToForm({ validationString: 'required' }));
-      expect(state.get('validationString')).toEqual('required');
+      expect(state.get('validators')).toEqual([{ validator: 'required', params: [] }]);
     });
 
     it('should not change the default validation string if none is provided', () => {

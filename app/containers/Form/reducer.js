@@ -17,13 +17,21 @@ import * as validators from './validators';
  */
 
 const FieldRecord = Record({
+  name: '',
   value: '',
-  validationString: '',
+  validators: [],
   errors: List(),
   needsValidation: true,
 });
 export class Field extends FieldRecord {
   isValid() { return this.get('errors').isEmpty(); }
+
+  setNeedsValidation({ name }) {
+    const needsValidation = this.validators.map(
+      val => val.params.some(param => param === name)
+    ).some(req => req) || name === this.name;
+    return this.set('needsValidation', needsValidation);
+  }
 }
 
 const FormRecord = Record({
@@ -72,10 +80,9 @@ export class Form extends FormRecord {
     });
   }
 
-  validateValue(value, validationString) {
+  validateValue(value, validatorsParams) {
     const errors = [];
 
-    const validatorsParams = this.constructor.parseValidators(validationString);
     validatorsParams.forEach(({ validator, params }) => {
       // Confirm that the validator is recognized
       invariant(
@@ -94,8 +101,10 @@ export class Form extends FormRecord {
   validate() {
     return this.set('fields', this.fields.map((f) => {
       if (f.get('needsValidation')) {
-        return f.set('errors', List(this.validateValue(f.get('value'), f.get('validationString'))))
-          .set('needsValidation', false);
+        return f.set(
+          'errors',
+          List(this.validateValue(f.get('value'), f.get('validators')))
+        ).set('needsValidation', false);
       }
       return f;
     }));
@@ -116,14 +125,15 @@ export const field = (state = new Field(), action) => {
   switch (type) {
     case ATTACH_TO_FORM:
       return state.set(
-        'validationString',
-        trim(payload.validationString, '|') || state.get('validationString')
+        'validators',
+        Form.parseValidators(trim(payload.validationString, '|'))
       ).set(
-        'value',
-        payload.initialValue || state.get('initialValue')
+        'value', payload.initialValue || state.get('value')
+      ).set(
+        'name', payload.name || state.get('name')
       );
     case CHANGE:
-      return state.set('value', payload.value).set('needsValidation', true);
+      return state.set('value', payload.value).setNeedsValidation(payload);
     default:
       return state;
   }
@@ -139,7 +149,10 @@ export const form = (state = new Form(), action) => {
     case DETACH_FROM_FORM:
       return state.removeIn(['fields', payload.name]);
     case CHANGE:
-      return state.setIn(
+      return state.set(
+        'fields',
+        state.get('fields').map(f => f.setNeedsValidation(payload))
+      ).setIn(
         ['fields', payload.name],
         field(state.getIn(['fields', payload.name]), action)
       ).validate();

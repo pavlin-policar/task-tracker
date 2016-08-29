@@ -49,7 +49,8 @@ const generateForm = ({ id }) => (FormComponent) => {
     shouldComponentUpdate(nextProps) {
       return (
         this.props.values !== nextProps.values ||
-        this.props.errors !== nextProps.errors
+        this.props.errors !== nextProps.errors ||
+        this.props.isValid !== nextProps.isValid
       );
     }
 

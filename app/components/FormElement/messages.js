@@ -14,8 +14,20 @@ export default defineMessages({
     id: 'app.containers.FormElement.length',
     defaultMessage: 'This text you input doesn\'t match the required length.',
   },
+  alpha: {
+    id: 'app.containers.FormElement.alpha',
+    defaultMessage: 'This text you input contains invalid characters',
+  },
+  alphaDash: {
+    id: 'app.containers.FormElement.alphaDash',
+    defaultMessage: 'This text you input contains invalid characters',
+  },
   sameAs: {
     id: 'app.containers.FormElement.sameAs',
     defaultMessage: 'This field does not match its counterpart.',
+  },
+  email: {
+    id: 'app.containers.FormElement.email',
+    defaultMessage: 'This field is not a valid email.',
   },
 });

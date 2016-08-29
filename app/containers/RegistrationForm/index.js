@@ -19,6 +19,8 @@ import FormElement from 'components/FormElement';
 class RegistrationForm extends React.Component {
   static propTypes = {
     errors: React.PropTypes.object,
+    values: React.PropTypes.object,
+    isValid: React.PropTypes.bool,
     // register: React.PropTypes.func.isRequired,
   }
 
@@ -32,7 +34,13 @@ class RegistrationForm extends React.Component {
   //   this.props.checkEmailExists(email);
   // }
 
-  submit() {
+  submit(e) {
+    // console.log(this.props.errors.toJS());
+    // console.log(this.props.values.toJS());
+    e.preventDefault();
+    if (this.props.isValid) {
+      // console.log('valid');
+    }
   }
 
   render() {
@@ -85,7 +93,7 @@ class RegistrationForm extends React.Component {
             <PasswordField
               name="password"
               placeholder="Password"
-              validate="required|length:6"
+              validate="length:6"
             />
           }
         />
@@ -97,7 +105,7 @@ class RegistrationForm extends React.Component {
             <PasswordField
               name="passwordConfirmation"
               placeholder="Confirm password"
-              validate="required|same-as:password"
+              validate="same-as:password"
             />
           }
         />

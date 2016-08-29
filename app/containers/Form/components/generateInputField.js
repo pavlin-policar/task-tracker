@@ -52,6 +52,10 @@ export function generateInputComponent(type, { validate = '' } = {}) {
       change: React.PropTypes.func,
     }
 
+    static defaultProps = {
+      validate: '',
+    }
+
     static contextTypes = {
       form: React.PropTypes.object.isRequired,
     }
