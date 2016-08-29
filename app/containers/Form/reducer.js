@@ -1,5 +1,5 @@
 import { Map, List, Record } from 'immutable';
-import { trimEnd, camelCase, isEmpty } from 'lodash';
+import { trim, camelCase, isEmpty } from 'lodash';
 import invariant from 'invariant';
 
 import {
@@ -48,7 +48,7 @@ export class Form extends FormRecord {
   static parseValidators(validationString) {
     // Parse validators, remove duplicates, include default validators
     const strValidators = Object.keys(
-      trimEnd(validationString, '|').split('|')
+      validationString.split('|')
         .reduce((acc, el) => (el ? { ...acc, [el]: null } : acc), {})
     );
     return strValidators.map((strValidator) => {
@@ -83,7 +83,7 @@ export class Form extends FormRecord {
         `${validator} validator is not recognized in validators.js`
       );
 
-      if (!validators[validator](value, params, this.getData().toJS())) {
+      if (!value || !validators[validator](value, params, this.getData().toJS())) {
         errors.push(validator);
       }
     });
@@ -117,7 +117,7 @@ export const field = (state = new Field(), action) => {
     case ATTACH_TO_FORM:
       return state.set(
         'validationString',
-        payload.validationString || state.get('validationString')
+        trim(payload.validationString, '|') || state.get('validationString')
       ).set(
         'value',
         payload.initialValue || state.get('initialValue')

@@ -26,14 +26,13 @@ import styles from '../styles.css';
  * @return {Component}        A `InputField` component that renders the input
  *   according to the specified options.
  */
-export function generateInputComponent(type, { defaultValidations = '' } = {}) {
+export function generateInputComponent(type, { validate = '' } = {}) {
   return class InputField extends React.Component {
     static displayName = `${capitalize(camelCase(type))}Field`;
 
     static propTypes = {
-      // User defined methods
+      // User defined options
       placeholder: React.PropTypes.string,
-      value: React.PropTypes.string,
       className: React.PropTypes.string,
       name: React.PropTypes.string,
       autoFocus: React.PropTypes.bool,
@@ -45,6 +44,8 @@ export function generateInputComponent(type, { defaultValidations = '' } = {}) {
       onChange: React.PropTypes.func,
       onFocus: React.PropTypes.func,
       onBlur: React.PropTypes.func,
+      // Connected values
+      value: React.PropTypes.string,
       // Dispatch methods
       blur: React.PropTypes.func,
       focus: React.PropTypes.func,
@@ -53,11 +54,6 @@ export function generateInputComponent(type, { defaultValidations = '' } = {}) {
 
     static contextTypes = {
       form: React.PropTypes.object.isRequired,
-    }
-
-    static defaultProps = {
-      validate: '',
-      defaultValidations,
     }
 
     constructor(props, context) {
@@ -78,7 +74,7 @@ export function generateInputComponent(type, { defaultValidations = '' } = {}) {
     componentWillMount() {
       this.context.form.attach({
         name: this.props.name,
-        validationString: this.props.validate,
+        validationString: `${this.props.validate}|${validate}`,
         initialValue: this.props.value,
       });
     }
