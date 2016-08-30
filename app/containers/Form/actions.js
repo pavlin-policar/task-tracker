@@ -8,6 +8,7 @@ import {
   CHANGE,
   FOCUS,
   BLUR,
+  TOUCH,
 } from './constants';
 
 
@@ -21,3 +22,4 @@ export const change = createAction(CHANGE);
 
 export const focus = createAction(FOCUS);
 export const blur = createAction(BLUR);
+export const touch = createAction(TOUCH);

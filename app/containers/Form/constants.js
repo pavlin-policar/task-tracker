@@ -12,6 +12,7 @@ export const CHANGE = 'Form.CHANGE';
 
 export const FOCUS = 'Form.FOCUS';
 export const BLUR = 'Form.BLUR';
+export const TOUCH = 'Form.TOUCH';
 
 export const RESET = 'Form.RESET';
 export const SUBMIT = 'Form.SUBMIT';

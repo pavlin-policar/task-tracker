@@ -7,11 +7,13 @@ import {
   attachToForm,
   detachFromForm,
   change,
+  touch,
 } from './actions';
 import {
   getFormValues,
   getFormErrors,
   getFormIsValid,
+  getFormFieldNames,
   getFormTouchedFields,
 } from './selectors';
 
@@ -25,6 +27,7 @@ const generateForm = ({ id }) => (FormComponent) => {
       values: React.PropTypes.object.isRequired,
       errors: React.PropTypes.object.isRequired,
       isValid: React.PropTypes.bool.isRequired,
+      fieldNames: React.PropTypes.object,
       fieldsTouched: React.PropTypes.object,
       // Dispatch methods
       change: React.PropTypes.func.isRequired,
@@ -32,6 +35,7 @@ const generateForm = ({ id }) => (FormComponent) => {
       unregisterForm: React.PropTypes.func.isRequired,
       attachToForm: React.PropTypes.func.isRequired,
       detachFromForm: React.PropTypes.func.isRequired,
+      touch: React.PropTypes.func.isRequired,
     }
 
     static childContextTypes = {
@@ -82,6 +86,7 @@ const generateForm = ({ id }) => (FormComponent) => {
     values: getFormValues(id)(state),
     errors: getFormErrors(id)(state),
     isValid: getFormIsValid(id)(state),
+    fieldNames: getFormFieldNames(id)(state),
     fieldsTouched: getFormTouchedFields(id)(state),
   });
   const mapDispatchToProps = {
@@ -90,6 +95,7 @@ const generateForm = ({ id }) => (FormComponent) => {
     attachToForm,
     detachFromForm,
     change,
+    touch,
   };
   return connect(mapStateToProps, mapDispatchToProps)(FormWrapper);
 };

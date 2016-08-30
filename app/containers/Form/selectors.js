@@ -35,6 +35,10 @@ export const getFormIsValid = (id) => createSelector(
   getForm(id),
   form => (form.isValid && form.isValid()) || false
 );
+export const getFormFieldNames = (id) => createSelector(
+  getFormFields(id),
+  fields => fields.map(f => f.get('name')) || []
+);
 export const getFormTouchedFields = (id) => createSelector(
   getFormFields(id),
   fields => fields.map(f => f.get('touched')) || Map()

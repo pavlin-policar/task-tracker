@@ -9,6 +9,7 @@ import {
   DETACH_FROM_FORM,
   CHANGE,
   BLUR,
+  TOUCH,
 } from './constants';
 import * as validators from './validators';
 
@@ -136,6 +137,11 @@ export const field = (state = new Field(), action) => {
       );
     case BLUR:
       return state.set('touched', true);
+    case TOUCH:
+      if (payload.fields.includes(state.get('name'))) {
+        return state.set('touched', true);
+      }
+      return state;
     case CHANGE:
       return state.set('value', payload.value).setNeedsValidation(payload);
     default:
@@ -157,6 +163,8 @@ export const form = (state = new Form(), action) => {
         ['fields', payload.name],
         field(state.getIn(['fields', payload.name]), action)
       );
+    case TOUCH:
+      return state.set('fields', state.get('fields').map(f => field(f, action)));
     case CHANGE:
       return state.set(
         'fields',
@@ -183,6 +191,7 @@ export const forms = (state = new Map(), action) => {
     case DETACH_FROM_FORM:
     case CHANGE:
     case BLUR:
+    case TOUCH:
       return state.set(payload.id, form(state.get(payload.id), action));
     default:
       return state;
