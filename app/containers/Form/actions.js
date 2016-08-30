@@ -9,6 +9,9 @@ import {
   FOCUS,
   BLUR,
   TOUCH,
+  SUBMIT_REQUEST,
+  SUBMIT_SUCCESS,
+  SUBMIT_FAILURE,
 } from './constants';
 
 
@@ -23,3 +26,7 @@ export const change = createAction(CHANGE);
 export const focus = createAction(FOCUS);
 export const blur = createAction(BLUR);
 export const touch = createAction(TOUCH);
+
+export const submit = createAction(SUBMIT_REQUEST);
+export const submitSuccessful = createAction(SUBMIT_SUCCESS);
+export const submittingFailed = createAction(SUBMIT_FAILURE);

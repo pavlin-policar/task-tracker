@@ -18,6 +18,10 @@ export const getFormProps = (id) => createSelector(
   getForm(id),
   form => (form || new Form()).toJS()
 );
+export const getFormIsSubmitting = (id) => createSelector(
+  getForm(id),
+  form => form.get('submitting') || false
+);
 
 export const getFormFields = (id) => createSelector(
   getForm(id),

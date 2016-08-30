@@ -19,10 +19,13 @@ import FormElement from 'components/FormElement';
 class RegistrationForm extends React.Component {
   static propTypes = {
     // Connected props
+    isSubmitting: React.PropTypes.bool,
     errors: React.PropTypes.object,
     values: React.PropTypes.object,
     isValid: React.PropTypes.bool,
     fieldsTouched: React.PropTypes.object,
+    // Form methods
+    handleSubmit: React.PropTypes.func,
     // register: React.PropTypes.func.isRequired,
   }
 
@@ -46,9 +49,10 @@ class RegistrationForm extends React.Component {
   }
 
   render() {
-    const { errors, fieldsTouched } = this.props;
+    const { errors, fieldsTouched, handleSubmit } = this.props;
+
     return (
-      <form onSubmit={this.submit}>
+      <form onSubmit={handleSubmit}>
         <p><FormattedMessage {...messages.fillInDataText} /></p>
         <div className="row">
           <div className="col-md-6">
@@ -111,7 +115,7 @@ class RegistrationForm extends React.Component {
         </div>
         <div className="row">
           <div className="col-md">
-            <Button type="submit">Register</Button>
+            <Button type="submit" disabled={this.props.isSubmitting}>Register</Button>
           </div>
         </div>
       </form>

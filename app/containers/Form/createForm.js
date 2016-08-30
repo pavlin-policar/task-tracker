@@ -8,6 +8,7 @@ import {
   detachFromForm,
   change,
   touch,
+  submit,
 } from './actions';
 import {
   getFormValues,
@@ -15,6 +16,7 @@ import {
   getFormIsValid,
   getFormFieldNames,
   getFormTouchedFields,
+  getFormIsSubmitting,
 } from './selectors';
 
 
@@ -24,6 +26,7 @@ const generateForm = ({ id }) => (FormComponent) => {
 
     static propTypes = {
       // Connected values
+      isSubmitting: React.PropTypes.bool.isRequired,
       values: React.PropTypes.object.isRequired,
       errors: React.PropTypes.object.isRequired,
       isValid: React.PropTypes.bool.isRequired,
@@ -36,6 +39,7 @@ const generateForm = ({ id }) => (FormComponent) => {
       attachToForm: React.PropTypes.func.isRequired,
       detachFromForm: React.PropTypes.func.isRequired,
       touch: React.PropTypes.func.isRequired,
+      submit: React.PropTypes.func.isRequired,
     }
 
     static childContextTypes = {
@@ -48,6 +52,7 @@ const generateForm = ({ id }) => (FormComponent) => {
       this.attach = this.attach.bind(this);
       this.detach = this.detach.bind(this);
       this.change = this.change.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     getChildContext() { return { form: this }; }
@@ -71,18 +76,32 @@ const generateForm = ({ id }) => (FormComponent) => {
 
     get id() { return id; }
 
+    handleSubmit(e) {
+      e.preventDefault();
+      // Touch all the fields
+      const fields = this.props.fieldNames;
+      this.props.touch({ id, fields });
+
+      if (this.props.isValid) {
+        this.props.submit({ id, data: this.props.values });
+      }
+    }
+
     render() {
       return React.Children.only(
         <FormComponent
+          isSubmitting={this.props.isSubmitting}
           values={this.props.values}
           errors={this.props.errors}
           isValid={this.props.isValid}
           fieldsTouched={this.props.fieldsTouched}
+          handleSubmit={this.handleSubmit}
         />
       );
     }
   }
   const mapStateToProps = (state) => ({
+    isSubmitting: getFormIsSubmitting(id)(state),
     values: getFormValues(id)(state),
     errors: getFormErrors(id)(state),
     isValid: getFormIsValid(id)(state),
@@ -96,6 +115,7 @@ const generateForm = ({ id }) => (FormComponent) => {
     detachFromForm,
     change,
     touch,
+    submit,
   };
   return connect(mapStateToProps, mapDispatchToProps)(FormWrapper);
 };

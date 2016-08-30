@@ -15,4 +15,7 @@ export const BLUR = 'Form.BLUR';
 export const TOUCH = 'Form.TOUCH';
 
 export const RESET = 'Form.RESET';
-export const SUBMIT = 'Form.SUBMIT';
+
+export const SUBMIT_REQUEST = 'Form.SUBMIT_REQUEST';
+export const SUBMIT_SUCCESS = 'Form.SUBMIT_SUCCESS';
+export const SUBMIT_FAILURE = 'Form.SUBMIT_FAILURE';

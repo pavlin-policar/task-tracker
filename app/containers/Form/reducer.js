@@ -10,6 +10,9 @@ import {
   CHANGE,
   BLUR,
   TOUCH,
+  SUBMIT_REQUEST,
+  SUBMIT_SUCCESS,
+  SUBMIT_FAILURE,
 } from './constants';
 import * as validators from './validators';
 
@@ -39,6 +42,7 @@ export class Field extends FieldRecord {
 
 const FormRecord = Record({
   fields: Map(),
+  submitting: false,
 });
 export class Form extends FormRecord {
   getData() {
@@ -173,6 +177,11 @@ export const form = (state = new Form(), action) => {
         ['fields', payload.name],
         field(state.getIn(['fields', payload.name]), action)
       ).validate();
+    case SUBMIT_REQUEST:
+      return state.set('submitting', true);
+    case SUBMIT_SUCCESS:
+    case SUBMIT_FAILURE:
+      return state.set('submitting', false);
     default:
       return state;
   }
@@ -192,6 +201,9 @@ export const forms = (state = new Map(), action) => {
     case CHANGE:
     case BLUR:
     case TOUCH:
+    case SUBMIT_REQUEST:
+    case SUBMIT_SUCCESS:
+    case SUBMIT_FAILURE:
       return state.set(payload.id, form(state.get(payload.id), action));
     default:
       return state;
