@@ -16,12 +16,13 @@ export class LoginForm extends React.Component {
   static propTypes = {
     fieldsTouched: React.PropTypes.object,
     errors: React.PropTypes.object,
+    handleSubmit: React.PropTypes.func,
   }
 
   render() {
-    const { errors, fieldsTouched } = this.props;
+    const { errors, fieldsTouched, handleSubmit } = this.props;
     return (
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-xs-12">
             <FormElement

@@ -19,6 +19,7 @@ class AddTodoForm extends React.Component {
   static propTypes = {
     onCreateTodo: React.PropTypes.func.isRequired,
     values: React.PropTypes.object,
+    handleSubmit: React.PropTypes.func,
   }
 
   constructor(props) {
@@ -37,10 +38,11 @@ class AddTodoForm extends React.Component {
   }
 
   render() {
+    const { handleSubmit } = this.props;
     return (
       <div className={styles.createTodoForm}>
-        <form onSubmit={this.handleSubmit}>
-          <TextField name="text" placeholder="Buy milk!" />
+        <form onSubmit={handleSubmit}>
+          <TextField name="text" placeholder="Buy milk!" validate="required" />
           <Button type="submit"><FormattedMessage {...messages.createTodoButton} /></Button>
         </form>
       </div>
