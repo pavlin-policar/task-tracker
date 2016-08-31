@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { omit } from 'lodash';
 
 import {
   registerForm,
@@ -76,26 +77,38 @@ const generateForm = ({ id }) => (FormComponent) => {
 
     get id() { return id; }
 
-    handleSubmit(e) {
+    handleSubmit = (submit) => (e) => {
       e.preventDefault();
       // Touch all the fields
       const fields = this.props.fieldNames;
       this.props.touch({ id, fields });
 
       if (this.props.isValid) {
-        this.props.submit({ id, data: this.props.values });
+        this.props.submit({ id });
+        submit(this.props.values);
       }
     }
 
     render() {
+      // We don't want to give the form access to the dispatch methods specific
+      // to Forms, but we still want to pass down any other properties, e.g.
+      // forms are often connected components, so they receive props from the
+      // state. We need to make the process commutative so that the component
+      // can be wrapped `connect(form(Component))` as well as with
+      // form(connect(Component))
+      const propsToPass = omit(this.props, [
+        'registerForm',
+        'unregisterForm',
+        'attachToForm',
+        'detachFromForm',
+        'change',
+        'touch',
+        'submit',
+      ]);
       return React.Children.only(
         <FormComponent
-          isSubmitting={this.props.isSubmitting}
-          values={this.props.values}
-          errors={this.props.errors}
-          isValid={this.props.isValid}
-          fieldsTouched={this.props.fieldsTouched}
           handleSubmit={this.handleSubmit}
+          {...propsToPass}
         />
       );
     }
