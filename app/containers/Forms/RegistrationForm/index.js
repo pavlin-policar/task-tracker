@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
 import messages from './messages';
-import { register, checkEmailExists } from 'containers/Authentication/actions';
 import createForm from 'containers/Form/createForm';
+import { checkEmailExists } from 'containers/Authentication/actions';
+import { register } from './actions';
 
 import TextField from 'containers/Form/components/TextField';
 import EmailField from 'containers/Form/components/EmailField';
@@ -47,7 +48,7 @@ class RegistrationForm extends React.Component {
   render() {
     const { errors, fieldsTouched, handleSubmit } = this.props;
     return (
-      <form onSubmit={handleSubmit(this.onSubmit)}>
+      <form onSubmit={handleSubmit(register)}>
         <p><FormattedMessage {...messages.fillInDataText} /></p>
         <div className="row">
           <div className="col-xs-6">

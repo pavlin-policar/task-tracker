@@ -1,4 +1,5 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { omit } from 'lodash';
 
@@ -45,6 +46,7 @@ const generateForm = ({ id }) => (FormComponent) => {
       submit: React.PropTypes.func.isRequired,
       submitSuccessful: React.PropTypes.func.isRequired,
       submitFailed: React.PropTypes.func.isRequired,
+      dispatch: React.PropTypes.func.isRequired,
     }
 
     static childContextTypes = {
@@ -87,24 +89,27 @@ const generateForm = ({ id }) => (FormComponent) => {
       this.props.touch({ id, fields });
 
       if (this.props.isValid) {
-        const result = submitFunction(this.props.values);
-        // If it is a promise, assume it is async
+        const result = submitFunction(
+          id,
+          { values: this.props.values },
+          this.props.dispatch
+        );
+
         if (result.then && typeof result.then === 'function') {
-          this.props.submit({ id });
+          // We are dealing with an async action
           return result.then(
             (submitResult) => {
-              this.props.submitSuccessful({ id });
+              this.props.submitSuccessful(id);
               return submitResult;
             },
-            (submitError) => {
-              const { errors } = submitError.error;
+            (errorResponse) => {
+              const { errors } = errorResponse.payload.error;
               this.props.submitFailed({ id, errors });
-              return submitError;
+              return errors;
             }
           );
         } else { // eslint-disable-line no-else-return
-          // Synchronous submit function
-          this.props.submitSuccessful({ id });
+          // We are dealing with a synchronous submit function
           return result;
         }
       } else { // eslint-disable-line no-else-return
@@ -145,17 +150,18 @@ const generateForm = ({ id }) => (FormComponent) => {
     fieldNames: getFormFieldNames(id)(state),
     fieldsTouched: getFormTouchedFields(id)(state),
   });
-  const mapDispatchToProps = {
-    registerForm,
-    unregisterForm,
-    attachToForm,
-    detachFromForm,
-    change,
-    touch,
-    submit,
-    submitSuccessful,
-    submitFailed,
-  };
+  const mapDispatchToProps = (dispatch) => ({
+    registerForm: bindActionCreators(registerForm, dispatch),
+    unregisterForm: bindActionCreators(unregisterForm, dispatch),
+    attachToForm: bindActionCreators(attachToForm, dispatch),
+    detachFromForm: bindActionCreators(detachFromForm, dispatch),
+    change: bindActionCreators(change, dispatch),
+    touch: bindActionCreators(touch, dispatch),
+    submit: bindActionCreators(submit, dispatch),
+    submitSuccessful: bindActionCreators(submitSuccessful, dispatch),
+    submitFailed: bindActionCreators(submitFailed, dispatch),
+    dispatch,
+  });
   return connect(mapStateToProps, mapDispatchToProps)(FormWrapper);
 };
 
