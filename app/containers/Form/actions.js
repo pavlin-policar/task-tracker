@@ -29,4 +29,4 @@ export const touch = createAction(TOUCH);
 
 export const submit = createAction(SUBMIT_REQUEST);
 export const submitSuccessful = createAction(SUBMIT_SUCCESS);
-export const submittingFailed = createAction(SUBMIT_FAILURE);
+export const submitFailed = createAction(SUBMIT_FAILURE);

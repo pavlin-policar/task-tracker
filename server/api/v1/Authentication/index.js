@@ -30,7 +30,7 @@ router.post('/register', (req, res) => {
         res.status(500).json({ error: 'INTERNAL_ERROR' });
       } else if (user) {
         // User with email already exists
-        errors.email.push('The email address provided is already in use.');
+        errors.email.push('emailUnique');
         res.status(400).json({ errors, isValid });
       } else {
         // The user is indeed a new user, proceed with registration

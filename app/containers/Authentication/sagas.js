@@ -10,15 +10,18 @@ import request from 'utils/request';
 
 // Individual exports for testing
 export function* registration({ payload }) {
+  const { values, resolve, reject } = payload;
   const response = yield call(request, URLS.REGISTRATION_URL, {
     method: 'post',
-    body: payload,
+    body: values,
   });
 
   if (!response.error) {
     yield put(registrationSuccess());
+    if (resolve) yield call(resolve);
   } else {
     yield put(registrationFailure(response));
+    if (reject) yield call(reject, response);
   }
 }
 

@@ -30,4 +30,8 @@ export default defineMessages({
     id: 'app.containers.FormElement.email',
     defaultMessage: 'This field is not a valid email.',
   },
+  emailUnique: {
+    id: 'app.containers.FormElement.emailUnique',
+    defaultMessage: 'The email you have provided is already in use.',
+  },
 });

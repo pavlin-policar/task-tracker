@@ -148,6 +148,8 @@ export const field = (state = new Field(), action) => {
       return state;
     case CHANGE:
       return state.set('value', payload.value).setNeedsValidation(payload);
+    case SUBMIT_FAILURE:
+      return state.set('errors', List(payload.errors[state.get('name')]));
     default:
       return state;
   }
@@ -181,7 +183,10 @@ export const form = (state = new Form(), action) => {
       return state.set('submitting', true);
     case SUBMIT_SUCCESS:
     case SUBMIT_FAILURE:
-      return state.set('submitting', false);
+      return state.set('submitting', false).set(
+        'fields',
+        state.get('fields').map(f => field(f, action))
+      );
     default:
       return state;
   }

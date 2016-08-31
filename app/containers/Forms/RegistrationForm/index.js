@@ -26,33 +26,28 @@ class RegistrationForm extends React.Component {
     fieldsTouched: React.PropTypes.object,
     // Form methods
     handleSubmit: React.PropTypes.func,
-    // register: React.PropTypes.func.isRequired,
+    register: React.PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
 
-    this.submit = this.submit.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   // checkEmailExists(email) {
   //   this.props.checkEmailExists(email);
   // }
 
-  submit(e) {
-    // console.log(this.props.errors.toJS());
-    // console.log(this.props.values.toJS());
-    e.preventDefault();
-    if (this.props.isValid) {
-      // console.log('valid');
-    }
+  onSubmit(values) {
+    return new Promise((resolve, reject) =>
+      this.props.register({ values, resolve, reject }));
   }
 
   render() {
     const { errors, fieldsTouched, handleSubmit } = this.props;
-
     return (
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(this.onSubmit)}>
         <p><FormattedMessage {...messages.fillInDataText} /></p>
         <div className="row">
           <div className="col-xs-6">

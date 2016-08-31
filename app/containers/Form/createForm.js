@@ -10,6 +10,8 @@ import {
   change,
   touch,
   submit,
+  submitSuccessful,
+  submitFailed,
 } from './actions';
 import {
   getFormValues,
@@ -41,6 +43,8 @@ const generateForm = ({ id }) => (FormComponent) => {
       detachFromForm: React.PropTypes.func.isRequired,
       touch: React.PropTypes.func.isRequired,
       submit: React.PropTypes.func.isRequired,
+      submitSuccessful: React.PropTypes.func.isRequired,
+      submitFailed: React.PropTypes.func.isRequired,
     }
 
     static childContextTypes = {
@@ -53,7 +57,6 @@ const generateForm = ({ id }) => (FormComponent) => {
       this.attach = this.attach.bind(this);
       this.detach = this.detach.bind(this);
       this.change = this.change.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     getChildContext() { return { form: this }; }
@@ -77,15 +80,36 @@ const generateForm = ({ id }) => (FormComponent) => {
 
     get id() { return id; }
 
-    handleSubmit = (submit) => (e) => {
+    handleSubmit = (submitFunction) => (e) => {
       e.preventDefault();
       // Touch all the fields
       const fields = this.props.fieldNames;
       this.props.touch({ id, fields });
 
       if (this.props.isValid) {
-        this.props.submit({ id });
-        submit(this.props.values);
+        const result = submitFunction(this.props.values);
+        // If it is a promise, assume it is async
+        if (result.then && typeof result.then === 'function') {
+          this.props.submit({ id });
+          return result.then(
+            (submitResult) => {
+              this.props.submitSuccessful({ id });
+              return submitResult;
+            },
+            (submitError) => {
+              const { errors } = submitError.error;
+              this.props.submitFailed({ id, errors });
+              return submitError;
+            }
+          );
+        } else { // eslint-disable-line no-else-return
+          // Synchronous submit function
+          this.props.submitSuccessful({ id });
+          return result;
+        }
+      } else { // eslint-disable-line no-else-return
+        // Form was not valid, so return errors
+        return this.props.errors;
       }
     }
 
@@ -129,6 +153,8 @@ const generateForm = ({ id }) => (FormComponent) => {
     change,
     touch,
     submit,
+    submitSuccessful,
+    submitFailed,
   };
   return connect(mapStateToProps, mapDispatchToProps)(FormWrapper);
 };
