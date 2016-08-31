@@ -55,7 +55,7 @@ class RegistrationForm extends React.Component {
       <form onSubmit={handleSubmit}>
         <p><FormattedMessage {...messages.fillInDataText} /></p>
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-xs-6">
             <FormElement
               errors={errors.get('firstName')}
               touched={fieldsTouched.get('firstName')}
@@ -65,7 +65,7 @@ class RegistrationForm extends React.Component {
               validate="required|alpha-dash"
             />
           </div>
-          <div className="col-md-6">
+          <div className="col-xs-6">
             <FormElement
               errors={errors.get('surname')}
               touched={fieldsTouched.get('surname')}
@@ -77,7 +77,7 @@ class RegistrationForm extends React.Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-md">
+          <div className="col-xs">
             <FormElement
               errors={errors.get('email')}
               touched={fieldsTouched.get('email')}
@@ -90,7 +90,7 @@ class RegistrationForm extends React.Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-md">
+          <div className="col-xs">
             <FormElement
               errors={errors.get('password')}
               touched={fieldsTouched.get('password')}
@@ -102,7 +102,7 @@ class RegistrationForm extends React.Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-md">
+          <div className="col-xs">
             <FormElement
               errors={errors.get('passwordConfirmation')}
               touched={fieldsTouched.get('passwordConfirmation')}
@@ -114,7 +114,7 @@ class RegistrationForm extends React.Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-md">
+          <div className="col-xs">
             <Button type="submit" disabled={this.props.isSubmitting}>Register</Button>
           </div>
         </div>

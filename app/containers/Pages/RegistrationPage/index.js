@@ -13,14 +13,14 @@ const RegistrationPage = () => (
     <div className="col-xs-12 center">
       <h1><FormattedMessage {...messages.mainHeading} /></h1>
     </div>
-    <div className={classNames('col-md-6', 'center', styles.descriptionBlock)}>
+    <div className={classNames('col-xs-12', 'col-md-6', 'center', styles.descriptionBlock)}>
       <h2><FormattedMessage {...messages.neverForgetHeading} /></h2>
       <p><FormattedMessage {...messages.neverForgetText} /></p>
 
       <h2><FormattedMessage {...messages.takeItWithYouHeading} /></h2>
       <p><FormattedMessage {...messages.takeItWithYouText} /></p>
     </div>
-    <div className="col-md-6">
+    <div className="col-xs-12 col-md-6">
       <RegistrationForm />
     </div>
   </div>
