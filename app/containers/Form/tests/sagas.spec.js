@@ -1,15 +1,11 @@
 import expect from 'expect';
 import { put, race, take } from 'redux-saga/effects';
 
-import * as actions from '../actions';
-import { asyncHandler } from '../sagas';
+import { createAsyncHandler } from '../sagas';
 
 
 describe('form sagas', () => {
   describe('asyncHandler saga', () => {
-    const successSpy = expect.spyOn(actions, 'submitSuccessful');
-    const failureSpy = expect.spyOn(actions, 'submitFailed');
-
     const requestAction = {
       type: 'ACTION',
       payload: 1,
@@ -17,33 +13,19 @@ describe('form sagas', () => {
     const id = 'form';
     const response = 123;
 
-
+    let formSuccessSpy;
+    let formFailureSpy;
     let generator;
     beforeEach(() => {
-      successSpy.restore();
-      failureSpy.restore();
-      generator = asyncHandler({
+      formSuccessSpy = expect.createSpy().andReturn({ type: 'FORM_SUCCESS' });
+      formFailureSpy = expect.createSpy().andReturn({ type: 'FORM_FAILURE' });
+      generator = createAsyncHandler([formSuccessSpy, formFailureSpy])({
         payload: { id, action: requestAction },
         meta: {
           successActionType: 'ACTION_SUCCESS',
           failureActionType: 'ACTION_FAILURE',
         },
       });
-    });
-
-    it('should handle a successful async action', () => {
-      expect(generator.next().value).toEqual(put(requestAction));
-      expect(generator.next().value).toEqual(
-        race({
-          success: take('ACTION_SUCCESS'),
-          failure: take('ACTION_FAILURE'),
-        })
-      );
-      expect(
-        generator.next({ success: { payload: response } }).value
-      ).toEqual(
-        put(actions.submitSuccessful({ id, response }))
-      );
     });
 
     it('should handle a failed async action', () => {
@@ -54,11 +36,22 @@ describe('form sagas', () => {
           failure: take('ACTION_FAILURE'),
         })
       );
-      expect(
-        generator.next({ failure: { payload: response } }).value
-      ).toEqual(
-        put(actions.submitFailed({ id, response }))
+      generator.next({ failure: { payload: response } });
+      expect(formFailureSpy).toHaveBeenCalledWith({ id, response });
+      expect(formSuccessSpy).toNotHaveBeenCalled();
+    });
+
+    it('should handle a successful async action', () => {
+      expect(generator.next().value).toEqual(put(requestAction));
+      expect(generator.next().value).toEqual(
+        race({
+          success: take('ACTION_SUCCESS'),
+          failure: take('ACTION_FAILURE'),
+        })
       );
+      generator.next({ success: { payload: response } });
+      expect(formSuccessSpy).toHaveBeenCalledWith({ id, response });
+      expect(formFailureSpy).toNotHaveBeenCalled();
     });
   });
 });
