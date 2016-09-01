@@ -77,6 +77,7 @@ export function generateInputComponent(type, { validate = '' } = {}) {
       this.onChange = this.onChange.bind(this);
       this.onFocus = this.onFocus.bind(this);
       this.onBlur = this.onBlur.bind(this);
+      this.triggerAsyncValidation = this.triggerAsyncValidation.bind(this);
     }
 
     componentWillMount() {
@@ -112,32 +113,24 @@ export function generateInputComponent(type, { validate = '' } = {}) {
 
     onFocus() {
       this.props.focus({ id: this.props.formId, name: this.props.name });
-      if (this.props.onFocus) {
-        this.props.onFocus();
-      }
+      if (this.props.onFocus) this.props.onFocus();
     }
 
-    onBlur() {
-      const {
-        formId,
-        name,
-        value,
-        dispatch,
-        validateAsync,
-        onBlur,
-      } = this.props;
-
-      this.props.blur({ id: formId, name });
-      // Trigger async validations
+    triggerAsyncValidation() {
+      const { validateAsync, formId, name, value, dispatch } = this.props;
       forEach(validateAsync, (validateActionRequest) => {
         const action = validateActionRequest(formId, name, { [name]: value });
         // The action may be noop, if the components decide there is no need to
         // validate
         if (action && action.type) dispatch(action);
       });
-      if (onBlur) {
-        onBlur();
-      }
+    }
+
+    onBlur() {
+      const { formId, name, onBlur } = this.props;
+      this.props.blur({ id: formId, name });
+      this.triggerAsyncValidation();
+      if (onBlur) onBlur();
     }
 
     render() {
