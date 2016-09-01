@@ -12,14 +12,16 @@ import { SUBMIT_REQUEST } from './constants';
  *          and the second the failure constants to the request.
  *
  * @return {function}
- *          Returns a function that accepts some data and the dispatch method.
+ *          Returns a function that accepts the dispatch method. When this
+ *          function is bound with dispatch, it returns another function that
+ *          acceptsthe form id and the form data.
  *          This function then returns a promise which the Form saga can
  *          understand.
  */
-const createFormAction = (requestAction, types) => {
+const createFormAction = (requestAction, types) => (dispatch) => {
   const [successActionType, failureActionType] = types;
 
-  return (id, data, dispatch) => new Promise((resolve, reject) => dispatch({
+  return (id, data) => new Promise((resolve, reject) => dispatch({
     type: SUBMIT_REQUEST,
     meta: { resolve, reject, successActionType, failureActionType },
     payload: {

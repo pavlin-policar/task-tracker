@@ -10,7 +10,6 @@ import {
   detachFromForm,
   change,
   touch,
-  submit,
   submitSuccessful,
   submitFailed,
 } from './actions';
@@ -43,7 +42,6 @@ const generateForm = ({ id }) => (FormComponent) => {
       attachToForm: React.PropTypes.func.isRequired,
       detachFromForm: React.PropTypes.func.isRequired,
       touch: React.PropTypes.func.isRequired,
-      submit: React.PropTypes.func.isRequired,
       submitSuccessful: React.PropTypes.func.isRequired,
       submitFailed: React.PropTypes.func.isRequired,
       dispatch: React.PropTypes.func.isRequired,
@@ -89,10 +87,9 @@ const generateForm = ({ id }) => (FormComponent) => {
       this.props.touch({ id, fields });
 
       if (this.props.isValid) {
-        const result = submitFunction(
+        const result = submitFunction(this.props.dispatch)(
           id,
-          { values: this.props.values },
-          this.props.dispatch
+          { values: this.props.values }
         );
 
         if (result.then && typeof result.then === 'function') {
@@ -132,7 +129,6 @@ const generateForm = ({ id }) => (FormComponent) => {
         'detachFromForm',
         'change',
         'touch',
-        'submit',
       ]);
       return React.Children.only(
         <FormComponent
@@ -157,7 +153,6 @@ const generateForm = ({ id }) => (FormComponent) => {
     detachFromForm: bindActionCreators(detachFromForm, dispatch),
     change: bindActionCreators(change, dispatch),
     touch: bindActionCreators(touch, dispatch),
-    submit: bindActionCreators(submit, dispatch),
     submitSuccessful: bindActionCreators(submitSuccessful, dispatch),
     submitFailed: bindActionCreators(submitFailed, dispatch),
     dispatch,
