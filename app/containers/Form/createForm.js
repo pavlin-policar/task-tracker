@@ -36,11 +36,11 @@ const createFormWrapper = ({ id }) => (FormComponent) =>
       fieldNames: React.PropTypes.object,
       fieldsTouched: React.PropTypes.object,
       // Dispatch methods
-      change: React.PropTypes.func.isRequired,
       registerForm: React.PropTypes.func.isRequired,
       unregisterForm: React.PropTypes.func.isRequired,
       attachToForm: React.PropTypes.func.isRequired,
       detachFromForm: React.PropTypes.func.isRequired,
+      change: React.PropTypes.func.isRequired,
       touch: React.PropTypes.func.isRequired,
       submitSuccessful: React.PropTypes.func.isRequired,
       submitFailed: React.PropTypes.func.isRequired,
@@ -87,9 +87,10 @@ const createFormWrapper = ({ id }) => (FormComponent) =>
       this.props.touch({ id, fields });
 
       if (this.props.isValid) {
-        const result = submitFunction(this.props.dispatch)(
+        const result = submitFunction(
           id,
-          { values: this.props.values }
+          { values: this.props.values },
+          this.props.dispatch
         );
 
         if (result.then && typeof result.then === 'function') {
@@ -107,6 +108,7 @@ const createFormWrapper = ({ id }) => (FormComponent) =>
           );
         } else { // eslint-disable-line no-else-return
           // We are dealing with a synchronous submit function
+          this.props.submitSuccessful(id);
           return result;
         }
       } else { // eslint-disable-line no-else-return

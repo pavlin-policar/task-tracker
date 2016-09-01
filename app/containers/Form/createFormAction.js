@@ -18,10 +18,10 @@ import { SUBMIT_REQUEST } from './constants';
  *          This function then returns a promise which the Form saga can
  *          understand.
  */
-const createFormAction = (requestAction, types) => (dispatch) => {
+const createFormAction = (requestAction, types) => {
   const [successActionType, failureActionType] = types;
 
-  return (id, data) => new Promise((resolve, reject) => dispatch({
+  return (id, data, dispatch) => new Promise((resolve, reject) => dispatch({
     type: SUBMIT_REQUEST,
     meta: { resolve, reject, successActionType, failureActionType },
     payload: {
