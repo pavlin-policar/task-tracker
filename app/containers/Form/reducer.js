@@ -142,8 +142,10 @@ export const field = (state = new Field(), action) => {
       return state;
     case CHANGE:
       return state.set('value', payload.value).setNeedsValidation(payload);
-    case SUBMIT_FAILURE:
-      return state.set('errors', List(payload.errors[state.get('name')]));
+    case SUBMIT_FAILURE: {
+      const { errors } = payload.response.error;
+      return state.set('errors', List(errors[state.get('name')]));
+    }
     default:
       return state;
   }

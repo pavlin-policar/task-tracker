@@ -1,26 +1,32 @@
 import expect from 'expect';
-import { put, race, take, call } from 'redux-saga/effects';
+import { put, race, take } from 'redux-saga/effects';
 
+import * as actions from '../actions';
 import { asyncHandler } from '../sagas';
 
 
 describe('form sagas', () => {
   describe('asyncHandler saga', () => {
-    const resolve = expect.createSpy();
-    const reject = expect.createSpy();
+    const successSpy = expect.spyOn(actions, 'submitSuccessful');
+    const failureSpy = expect.spyOn(actions, 'submitFailed');
+
     const requestAction = {
       type: 'ACTION',
       payload: 1,
     };
+    const id = 'form';
+    const response = 123;
+
+
     let generator;
     beforeEach(() => {
+      successSpy.restore();
+      failureSpy.restore();
       generator = asyncHandler({
-        payload: { action: requestAction },
+        payload: { id, action: requestAction },
         meta: {
           successActionType: 'ACTION_SUCCESS',
           failureActionType: 'ACTION_FAILURE',
-          resolve,
-          reject,
         },
       });
     });
@@ -33,8 +39,10 @@ describe('form sagas', () => {
           failure: take('ACTION_FAILURE'),
         })
       );
-      expect(generator.next({ success: true }).value).toEqual(
-        call(resolve, true)
+      expect(
+        generator.next({ success: { payload: response } }).value
+      ).toEqual(
+        put(actions.submitSuccessful({ id, response }))
       );
     });
 
@@ -46,8 +54,10 @@ describe('form sagas', () => {
           failure: take('ACTION_FAILURE'),
         })
       );
-      expect(generator.next({ failure: true }).value).toEqual(
-        call(reject, true)
+      expect(
+        generator.next({ failure: { payload: response } }).value
+      ).toEqual(
+        put(actions.submitFailed({ id, response }))
       );
     });
   });

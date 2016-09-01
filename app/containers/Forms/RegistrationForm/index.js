@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 import messages from './messages';
 import createForm from 'containers/Form/createForm';
-import { register, checkEmailExists as emailUnique } from './actions';
+import { register } from './actions';
 
 import TextField from 'containers/Form/components/TextField';
 import EmailField from 'containers/Form/components/EmailField';
@@ -49,7 +49,7 @@ const RegistrationForm = ({ errors, fieldsTouched, handleSubmit, isSubmitting })
           name="email"
           placeholder="Email"
           validate="required"
-          validateAsync={{ emailUnique }}
+          // validateAsync={{ emailUnique }}
         />
       </div>
     </div>

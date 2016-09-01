@@ -17,8 +17,6 @@ describe('createForm', () => {
       detachFromForm: expect.createSpy(),
       change: expect.createSpy(),
       touch: expect.createSpy(),
-      submitSuccessful: expect.createSpy(),
-      submitFailed: expect.createSpy(),
       dispatch: expect.createSpy(),
     };
     const emptyMapStateToProps = {
@@ -129,11 +127,12 @@ describe('createForm', () => {
               isValid
             />
           );
-          const submitFunctionSpy = expect.createSpy().andReturn(values);
+          const submitFunctionSpy = expect.createSpy().andReturn({ foo: 'foo' });
           const handleSubmit = renderedComponent.instance().handleSubmit(submitFunctionSpy);
 
-          expect(handleSubmit({ preventDefault: () => {} })).toEqual(values);
-          expect(mapDispatchToProps.submitSuccessful).toHaveBeenCalled();
+          handleSubmit({ preventDefault: () => {} });
+          expect(submitFunctionSpy).toHaveBeenCalled();
+          expect(mapDispatchToProps.dispatch).toHaveBeenCalledWith({ foo: 'foo' });
         });
       });
 

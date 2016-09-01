@@ -4,10 +4,10 @@ import {
 } from 'containers/Form/createFormActions';
 
 import {
-  REGISTRATION_SUCCESS,
-  REGISTRATION_FAILURE,
   CHECK_EMAIL_EXISTS_SUCCESS,
   CHECK_EMAIL_EXISTS_FAILURE,
+  REGISTRATION_SUCCESS,
+  REGISTRATION_FAILURE,
 } from 'containers/Authentication/constants';
 
 import {

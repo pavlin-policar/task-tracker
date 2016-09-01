@@ -1,6 +1,7 @@
 import { takeEvery } from 'redux-saga';
-import { call, put, race, take } from 'redux-saga/effects';
+import { put, race, take } from 'redux-saga/effects';
 
+import { submitSuccessful, submitFailed } from './actions';
 import { SUBMIT_REQUEST, VALIDATION_REQUEST } from './constants';
 
 
@@ -28,7 +29,8 @@ import { SUBMIT_REQUEST, VALIDATION_REQUEST } from './constants';
  * @return {void}
  */
 export function* asyncHandler({ payload, meta }) {
-  const { successActionType, failureActionType, resolve, reject } = meta;
+  const { successActionType, failureActionType } = meta;
+  const { id } = payload;
 
   // Dispatch the initial form request action
   yield put(payload.action);
@@ -38,10 +40,13 @@ export function* asyncHandler({ payload, meta }) {
     failure: take(failureActionType),
   });
 
+  // Signal that the async action has completed with appropriate status
   if (responseStatus.success) {
-    yield call(resolve, responseStatus.success);
+    const response = responseStatus.success.payload;
+    yield put(submitSuccessful({ id, response }));
   } else {
-    yield call(reject, responseStatus.failure);
+    const response = responseStatus.failure.payload;
+    yield put(submitFailed({ id, response }));
   }
 }
 

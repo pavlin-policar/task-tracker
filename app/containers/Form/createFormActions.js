@@ -20,14 +20,14 @@ import { SUBMIT_REQUEST, VALIDATION_REQUEST } from './constants';
 const createFormSubmitAction = (requestAction, types) => {
   const [successActionType, failureActionType] = types;
 
-  return (id, data, dispatch) => new Promise((resolve, reject) => dispatch({
+  return (id, data) => ({
     type: SUBMIT_REQUEST,
-    meta: { resolve, reject, successActionType, failureActionType },
+    meta: { successActionType, failureActionType },
     payload: {
       id,
       action: requestAction(data),
     },
-  }));
+  });
 };
 
 /**

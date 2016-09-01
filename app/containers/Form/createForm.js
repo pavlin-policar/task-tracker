@@ -42,8 +42,6 @@ const createFormWrapper = ({ id }) => (FormComponent) =>
       detachFromForm: React.PropTypes.func.isRequired,
       change: React.PropTypes.func.isRequired,
       touch: React.PropTypes.func.isRequired,
-      submitSuccessful: React.PropTypes.func.isRequired,
-      submitFailed: React.PropTypes.func.isRequired,
       dispatch: React.PropTypes.func.isRequired,
     }
 
@@ -82,38 +80,17 @@ const createFormWrapper = ({ id }) => (FormComponent) =>
 
     handleSubmit = (submitFunction) => (e) => {
       e.preventDefault();
+      const {
+        fieldNames: fields,
+        isValid,
+        dispatch,
+        values,
+      } = this.props;
       // Touch all the fields
-      const fields = this.props.fieldNames;
       this.props.touch({ id, fields });
 
-      if (this.props.isValid) {
-        const result = submitFunction(
-          id,
-          { values: this.props.values },
-          this.props.dispatch
-        );
-
-        if (result.then && typeof result.then === 'function') {
-          // We are dealing with an async action
-          return result.then(
-            (submitResult) => {
-              this.props.submitSuccessful(id);
-              return submitResult;
-            },
-            (errorResponse) => {
-              const { errors } = errorResponse.payload.error;
-              this.props.submitFailed({ id, errors });
-              return errors;
-            }
-          );
-        } else { // eslint-disable-line no-else-return
-          // We are dealing with a synchronous submit function
-          this.props.submitSuccessful(id);
-          return result;
-        }
-      } else { // eslint-disable-line no-else-return
-        // Form was not valid, so return errors
-        return this.props.errors;
+      if (isValid) {
+        dispatch(submitFunction(id, { values }));
       }
     }
 
