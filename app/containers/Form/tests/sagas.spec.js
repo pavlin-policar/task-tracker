@@ -36,8 +36,8 @@ describe('form sagas', () => {
           failure: take('ACTION_FAILURE'),
         })
       );
-      generator.next({ failure: { payload: response } });
-      expect(formFailureSpy).toHaveBeenCalledWith({ id, response });
+      generator.next({ failure: { payload: { error: response } } });
+      expect(formFailureSpy).toHaveBeenCalled();
       expect(formSuccessSpy).toNotHaveBeenCalled();
     });
 
@@ -50,7 +50,7 @@ describe('form sagas', () => {
         })
       );
       generator.next({ success: { payload: response } });
-      expect(formSuccessSpy).toHaveBeenCalledWith({ id, response });
+      expect(formSuccessSpy).toHaveBeenCalled();
       expect(formFailureSpy).toNotHaveBeenCalled();
     });
   });

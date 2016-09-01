@@ -23,7 +23,7 @@ router.get('/checkuser', (req, res) => {
       if (findUserError) {
         res.status(500).json({ error: 'INTERNAL_ERROR' });
       } else if (user) {
-        errors.user = true;
+        errors.emailUnique = true;
       }
 
       // Username was submitted for checking

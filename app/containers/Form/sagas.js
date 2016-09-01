@@ -53,7 +53,7 @@ export function createAsyncHandler(formActions) {
    */
   return function* asyncHandler({ payload, meta }) {
     const { successActionType, failureActionType } = meta;
-    const { id } = payload;
+    const { id, name } = payload;
 
     // Dispatch the initial form request action
     yield put(payload.action);
@@ -65,11 +65,11 @@ export function createAsyncHandler(formActions) {
 
     // Signal that the async action has completed with appropriate status
     if (responseStatus.success) {
-      const response = responseStatus.success.payload;
-      yield put(formSuccessAction({ id, response }));
+      const data = responseStatus.success.payload;
+      yield put(formSuccessAction({ id, data }));
     } else {
-      const response = responseStatus.failure.payload;
-      yield put(formFailureAction({ id, response }));
+      const { errors } = responseStatus.failure.payload.error;
+      yield put(formFailureAction({ id, name, errors }));
     }
   };
 }

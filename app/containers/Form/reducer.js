@@ -13,6 +13,8 @@ import {
   SUBMIT_REQUEST,
   SUBMIT_SUCCESS,
   SUBMIT_FAILURE,
+  VALIDATION_REQUEST,
+  RECEIVE_VALIDATION_ERRORS,
 } from './constants';
 import * as validators from './validators';
 
@@ -28,6 +30,7 @@ const FieldRecord = Record({
   errors: List(),
   needsValidation: true,
   touched: false,
+  validating: false,
 });
 export class Field extends FieldRecord {
   isValid() { return this.get('errors').isEmpty(); }
@@ -43,7 +46,6 @@ export class Field extends FieldRecord {
 const FormRecord = Record({
   fields: Map(),
   submitting: false,
-  validating: false,
 });
 export class Form extends FormRecord {
   getData() { return this.fields.map(f => f.get('value')); }
@@ -143,9 +145,16 @@ export const field = (state = new Field(), action) => {
     case CHANGE:
       return state.set('value', payload.value).setNeedsValidation(payload);
     case SUBMIT_FAILURE: {
-      const { errors } = payload.response.error;
+      const { errors } = payload;
       return state.set('errors', List(errors[state.get('name')]));
     }
+    case VALIDATION_REQUEST:
+      return state.set('validating', true);
+    case RECEIVE_VALIDATION_ERRORS:
+      return state.set('validating', false).set(
+        'errors',
+        state.get('errors').push(...(payload.errors ? Object.keys(payload.errors) : []))
+      );
     default:
       return state;
   }
@@ -183,6 +192,12 @@ export const form = (state = new Form(), action) => {
         'fields',
         state.get('fields').map(f => field(f, action))
       );
+    case VALIDATION_REQUEST:
+    case RECEIVE_VALIDATION_ERRORS:
+      return state.setIn(
+        ['fields', payload.name],
+        field(state.getIn(['fields', payload.name]), action)
+      );
     default:
       return state;
   }
@@ -205,6 +220,8 @@ export const forms = (state = new Map(), action) => {
     case SUBMIT_REQUEST:
     case SUBMIT_SUCCESS:
     case SUBMIT_FAILURE:
+    case VALIDATION_REQUEST:
+    case RECEIVE_VALIDATION_ERRORS:
       return state.set(payload.id, form(state.get(payload.id), action));
     default:
       return state;
