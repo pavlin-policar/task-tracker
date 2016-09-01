@@ -19,17 +19,12 @@ import request from 'utils/request';
 export function* checkEmailExists({ payload }) {
   const { email } = payload;
 
-  if (email) {
-    const response = yield call(request, `${URLS.CHECK_USER_EXISTS}?email=${email}`);
+  const response = yield call(request, `${URLS.CHECK_USER_EXISTS}?email=${email}`);
 
-    if (!response.error) {
-      yield put(emailNotInUse());
-    } else {
-      yield put(emailExists(response));
-    }
-  } else {
-    // No sense in checking anything if the field is empty
+  if (!response.error) {
     yield put(emailNotInUse());
+  } else {
+    yield put(emailExists(response));
   }
 }
 

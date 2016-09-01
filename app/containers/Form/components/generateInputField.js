@@ -10,7 +10,6 @@ import {
   change,
   focus,
   blur,
-  receiveAsyncValidationErrors,
 } from '../actions';
 import { getFieldValue, getFieldTouched } from '../selectors';
 
@@ -55,7 +54,6 @@ export function generateInputComponent(type, { validate = '' } = {}) {
       blur: React.PropTypes.func,
       focus: React.PropTypes.func,
       change: React.PropTypes.func,
-      receiveValidationErrors: React.PropTypes.func,
       dispatch: React.PropTypes.func,
     }
 
@@ -127,20 +125,15 @@ export function generateInputComponent(type, { validate = '' } = {}) {
         dispatch,
         validateAsync,
         onBlur,
-        receiveValidationErrors,
       } = this.props;
 
       this.props.blur({ id: formId, name });
       // Trigger async validations
-      forEach(validateAsync, validateActionRequest => {
-        const result = validateActionRequest(formId, { [name]: value }, dispatch);
-
-        if (result.then && typeof result.then === 'function') {
-          result.then(
-            (clean) => receiveValidationErrors({ id: formId, response: clean }),
-            (error) => receiveValidationErrors({ id: formId, response: error })
-          );
-        }
+      forEach(validateAsync, (validateActionRequest) => {
+        const action = validateActionRequest(formId, { [name]: value });
+        // The action may be noop, if the components decide there is no need to
+        // validate
+        if (action && action.type) dispatch(action);
       });
       if (onBlur) {
         onBlur();
@@ -184,7 +177,6 @@ export default function generateInputField(...params) {
     change: bindActionCreators(change, dispatch),
     focus: bindActionCreators(focus, dispatch),
     blur: bindActionCreators(blur, dispatch),
-    receiveValidationErrors: bindActionCreators(receiveAsyncValidationErrors, dispatch),
     dispatch,
   });
   return withFormId(connect(mapStateToProps, mapDispatchToProps)(InputField));
