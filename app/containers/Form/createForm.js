@@ -23,7 +23,7 @@ import {
 } from './selectors';
 
 
-const generateForm = ({ id }) => (FormComponent) => {
+const createFormWrapper = ({ id }) => (FormComponent) =>
   class FormWrapper extends React.Component {
     static displayName = `Form(${FormComponent.displayName})`
 
@@ -137,7 +137,15 @@ const generateForm = ({ id }) => (FormComponent) => {
         />
       );
     }
-  }
+  };
+export { createFormWrapper };
+
+
+const createForm = (options) => (FormComponent) => {
+  const WrappedComponent = createFormWrapper(options)(FormComponent);
+
+  const { id } = options;
+
   const mapStateToProps = (state) => ({
     isSubmitting: getFormIsSubmitting(id)(state),
     values: getFormValues(id)(state),
@@ -157,7 +165,7 @@ const generateForm = ({ id }) => (FormComponent) => {
     submitFailed: bindActionCreators(submitFailed, dispatch),
     dispatch,
   });
-  return connect(mapStateToProps, mapDispatchToProps)(FormWrapper);
+  return connect(mapStateToProps, mapDispatchToProps)(WrappedComponent);
 };
 
-export default generateForm;
+export default createForm;
