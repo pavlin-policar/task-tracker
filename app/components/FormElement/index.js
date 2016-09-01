@@ -2,6 +2,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { List } from 'immutable';
+import { omit } from 'lodash';
 
 import messages from './messages';
 
@@ -29,6 +30,13 @@ class FormElement extends React.Component {
 
   render() {
     const { label, helpText, errors, touched } = this.props;
+    const propsToInput = omit(this.props, [
+      'label',
+      'type',
+      'helpText',
+      'errors',
+      'touched',
+    ]);
 
     const errorsMessages = errors.map((error) => (
       <span key={error} className={styles.errorText}>
@@ -51,12 +59,7 @@ class FormElement extends React.Component {
             {label}
           </label>
         ) : null}
-        <this.props.type
-          className={styles.input}
-          name={this.props.name}
-          placeholder={this.props.placeholder}
-          validate={this.props.validate}
-        />
+        <this.props.type className={styles.input} {...propsToInput} />
         {helpText ? (<span className={styles.helpText}>{helpText}</span>) : null}
         {touched ? errorsMessages : null}
       </div>

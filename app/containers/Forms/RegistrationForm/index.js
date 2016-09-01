@@ -28,21 +28,11 @@ class RegistrationForm extends React.Component {
     // Form methods
     handleSubmit: React.PropTypes.func,
     register: React.PropTypes.func.isRequired,
+    checkEmailExists: React.PropTypes.func.isRequired,
   }
 
-  constructor(props) {
-    super(props);
-
-    this.onSubmit = this.onSubmit.bind(this);
-  }
-
-  // checkEmailExists(email) {
-  //   this.props.checkEmailExists(email);
-  // }
-
-  onSubmit(values) {
-    return new Promise((resolve, reject) =>
-      this.props.register({ values, resolve, reject }));
+  checkEmailExists(email) {
+    this.props.checkEmailExists(email);
   }
 
   render() {
@@ -81,7 +71,7 @@ class RegistrationForm extends React.Component {
               name="email"
               placeholder="Email"
               validate="required"
-              serverValidate={this.checkEmailExists}
+              validateAsync={[checkEmailExists]}
             />
           </div>
         </div>

@@ -28,6 +28,7 @@ const FieldRecord = Record({
   errors: List(),
   needsValidation: true,
   touched: false,
+  asyncValidation: Map(),
 });
 export class Field extends FieldRecord {
   isValid() { return this.get('errors').isEmpty(); }
@@ -43,15 +44,11 @@ export class Field extends FieldRecord {
 const FormRecord = Record({
   fields: Map(),
   submitting: false,
+  validating: false,
 });
 export class Form extends FormRecord {
-  getData() {
-    return this.fields.map(f => f.get('value'));
-  }
-
-  getErrors() {
-    return this.fields.map(f => f.get('errors'));
-  }
+  getData() { return this.fields.map(f => f.get('value')); }
+  getErrors() { return this.fields.map(f => f.get('errors')); }
 
   /**
    * Parse the validation string passed down from props and return an object
@@ -117,9 +114,7 @@ export class Form extends FormRecord {
     }));
   }
 
-  isValid() {
-    return this.fields.map(f => f.isValid()).every(f => f === true);
-  }
+  isValid() { return this.fields.map(f => f.isValid()).every(f => f === true); }
 }
 
 /**
