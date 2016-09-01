@@ -112,7 +112,7 @@ describe('createForm', () => {
         const submitFunctionSpy = expect.createSpy();
         const handleSubmit = renderedComponent.instance().handleSubmit(submitFunctionSpy);
 
-        expect(handleSubmit({ preventDefault: () => {} })).toEqual(errors);
+        handleSubmit({ preventDefault: () => {} });
         expect(mapDispatchToProps.dispatch).toNotHaveBeenCalled();
       });
 
