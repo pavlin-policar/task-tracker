@@ -24,11 +24,10 @@ import * as validators from './validators';
 const FieldRecord = Record({
   name: '',
   value: '',
-  validators: [],
+  validators: List(),
   errors: List(),
   needsValidation: true,
   touched: false,
-  asyncValidation: Map(),
 });
 export class Field extends FieldRecord {
   isValid() { return this.get('errors').isEmpty(); }

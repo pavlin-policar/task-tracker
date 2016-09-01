@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import classNames from 'classnames';
-import { capitalize, camelCase } from 'lodash';
+import { capitalize, camelCase, forEach } from 'lodash';
 import invariant from 'invariant';
 
 import withFormId from './withFormId';
@@ -9,6 +10,7 @@ import {
   change,
   focus,
   blur,
+  receiveAsyncValidationErrors,
 } from '../actions';
 import { getFieldValue, getFieldTouched } from '../selectors';
 
@@ -39,6 +41,7 @@ export function generateInputComponent(type, { validate = '' } = {}) {
       disabled: React.PropTypes.bool,
       required: React.PropTypes.bool,
       validate: React.PropTypes.string,
+      validateAsync: React.PropTypes.object,
       formId: React.PropTypes.string.isRequired,
       // Event callbacks
       onKeyUp: React.PropTypes.func,
@@ -52,10 +55,13 @@ export function generateInputComponent(type, { validate = '' } = {}) {
       blur: React.PropTypes.func,
       focus: React.PropTypes.func,
       change: React.PropTypes.func,
+      receiveValidationErrors: React.PropTypes.func,
+      dispatch: React.PropTypes.func,
     }
 
     static defaultProps = {
       validate: '',
+      validateAsync: {},
     }
 
     static contextTypes = {
@@ -84,6 +90,7 @@ export function generateInputComponent(type, { validate = '' } = {}) {
     }
 
     shouldComponentUpdate() {
+      // TODO: Implement shouldComponentUpdate in generateInputField
       return true;
     }
 
@@ -113,9 +120,30 @@ export function generateInputComponent(type, { validate = '' } = {}) {
     }
 
     onBlur() {
-      this.props.blur({ id: this.props.formId, name: this.props.name });
-      if (this.props.onBlur) {
-        this.props.onBlur();
+      const {
+        formId,
+        name,
+        value,
+        dispatch,
+        validateAsync,
+        onBlur,
+        receiveValidationErrors,
+      } = this.props;
+
+      this.props.blur({ id: formId, name });
+      // Trigger async validations
+      forEach(validateAsync, validateActionRequest => {
+        const result = validateActionRequest(formId, { [name]: value }, dispatch);
+
+        if (result.then && typeof result.then === 'function') {
+          result.then(
+            (clean) => receiveValidationErrors({ id: formId, response: clean }),
+            (error) => receiveValidationErrors({ id: formId, response: error })
+          );
+        }
+      });
+      if (onBlur) {
+        onBlur();
       }
     }
 
@@ -152,10 +180,12 @@ export default function generateInputField(...params) {
     value: getFieldValue(formId, name)(state),
     touched: getFieldTouched(formId, name)(state),
   });
-  const mapDispatchToProps = {
-    change,
-    focus,
-    blur,
-  };
+  const mapDispatchToProps = (dispatch) => ({
+    change: bindActionCreators(change, dispatch),
+    focus: bindActionCreators(focus, dispatch),
+    blur: bindActionCreators(blur, dispatch),
+    receiveValidationErrors: bindActionCreators(receiveAsyncValidationErrors, dispatch),
+    dispatch,
+  });
   return withFormId(connect(mapStateToProps, mapDispatchToProps)(InputField));
 }

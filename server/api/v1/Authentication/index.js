@@ -13,6 +13,32 @@ const SALT_ROUNDS = 10;
 
 const router = Router();
 
+router.get('/checkuser', (req, res) => {
+  const { email, username } = req.query;
+
+  const errors = {};
+  // Email was submitted for checking
+  if (email) {
+    User.findOne({ email }, (findUserError, user) => {
+      if (findUserError) {
+        res.status(500).json({ error: 'INTERNAL_ERROR' });
+      } else if (user) {
+        errors.user = true;
+      }
+
+      // Username was submitted for checking
+      if (username) {
+        // TODO: Not really using this yet, so implement later
+      }
+      if (isEmpty(errors)) {
+        res.status(200).json({ available: true });
+      } else {
+        res.status(400).json({ errors });
+      }
+    });
+  }
+});
+
 router.post('/register', (req, res) => {
   const {
     firstName,

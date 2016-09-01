@@ -20,6 +20,7 @@ const idMapping = {
 /**
 * Authentication
 */
+const CHECK_USER_EXISTS = `${API_URL}/auth/checkuser`;
 const REGISTRATION_URL = `${API_URL}/auth/register`;
 const LOGIN_URL = `${API_URL}/auth/login`;
 
@@ -34,6 +35,7 @@ const todoMapping = idMapping;
  * Exports
  */
 export const URLS = {
+  CHECK_USER_EXISTS,
   REGISTRATION_URL,
   LOGIN_URL,
   TODOS_URL,

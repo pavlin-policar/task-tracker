@@ -25,8 +25,8 @@ export const registrationSuccess = createAction(REGISTRATION_SUCCESS);
 export const registrationFailure = createAction(REGISTRATION_FAILURE);
 
 export const checkEmailExists = createAction(CHECK_EMAIL_EXISTS_REQUEST);
-export const receiveCheckEmailExists = createAction(CHECK_EMAIL_EXISTS_SUCCESS);
-export const failedCheckingEmailExists = createAction(CHECK_EMAIL_EXISTS_FAILURE);
+export const emailNotInUse = createAction(CHECK_EMAIL_EXISTS_SUCCESS);
+export const emailExists = createAction(CHECK_EMAIL_EXISTS_FAILURE);
 
 export const login = createAction(LOGIN_REQUEST);
 export const loginSuccess = createAction(LOGIN_SUCCESS);

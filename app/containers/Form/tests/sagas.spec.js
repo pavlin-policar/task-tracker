@@ -1,11 +1,11 @@
 import expect from 'expect';
 import { put, race, take, call } from 'redux-saga/effects';
 
-import { submit } from '../sagas';
+import { asyncHandler } from '../sagas';
 
 
 describe('form sagas', () => {
-  describe('submit saga', () => {
+  describe('asyncHandler saga', () => {
     const resolve = expect.createSpy();
     const reject = expect.createSpy();
     const requestAction = {
@@ -14,7 +14,7 @@ describe('form sagas', () => {
     };
     let generator;
     beforeEach(() => {
-      generator = submit({
+      generator = asyncHandler({
         payload: { action: requestAction },
         meta: {
           successActionType: 'ACTION_SUCCESS',
@@ -25,7 +25,7 @@ describe('form sagas', () => {
       });
     });
 
-    it('should handle a successful submit', () => {
+    it('should handle a successful async action', () => {
       expect(generator.next().value).toEqual(put(requestAction));
       expect(generator.next().value).toEqual(
         race({
@@ -38,7 +38,7 @@ describe('form sagas', () => {
       );
     });
 
-    it('should handle a failed submit', () => {
+    it('should handle a failed async action', () => {
       expect(generator.next().value).toEqual(put(requestAction));
       expect(generator.next().value).toEqual(
         race({

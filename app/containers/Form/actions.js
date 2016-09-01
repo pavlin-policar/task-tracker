@@ -12,6 +12,7 @@ import {
   SUBMIT_REQUEST,
   SUBMIT_SUCCESS,
   SUBMIT_FAILURE,
+  RECEIVE_VALIDATION_ERRORS,
 } from './constants';
 
 
@@ -30,3 +31,5 @@ export const touch = createAction(TOUCH);
 export const submit = createAction(SUBMIT_REQUEST);
 export const submitSuccessful = createAction(SUBMIT_SUCCESS);
 export const submitFailed = createAction(SUBMIT_FAILURE);
+
+export const receiveAsyncValidationErrors = createAction(RECEIVE_VALIDATION_ERRORS);
