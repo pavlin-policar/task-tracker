@@ -134,19 +134,23 @@ describe('Form reducers', () => {
   });
 
   describe('Forms reducer', () => {
-    it('should register a new form', () => {
-      const initialState = Map({ existing: new Form() });
-      const state = forms(initialState, registerForm('newForm'));
-      expect(state.has('existing')).toBe(true);
-      expect(state.has('newForm')).toBe(true);
-      expect(state.get('newForm')).toBeA(Form);
+    describe('registerForm action', () => {
+      it('should register a form', () => {
+        const initialState = fromJS({ existing: new Form() });
+        const state = forms(initialState, registerForm('newForm'));
+        expect(state.has('existing')).toBe(true);
+        expect(state.has('newForm')).toBe(true);
+        expect(state.get('newForm')).toBeA(Form);
+      });
     });
 
-    it('should remove a form', () => {
-      const initialState = Map({ one: new Form(), two: new Form() });
-      const state = forms(initialState, unregisterForm('two'));
-      expect(state.has('one')).toBe(true);
-      expect(state.has('two')).toBe(false);
+    describe('unregisterForm action', () => {
+      it('should remove a form', () => {
+        const initialState = fromJS({ one: new Form(), two: new Form() });
+        const state = forms(initialState, unregisterForm('two'));
+        expect(state.has('one')).toBe(true);
+        expect(state.has('two')).toBe(false);
+      });
     });
   });
 
