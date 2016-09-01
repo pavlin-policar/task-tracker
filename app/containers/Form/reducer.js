@@ -127,13 +127,10 @@ export const field = (state = new Field(), action) => {
 
   switch (type) {
     case ATTACH_TO_FORM:
-      return state.set(
-        'validators',
-        Form.parseValidators(trim(payload.validationString, '|'))
-      ).set(
-        'value', payload.initialValue || state.get('value')
-      ).set(
-        'name', payload.name || state.get('name')
+      return (state
+        .set('validators', Form.parseValidators(trim(payload.validationString, '|')))
+        .set('value', payload.initialValue || state.get('value'))
+        .set('name', payload.name)
       );
     case BLUR:
       return state.set('touched', true);
@@ -150,11 +147,14 @@ export const field = (state = new Field(), action) => {
     }
     case VALIDATION_REQUEST:
       return state.set('validating', true);
-    case RECEIVE_VALIDATION_ERRORS:
-      return state.set('validating', false).set(
-        'errors',
-        state.get('errors').push(...(payload.errors ? Object.keys(payload.errors) : []))
+    case RECEIVE_VALIDATION_ERRORS: {
+      // Extract the error names from the error response
+      const errorNames = payload.errors ? Object.keys(payload.errors) : [];
+      return (state
+        .set('validating', false)
+        .set('errors', state.get('errors').push(...errorNames))
       );
+    }
     default:
       return state;
   }
@@ -165,39 +165,34 @@ export const form = (state = new Form(), action) => {
 
   switch (type) {
     case ATTACH_TO_FORM:
-      return state.setIn(['fields', payload.name], field(undefined, action))
-        .validate();
+      return (state
+        .setIn(['fields', payload.name], field(undefined, action))
+        .validate()
+      );
     case DETACH_FROM_FORM:
       return state.removeIn(['fields', payload.name]);
-    case BLUR:
-      return state.setIn(
-        ['fields', payload.name],
-        field(state.getIn(['fields', payload.name]), action)
-      );
     case TOUCH:
       return state.set('fields', state.get('fields').map(f => field(f, action)));
     case CHANGE:
-      return state.set(
-        'fields',
-        state.get('fields').map(f => f.setNeedsValidation(payload))
-      ).setIn(
-        ['fields', payload.name],
-        field(state.getIn(['fields', payload.name]), action)
-      ).validate();
+      return (state
+        .set('fields', state.get('fields').map(f => f.setNeedsValidation(payload)))
+        .setIn(['fields', payload.name], field(state.getIn(['fields', payload.name]), action))
+        .validate()
+      );
     case SUBMIT_REQUEST:
       return state.set('submitting', true);
     case SUBMIT_SUCCESS:
     case SUBMIT_FAILURE:
-      return state.set('submitting', false).set(
-        'fields',
-        state.get('fields').map(f => field(f, action))
+      return (state
+        .set('submitting', false)
+        .set('fields', state.get('fields').map(f => field(f, action)))
       );
+    case BLUR:
     case VALIDATION_REQUEST:
-    case RECEIVE_VALIDATION_ERRORS:
-      return state.setIn(
-        ['fields', payload.name],
-        field(state.getIn(['fields', payload.name]), action)
-      );
+    case RECEIVE_VALIDATION_ERRORS: {
+      const newField = field(state.getIn(['fields', payload.name]), action);
+      return state.setIn(['fields', payload.name], newField);
+    }
     default:
       return state;
   }

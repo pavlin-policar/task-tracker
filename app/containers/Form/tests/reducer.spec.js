@@ -1,5 +1,5 @@
 import expect from 'expect';
-import { Map, List } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 
 import { Form, Field, forms, form, field } from '../reducer';
 import {
@@ -9,6 +9,9 @@ import {
   detachFromForm,
   change,
   blur,
+  submitFailed,
+  requestAsyncValidation,
+  receiveAsyncValidationErrors,
 } from '../actions';
 
 
@@ -148,52 +151,128 @@ describe('Form reducers', () => {
   });
 
   describe('Form reducer', () => {
-    it('should attach a field to the form', () => {
-      const initialState = new Form({ fields: Map({ existing: new Field() }) });
-      const state = form(initialState, attachToForm({ name: 'newField' }));
-      expect(state.hasIn(['fields', 'existing'])).toBe(true);
-      expect(state.hasIn(['fields', 'newField'])).toBe(true);
-      expect(state.getIn(['fields', 'newField'])).toBeA(Field);
+    describe('attachToForm action', () => {
+      it('should attach a field to the form', () => {
+        const initialState = new Form({ fields: Map({ existing: new Field() }) });
+        const state = form(initialState, attachToForm({ name: 'newField' }));
+        expect(state.hasIn(['fields', 'existing'])).toBe(true);
+        expect(state.hasIn(['fields', 'newField'])).toBe(true);
+        expect(state.getIn(['fields', 'newField'])).toBeA(Field);
+      });
     });
 
-    it('should detach a field from the form', () => {
-      const initialState = new Form({ fields: Map({ one: new Field(), two: new Field() }) });
-      const state = form(initialState, detachFromForm({ name: 'two' }));
-      expect(state.hasIn(['fields', 'one'])).toBe(true);
-      expect(state.hasIn(['fields', 'two'])).toBe(false);
-    });
-
-    it('should set the initial value if one is passed when attaching to a form', () => {
-      const initialState = new Form();
-      const state = form(initialState, attachToForm({ name: 'field', initialValue: 'cookies' }));
-      expect(state.getIn(['fields', 'field', 'value'])).toEqual('cookies');
+    describe('detachFromForm action', () => {
+      it('should detach a field from the form', () => {
+        const initialState = new Form({ fields: Map({ one: new Field(), two: new Field() }) });
+        const state = form(initialState, detachFromForm({ name: 'two' }));
+        expect(state.hasIn(['fields', 'one'])).toBe(true);
+        expect(state.hasIn(['fields', 'two'])).toBe(false);
+      });
     });
   });
 
   describe('Field reducer', () => {
-    it('should set a value', () => {
-      const initialState = new Field({ value: 'original' });
-      const state = field(initialState, change({ value: 'changed' }));
-      expect(state.get('value')).toEqual('changed');
+    describe('attachToForm action', () => {
+      it('should parse its validation string if one is provided', () => {
+        const initialState = new Field();
+        const state = field(initialState, attachToForm({ validationString: 'required' }));
+        expect(state.get('validators')).toEqual([{ validator: 'required', params: [] }]);
+      });
+
+      it('should not change the default validation string if none is provided', () => {
+        const initialState = new Field();
+        const expected = initialState.get('validationString');
+        const state = field(initialState, attachToForm({ validationString: undefined }));
+        expect(state.get('validationString')).toEqual(expected);
+      });
+
+      it('should set its default value when it is provided', () => {
+        const initialState = new Field();
+        const state = field(initialState, attachToForm({ initialValue: 'foo' }));
+        expect(state.get('value')).toBe('foo');
+      });
+
+      it('should set its name', () => {
+        const initialState = new Field();
+        const state = field(initialState, attachToForm({ name: 'field' }));
+        expect(state.get('name')).toBe('field');
+      });
     });
 
-    it('should parse its validation string if one is provided', () => {
-      const initialState = new Field();
-      const state = field(initialState, attachToForm({ validationString: 'required' }));
-      expect(state.get('validators')).toEqual([{ validator: 'required', params: [] }]);
+    describe('change action', () => {
+      it('should set its value', () => {
+        const initialState = new Field({ value: 'original' });
+        const state = field(initialState, change({ value: 'changed' }));
+        expect(state.get('value')).toEqual('changed');
+      });
+
+      it('should set its `needsValidation` flag when its value changes', () => {
+        const initialState = new Field({ name: 'field', value: 'original' });
+        const state = field(initialState, change({ name: 'field', value: 'changed' }));
+        expect(state.get('needsValidation')).toBe(true);
+      });
+
+      it('should set its `needsValidation` flag when its validation relies on another field', () => {
+        const initialState = new Field({
+          name: 'field',
+          value: 'original',
+          validators: [{ name: 'someValidation', params: ['anotherField'] }],
+        });
+        const state = field(initialState, change({ name: 'anotherField', value: 'changed' }));
+        expect(state.get('needsValidation')).toBe(true);
+      });
     });
 
-    it('should not change the default validation string if none is provided', () => {
-      const initialState = new Field();
-      const expected = initialState.get('validationString');
-      const state = field(initialState, attachToForm({ validationString: undefined }));
-      expect(state.get('validationString')).toEqual(expected);
+    describe('blur action', () => {
+      it('should set itself to touched on a blur event', () => {
+        const initialState = new Field();
+        expect(initialState.get('touched')).toBe(false);
+        const state = field(initialState, blur());
+        expect(state.get('touched')).toBe(true);
+      });
     });
 
-    it('should set itself to touched on a blur event', () => {
-      const initialState = new Field();
-      const state = field(initialState, blur());
-      expect(state.get('touched')).toBe(true);
+    describe('submitFailure action', () => {
+      it('should set its errors to the server response errors', () => {
+        const errors = ['required', 'email'];
+        const initialState = new Field({
+          name: 'field',
+          errors: ['this', 'should', 'be', 'overwritten'],
+        });
+        const state = field(initialState, submitFailed({
+          errors: {
+            field: errors,
+          },
+        }));
+        expect(state.get('errors')).toEqual(fromJS(errors));
+      });
+    });
+
+    describe('requestAsyncValidation action', () => {
+      it('should set its `validating` flag to true', () => {
+        const initialState = new Field();
+        expect(initialState.get('validating')).toBe(false);
+        const state = field(initialState, requestAsyncValidation());
+        expect(state.get('validating')).toBe(true);
+      });
+    });
+
+    describe('receiveAsyncValidationErrors action', () => {
+      it('should set its `validating` flag to false', () => {
+        const initialState = new Field({ validating: true });
+        const state = field(initialState, receiveAsyncValidationErrors({
+          errors: { isUnique: false, email: false },
+        }));
+        expect(state.get('validating')).toBe(false);
+      });
+
+      it('should add the async valiation errors to the existing errors', () => {
+        const initialState = new Field(fromJS({ errors: ['existing', 'error'] }));
+        const state = field(initialState, receiveAsyncValidationErrors({
+          errors: { isUnique: false, email: false },
+        }));
+        expect(state.get('errors')).toEqual(fromJS(['existing', 'error', 'isUnique', 'email']));
+      });
     });
   });
 });
