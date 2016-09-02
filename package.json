@@ -1,11 +1,11 @@
 {
-  "name": "TaskTracker",
+  "name": "task-tracker",
   "version": "0.0.1",
   "description": "",
   "engines": {
     "npm": ">=3"
   },
-  "author": "Pavlin Poličar",
+  "author": "Pavlin Poličar <pavlin.g.p@gmail.com>",
   "license": "MIT",
   "scripts": {
     "analyze:clean": "rimraf stats.json",
@@ -303,5 +303,17 @@
     "webpack": "2.1.0-beta.15",
     "webpack-dev-middleware": "1.6.1",
     "webpack-hot-middleware": "2.12.2"
-  }
+  },
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pavlin-policar/task-tracker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pavlin-policar/task-tracker/issues"
+  },
+  "homepage": "https://github.com/pavlin-policar/task-tracker#readme"
 }
