@@ -1,7 +1,7 @@
 import {
   createFormSubmitAction,
   createFormValidationAction,
-} from 'containers/Form/createFormActions';
+} from '@policar/react-redux-form';
 
 import {
   CHECK_EMAIL_EXISTS_SUCCESS,

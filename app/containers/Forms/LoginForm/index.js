@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { createForm } from '@policar/react-redux-form';
 
-import createForm from 'containers/Form/createForm';
-
-import EmailField from 'containers/Form/components/EmailField';
-import PasswordField from 'containers/Form/components/PasswordField';
+import EmailField from 'components/Form/EmailField';
+import PasswordField from 'components/Form/PasswordField';
 import Button from 'components/Button';
 import FormElement from 'components/FormElement';
 

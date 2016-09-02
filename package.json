@@ -211,6 +211,7 @@
     "node-restful": "^0.2.5",
     "node-uuid": "^1.4.7",
     "normalizr": "^2.2.1",
+    "@policar/react-redux-form": "*",
     "react": "15.3.0",
     "react-dom": "15.3.0",
     "react-helmet": "3.1.0",

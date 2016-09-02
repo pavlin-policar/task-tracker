@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
+import { createForm } from '@policar/react-redux-form';
 
-import createForm from 'containers/Form/createForm';
 import { createTodo } from 'containers/Todos/actions';
 
-import TextField from 'containers/Form/components/TextField';
+import TextField from 'components/Form/TextField';
 import Button from 'components/Button';
 
 import messages from './messages';

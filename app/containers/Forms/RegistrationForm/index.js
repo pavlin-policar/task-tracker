@@ -1,13 +1,13 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { createForm } from '@policar/react-redux-form';
 
 import messages from './messages';
-import createForm from 'containers/Form/createForm';
 import { register, checkEmailExists } from './actions';
 
-import TextField from 'containers/Form/components/TextField';
-import EmailField from 'containers/Form/components/EmailField';
-import PasswordField from 'containers/Form/components/PasswordField';
+import TextField from 'components/Form/TextField';
+import EmailField from 'components/Form/EmailField';
+import PasswordField from 'components/Form/PasswordField';
 import Button from 'components/Button';
 import FormElement from 'components/FormElement';
 
