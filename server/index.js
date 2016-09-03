@@ -1,11 +1,11 @@
 /* eslint consistent-return:0 */
 
-import express from 'express';
-import bodyParser from 'body-parser';
-import methodOverride from 'method-override';
+const express = require('express');
+const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
 
-import logger from './logger';
-import api from './api/v1';
+const logger = require('./logger');
+const api = require('./api/v1');
 
 const argv = require('minimist')(process.argv.slice(2));
 const setup = require('./middlewares/frontendMiddleware');

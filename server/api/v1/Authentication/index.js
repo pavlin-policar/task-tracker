@@ -1,12 +1,12 @@
-import { Router } from 'express';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { isEmpty } from 'lodash';
+const Router = require('express').Router;
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const isEmpty = require('lodash').isEmpty;
 
-import config from './config';
+const config = require('./config');
 
-import User from '../models/User';
-import { validateUser } from './validation';
+const User = require('../models/User');
+const validateUser = require('./validation').validateUser;
 
 
 const SALT_ROUNDS = 10;
@@ -106,4 +106,4 @@ router.post('/login', (req, res) => {
   });
 });
 
-export default router;
+module.exports = router;

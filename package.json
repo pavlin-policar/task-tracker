@@ -19,7 +19,8 @@
     "build": "cross-env NODE_ENV=production webpack --config internals/webpack/webpack.prod.babel.js --color -p",
     "build:clean": "npm run test:clean && rimraf ./build",
     "build:dll": "node ./internals/scripts/dependencies.js",
-    "start": "cross-env NODE_ENV=development babel-node server --presets es2015",
+    "start": "npm run start:production",
+    "start:develop": "cross-env NODE_ENV=development node server",
     "start:tunnel": "cross-env NODE_ENV=development ENABLE_TUNNEL=true node server",
     "start:production": "npm run build && npm run start:prod",
     "start:prod": "cross-env NODE_ENV=production node server",
@@ -191,6 +192,7 @@
     ]
   },
   "dependencies": {
+    "@policar/react-redux-form": "*",
     "babel-polyfill": "6.9.1",
     "bcrypt": "^0.8.7",
     "bson-objectid": "^1.1.4",
@@ -211,7 +213,6 @@
     "node-restful": "^0.2.5",
     "node-uuid": "^1.4.7",
     "normalizr": "^2.2.1",
-    "@policar/react-redux-form": "*",
     "react": "15.3.0",
     "react-dom": "15.3.0",
     "react-helmet": "3.1.0",

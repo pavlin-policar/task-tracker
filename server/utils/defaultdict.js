@@ -1,4 +1,5 @@
-export default function (defaultFunction) {
+
+module.exports = function defaultdict(defaultFunction) {
   return new Proxy({}, {
     get: (target, name) => {
       if (!(name in target) && name !== 'length' && name !== 'toJSON') {
@@ -7,4 +8,4 @@ export default function (defaultFunction) {
       return target[name];
     },
   });
-}
+};

@@ -1,13 +1,13 @@
-import express from 'express';
-import mongoose from 'mongoose';
+const express = require('express');
+const mongoose = require('mongoose');
 
-import authentication from './Authentication';
+const authentication = require('./Authentication');
 
-import Todo from './models/Todo';
+const Todo = require('./models/Todo');
 
 
 // Connect to mongodb
-mongoose.connect('mongodb://localhost/todos');
+mongoose.connect('mongodb://23.251.134.189/task-tracker');
 
 // Create the router instance
 const router = express.Router();
@@ -17,4 +17,4 @@ router.use('/auth', authentication);
 // Register restful resources
 Todo.methods(['get', 'post', 'put', 'delete']).register(router, '/todos');
 
-export default router;
+module.exports = router;

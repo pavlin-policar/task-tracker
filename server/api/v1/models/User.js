@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import restful from 'node-restful';
+const mongoose = require('mongoose');
+const restful = require('node-restful');
 
 
 const user = mongoose.Schema({
@@ -15,4 +15,4 @@ const user = mongoose.Schema({
   timestamps: true,
 });
 
-export default restful.model('User', user);
+module.exports = restful.model('User', user);

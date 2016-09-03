@@ -1,10 +1,10 @@
-import { isEmpty } from 'lodash';
-import validator from 'validator';
+const isEmpty = require('lodash').isEmpty;
+const validator = require('validator');
 
-import defaultdict from '../../../utils/defaultdict';
+const defaultdict = require('../../../utils/defaultdict');
 
 
-export const validateUser = (data) => {
+const validateUser = (data) => {
   const {
     email,
     birthday,
@@ -34,3 +34,5 @@ export const validateUser = (data) => {
     errors,
   };
 };
+
+module.exports = { validateUser };
