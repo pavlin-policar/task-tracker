@@ -1,5 +1,5 @@
 
-export const API_URL = 'http://localhost:3000/api/v1';
+export const API_URL = 'http://localhost:3001/api/v1';
 
 /**
  * The primary job of `api.*` functions is to map the API data to a localized
