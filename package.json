@@ -183,7 +183,8 @@
       "express",
       "ip",
       "minimist",
-      "sanitize.css"
+      "sanitize.css",
+      "@policar/react-redux-form"
     ],
     "include": [
       "core-js",
@@ -217,7 +218,7 @@
     "react-router-scroll": "0.2.1",
     "redux": "3.5.2",
     "redux-actions": "^0.10.1",
-    "redux-immutable": "3.0.7",
+    "redux-immutable": "3.0.8",
     "redux-saga": "0.11.0",
     "reselect": "2.5.3",
     "sanitize.css": "4.1.0",
@@ -295,7 +296,7 @@
     "stylelint": "7.0.3",
     "stylelint-config-standard": "11.0.0",
     "url-loader": "0.5.7",
-    "webpack": "2.1.0-beta.15",
+    "webpack": "2.1.0-beta.21",
     "webpack-dev-middleware": "1.6.1",
     "webpack-hot-middleware": "2.12.2"
   },
