@@ -20,11 +20,11 @@ function parseJSON(response) {
     [response.status >= 400 ? 'error' : 'data']: data,
   });
 
-  const contentLength = response.headers.get('Content-Length');
-  if (contentLength !== null && contentLength !== undefined) {
-    return response.json().then((data) => formatData(data));
+  try {
+    return response.json().then(formatData);
+  } catch (e) {
+    return Promise.resolve(formatData({}));
   }
-  return Promise.resolve(formatData({}));
 }
 
 /**
