@@ -13,20 +13,20 @@ import FormElement from 'components/FormElement';
  */
 export class LoginForm extends React.Component {
   static propTypes = {
-    fieldsTouched: React.PropTypes.object,
+    fields: React.PropTypes.object,
     errors: React.PropTypes.object,
     handleSubmit: React.PropTypes.func,
   }
 
   render() {
-    const { errors, fieldsTouched, handleSubmit } = this.props;
+    const { errors, fields, handleSubmit } = this.props;
     return (
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit()}>
         <div className="row">
           <div className="col-xs-12">
             <FormElement
               errors={errors.get('email')}
-              touched={fieldsTouched.get('email')}
+              touched={fields.getIn(['email', 'touched'])}
               type={EmailField}
               name="email"
               placeholder="Email"
@@ -37,7 +37,7 @@ export class LoginForm extends React.Component {
           <div className="col-xs-12">
             <FormElement
               errors={errors.get('password')}
-              touched={fieldsTouched.get('password')}
+              touched={fields.getIn(['password', 'touched'])}
               type={PasswordField}
               name="password"
               placeholder="Password"
