@@ -18,19 +18,29 @@ import FormElement from 'components/FormElement';
 class RegistrationForm extends React.Component {
   static propTypes = {
     // Connected props
-    isSubmitting: React.PropTypes.bool,
-    errors: React.PropTypes.object,
-    values: React.PropTypes.object,
-    isValid: React.PropTypes.bool,
-    fieldsTouched: React.PropTypes.object,
+    isSubmitting: React.PropTypes.bool.isRequired,
+    errors: React.PropTypes.object.isRequired,
+    values: React.PropTypes.object.isRequired,
+    isValid: React.PropTypes.bool.isRequired,
+    fields: React.PropTypes.object.isRequired,
     // Form methods
-    handleSubmit: React.PropTypes.func,
+    handleSubmit: React.PropTypes.func.isRequired,
+    clear: React.PropTypes.func.isRequired,
+    router: React.PropTypes.shape({
+      push: React.PropTypes.func.isRequired,
+    }).isRequired,
   };
 
   constructor(props) {
     super(props);
 
     this.emailUnique = this.emailUnique.bind(this);
+    this.onSubmitSuccess = this.onSubmitSuccess.bind(this);
+  }
+
+  onSubmitSuccess() {
+    this.props.router.push('/register?success=true');
+    this.props.clear();
   }
 
   emailUnique(...params) {
@@ -41,17 +51,17 @@ class RegistrationForm extends React.Component {
   }
 
   render() {
-    const { errors, fieldsTouched, handleSubmit, isSubmitting } = this.props;
-    const { emailUnique } = this;
+    const { errors, fields, handleSubmit, isSubmitting } = this.props;
+    const { emailUnique, onSubmitSuccess } = this;
 
     return (
-      <form onSubmit={handleSubmit(register)}>
+      <form onSubmit={handleSubmit(register, [onSubmitSuccess])}>
         <p><FormattedMessage {...messages.fillInDataText} /></p>
         <div className="row">
           <div className="col-xs-6">
             <FormElement
               errors={errors.get('firstName')}
-              touched={fieldsTouched.get('firstName')}
+              touched={fields.getIn(['firstName', 'touched'])}
               type={TextField}
               name="firstName"
               placeholder="First name"
@@ -61,7 +71,7 @@ class RegistrationForm extends React.Component {
           <div className="col-xs-6">
             <FormElement
               errors={errors.get('surname')}
-              touched={fieldsTouched.get('surname')}
+              touched={fields.getIn(['surname', 'touched'])}
               type={TextField}
               name="surname"
               placeholder="Surname"
@@ -73,7 +83,7 @@ class RegistrationForm extends React.Component {
           <div className="col-xs">
             <FormElement
               errors={errors.get('email')}
-              touched={fieldsTouched.get('email')}
+              touched={fields.getIn(['email', 'touched'])}
               type={EmailField}
               name="email"
               placeholder="Email"
@@ -86,7 +96,7 @@ class RegistrationForm extends React.Component {
           <div className="col-xs">
             <FormElement
               errors={errors.get('password')}
-              touched={fieldsTouched.get('password')}
+              touched={fields.getIn(['password', 'touched'])}
               type={PasswordField}
               name="password"
               placeholder="Password"
@@ -98,7 +108,7 @@ class RegistrationForm extends React.Component {
           <div className="col-xs">
             <FormElement
               errors={errors.get('passwordConfirmation')}
-              touched={fieldsTouched.get('passwordConfirmation')}
+              touched={fields.getIn(['passwordConfirmation', 'touched'])}
               type={PasswordField}
               name="passwordConfirmation"
               placeholder="Confirm password"
