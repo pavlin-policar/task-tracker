@@ -20,11 +20,10 @@ function parseJSON(response) {
     [response.status >= 400 ? 'error' : 'data']: data,
   });
 
-  try {
-    return response.json().then(formatData);
-  } catch (e) {
-    return Promise.resolve(formatData({}));
-  }
+  return response
+    .json()
+    .then(formatData)
+    .catch(() => Promise.resolve(formatData({})));
 }
 
 /**
