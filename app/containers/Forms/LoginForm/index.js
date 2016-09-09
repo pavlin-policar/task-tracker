@@ -1,6 +1,8 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { createForm } from '@policar/react-redux-form';
+import { withRouter } from 'react-router';
+
+import { login } from './actions';
 
 import EmailField from 'components/Form/EmailField';
 import PasswordField from 'components/Form/PasswordField';
@@ -13,15 +15,35 @@ import FormElement from 'components/FormElement';
  */
 export class LoginForm extends React.Component {
   static propTypes = {
-    fields: React.PropTypes.object,
-    errors: React.PropTypes.object,
-    handleSubmit: React.PropTypes.func,
+    fields: React.PropTypes.object.isRequired,
+    errors: React.PropTypes.object.isRequired,
+    handleSubmit: React.PropTypes.func.isRequired,
+    clear: React.PropTypes.func.isRequired,
+    router: React.PropTypes.object.isRequired,
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.onSubmitSuccess = this.onSubmitSuccess.bind(this);
+    this.onSubmitFailure = this.onSubmitFailure.bind(this);
+  }
+
+  onSubmitSuccess() {
+    this.props.router.push('/');
+    this.props.clear();
+  }
+
+  onSubmitFailure() {
+    this.props.clear(['password']);
   }
 
   render() {
     const { errors, fields, handleSubmit } = this.props;
+    const { onSubmitSuccess, onSubmitFailure } = this;
+
     return (
-      <form onSubmit={handleSubmit()}>
+      <form onSubmit={handleSubmit(login, [onSubmitSuccess, onSubmitFailure])}>
         <div className="row">
           <div className="col-xs-12">
             <FormElement
@@ -31,7 +53,6 @@ export class LoginForm extends React.Component {
               name="email"
               placeholder="Email"
               validate="required"
-              serverValidate={this.checkEmailExists}
             />
           </div>
           <div className="col-xs-12">
@@ -57,6 +78,6 @@ export class LoginForm extends React.Component {
 
 LoginForm = createForm({ // eslint-disable-line no-class-assign
   id: 'login',
-})(LoginForm);
+})(withRouter(LoginForm));
 
-export default connect(null)(LoginForm);
+export default LoginForm;
