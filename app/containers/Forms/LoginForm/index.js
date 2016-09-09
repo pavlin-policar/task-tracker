@@ -30,7 +30,7 @@ export class LoginForm extends React.Component {
   }
 
   onSubmitSuccess() {
-    this.props.router.push('/');
+    this.props.router.push('/todos');
     this.props.clear();
   }
 
@@ -42,8 +42,17 @@ export class LoginForm extends React.Component {
     const { errors, fields, handleSubmit } = this.props;
     const { onSubmitSuccess, onSubmitFailure } = this;
 
+    const formError = (
+      <div className="row">
+        <div className="col-xs-12">
+          <p>{errors.get('form')}</p>
+        </div>
+      </div>
+    );
+
     return (
       <form onSubmit={handleSubmit(login, [onSubmitSuccess, onSubmitFailure])}>
+        {errors.get('form').isEmpty() ? null : formError}
         <div className="row">
           <div className="col-xs-12">
             <FormElement
