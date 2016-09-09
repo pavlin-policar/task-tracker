@@ -29,8 +29,11 @@ export const Auth = Record({
 });
 
 const authReducer = handleActions({
-  [constants.LOGIN_REQUEST](state) {
-    return state;
+  [constants.LOGIN_SUCCESS](state, action) {
+    return state.set('user', new User(action.payload));
+  },
+  [constants.LOGOUT](state) {
+    return state.set('user', new User());
   },
 }, new Auth());
 

@@ -25,6 +25,12 @@ const REGISTRATION_URL = `${API_URL}/auth/register`;
 const LOGIN_URL = `${API_URL}/auth/login`;
 
 /**
+ * Users
+ */
+const USERS_URL = `${API_URL}/users`;
+const userMapping = idMapping;
+
+/**
  * Todos
  */
 const TODOS_URL = `${API_URL}/todos`;
@@ -39,7 +45,9 @@ export const URLS = {
   REGISTRATION_URL,
   LOGIN_URL,
   TODOS_URL,
+  USERS_URL,
 };
 export const mappings = {
   [URLS.TODOS_URL]: todoMapping,
+  [URLS.USERS_URL]: userMapping,
 };
