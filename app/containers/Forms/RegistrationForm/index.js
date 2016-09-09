@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { createForm } from '@policar/react-redux-form';
+import { withRouter } from 'react-router';
 
 import messages from './messages';
 import { register, checkEmailExists } from './actions';
@@ -128,4 +129,4 @@ class RegistrationForm extends React.Component {
 
 export default createForm({
   id: 'registration',
-})(RegistrationForm);
+})(withRouter(RegistrationForm));
