@@ -1,21 +1,22 @@
 import { createSelector } from 'reselect';
 
+import { ROLES } from './reducer';
+
 /**
  * Direct selector to the Authentication state domain
  */
-export const getLoginContainerDomain = () => state => state.get('authentication');
-
-/**
- * Other specific selectors
- */
-
+export const getAuthenticationDomain = () => state => state.get('auth');
 
 /**
  * Default selector used by Authentication
  */
 
-export const getLoginContainer = () => createSelector(
-  getLoginContainerDomain(),
-  (substate) => substate.toJS()
+export const getUser = () => createSelector(
+  getAuthenticationDomain(),
+  auth => auth.get('user')
 );
-export default getLoginContainer;
+
+export const getIsLoggedIn = () => createSelector(
+  getUser(),
+  user => user.get('role') !== ROLES.GUEST
+);

@@ -1,11 +1,18 @@
-// import { selectLoginContainerDomain } from '../selectors';
-// import { fromJS } from 'immutable';
 import expect from 'expect';
+import { Map } from 'immutable';
 
-// const selector = selectLoginContainerDomain();
+import auth from '../reducer';
+import {
+  getIsLoggedIn,
+} from '../selectors';
 
-describe('selectLoginContainerDomain', () => {
-  it('Expect to have unit tests specified', () => {
-    expect(true).toEqual(true);
+
+const s = (state) => Map({ auth: state });
+
+describe('authentication selectors', () => {
+  describe('getIsLoggedIn', () => {
+    it('should return false for the default state', () => {
+      expect(getIsLoggedIn()(s(auth(undefined, {})))).toBe(false);
+    });
   });
 });

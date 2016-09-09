@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable';
+import { Record } from 'immutable';
 import { handleActions } from 'redux-actions';
 
 import * as constants from './constants';
@@ -7,12 +7,31 @@ import * as constants from './constants';
 /*
  * Authentication reducer
  */
-const initialState = fromJS({});
+export const ROLES = {
+  GUEST: 10,
+  NORMAL: 20,
+  ADMIN: 100,
+};
 
-const loginFormreducer = handleActions({
+export const User = Record({
+  id: null,
+  name: '',
+  surname: '',
+  email: '',
+  birthday: '',
+  lastLogin: null,
+  lastSeen: null,
+  role: ROLES.GUEST,
+});
+
+export const Auth = Record({
+  user: new User(),
+});
+
+const authReducer = handleActions({
   [constants.LOGIN_REQUEST](state) {
     return state;
   },
-}, initialState);
+}, new Auth());
 
-export default loginFormreducer;
+export default authReducer;
