@@ -9,7 +9,7 @@ import * as constants from './constants';
  */
 export const ROLES = {
   GUEST: 10,
-  NORMAL: 20,
+  USER: 20,
   ADMIN: 100,
 };
 

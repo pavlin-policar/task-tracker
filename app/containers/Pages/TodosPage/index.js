@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { allowOnly, ROLES } from 'containers/Authentication';
 import { getListOfAllTodos } from 'containers/Todos/selectors';
 import {
   createTodo,
@@ -58,4 +59,4 @@ const mapDispatchToProps = {
   updateTodo,
   deleteTodo,
 };
-export default connect(mapStateToProps, mapDispatchToProps)(TodosPage);
+export default allowOnly(ROLES.USER)(connect(mapStateToProps, mapDispatchToProps)(TodosPage));

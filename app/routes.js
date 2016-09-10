@@ -62,10 +62,18 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: '*',
-      name: 'notfound',
+      path: '/401',
+      name: '401-unauthorized',
       getComponent(nextState, cb) {
-        System.import('containers/NotFoundPage')
+        System.import('containers/401')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
+      path: '*',
+      name: '404-not-found',
+      getComponent(nextState, cb) {
+        System.import('containers/404')
           .then(loadModule(cb))
           .catch(errorLoading);
       },
