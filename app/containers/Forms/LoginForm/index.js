@@ -30,7 +30,7 @@ export class LoginForm extends React.Component {
   }
 
   onSubmitSuccess() {
-    this.props.router.push('/todos');
+    this.props.router.push('/');
     this.props.clear();
   }
 

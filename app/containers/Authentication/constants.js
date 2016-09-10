@@ -20,3 +20,6 @@ export const PASSWORD_RESET_SUCCESS = 'Authentication.PASSWORD_RESET_SUCCESS';
 export const PASSWORD_RESET_FAILURE = 'Authentication.PASSWORD_RESET_FAILURE';
 
 export const LOGOUT = 'Authentication.LOGOUT';
+
+export const REDIRECT_FROM_UNAUTHORIZED = 'Authentication.REDIRECT_FROM_UNAUTHORIZED';
+export const REDIRECT_TO_INTENDED = 'Authentication.REDIRECT_TO_INTENDED';

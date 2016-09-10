@@ -26,6 +26,7 @@ export const User = Record({
 
 export const Auth = Record({
   user: new User(),
+  intendedLocation: null,
 });
 
 const authReducer = handleActions({
@@ -34,6 +35,12 @@ const authReducer = handleActions({
   },
   [constants.LOGOUT](state) {
     return state.set('user', new User());
+  },
+  [constants.REDIRECT_FROM_UNAUTHORIZED](state, { payload }) {
+    return state.set('intendedLocation', payload.intendedLocation);
+  },
+  [constants.REDIRECT_TO_INTENDED](state) {
+    return state.set('intendedLocation', null);
   },
 }, new Auth());
 

@@ -20,3 +20,8 @@ export const getIsLoggedIn = () => createSelector(
   getUser(),
   user => user.get('role') !== ROLES.GUEST
 );
+
+export const getIntendedLocation = () => createSelector(
+  getAuthenticationDomain(),
+  auth => auth.get('intendedLocation')
+);

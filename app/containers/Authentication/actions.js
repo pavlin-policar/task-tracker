@@ -14,6 +14,8 @@ import {
   PASSWORD_RESET_SUCCESS,
   PASSWORD_RESET_FAILURE,
   LOGOUT,
+  REDIRECT_FROM_UNAUTHORIZED,
+  REDIRECT_TO_INTENDED,
 } from './constants';
 
 /*
@@ -37,3 +39,6 @@ export const resetPasswordSuccess = createAction(PASSWORD_RESET_SUCCESS);
 export const resetPasswordFailure = createAction(PASSWORD_RESET_FAILURE);
 
 export const logout = createAction(LOGOUT);
+
+export const redirectFromUnauthorized = createAction(REDIRECT_FROM_UNAUTHORIZED);
+export const redirectToIntended = createAction(REDIRECT_TO_INTENDED);
